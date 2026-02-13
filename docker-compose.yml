@@ -10,6 +10,7 @@ services:
         NEXT_PUBLIC_TWITCH_CHANNEL: ${NEXT_PUBLIC_TWITCH_CHANNEL}
     environment:
       SERVER_API_URL: ${SERVER_API_URL}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN}
     ports:
       - "3001:3000"
     networks:
