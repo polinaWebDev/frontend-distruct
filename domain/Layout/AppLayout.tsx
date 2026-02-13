@@ -1,10 +1,15 @@
 import styles from './AppLayout.module.css';
 import { ReactNode } from 'react';
-import { Header } from './Header/Header';
+import dynamic from 'next/dynamic';
 import { GameType } from '@/lib/enums/game_type.enum';
 import { UserResponseDto } from '@/lib/api_client/gen';
-import { TwitchWidget } from '@/components/twitch-widget/TwitchWidget';
+import { Header } from '@/domain/Layout/Header/Header';
+// const Header = dynamic(() => import('./Header/Header').then((mod) => mod.Header), { ssr: false });
 
+const TwitchWidget = dynamic(
+    () => import('@/components/twitch-widget/TwitchWidget').then((mod) => mod.TwitchWidget),
+  { ssr: false }
+);
 export const AppLayout = ({
     children,
     game,
