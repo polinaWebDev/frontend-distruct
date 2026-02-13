@@ -103,7 +103,7 @@
 }
 
 .viewerCount {
-    font-family: 'Space Grotesk', var(--font-thicker, 'Thicker Variable Trial', sans-serif), sans-serif;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     font-variant-numeric: tabular-nums;
     font-feature-settings: 'tnum' 1, 'liga' 0;
 }
