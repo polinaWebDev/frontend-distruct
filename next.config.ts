@@ -3,6 +3,10 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
     /* config options here */
+    productionBrowserSourceMaps: true,
+    experimental: {
+        serverSourceMaps: true,
+    },
     images: {
         remotePatterns: [
             new URL('https://picsum.photos/**'),
