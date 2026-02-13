@@ -16,7 +16,7 @@ export const AppLayout = ({
     user?: UserResponseDto;
     isMobileServer: boolean;
 }) => {
-    const twitchChannel = process.env.NEXT_PUBLIC_TWITCH_CHANNEL ?? 'twitch';
+    const twitchChannel = process.env.NEXT_PUBLIC_TWITCH_CHANNEL ?? 'DISTRUCT_STREAM';
 
     return (
         <div className={styles.page_wrapper}>
