@@ -33,6 +33,7 @@ export const TwitchWidget = ({
 
     const [position, setPosition] = useState<Position>(defaultPosition);
     const [closed, setClosed] = useState(false);
+    const hasStoredPositionRef = useRef(false);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -42,11 +43,25 @@ export const TwitchWidget = ({
             const parsed = JSON.parse(raw) as { x?: number; y?: number };
             if (typeof parsed.x === 'number' && typeof parsed.y === 'number') {
                 setPosition({ x: parsed.x, y: parsed.y });
+                hasStoredPositionRef.current = true;
             }
         } catch {
             // ignore malformed storage
         }
     }, []);
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        if (hasStoredPositionRef.current) return;
+        const widget = widgetRef.current;
+        if (!widget) return;
+
+        const width = widget.offsetWidth || 260;
+        const height = widget.offsetHeight || 220;
+        const nextX = Math.max(8, window.innerWidth - width - 24);
+        const nextY = Math.max(8, window.innerHeight - height - 24);
+        setPosition({ x: nextX, y: nextY });
+    }, [data?.isLive]);
 
     useEffect(() => {
         if (typeof window === 'undefined') return;
@@ -109,6 +124,10 @@ export const TwitchWidget = ({
     };
 
     if (closed) {
+        return null;
+    }
+
+    if (!loading && !error && !data?.isLive) {
         return null;
     }
 
