@@ -50,6 +50,19 @@ export const TwitchWidget = ({
         }
     }, []);
 
+    const {
+        data,
+        isLoading: loading,
+        error,
+    } = useQuery({
+        ...twitchControllerGetWidgetStatusOptions({
+            client: getPublicClient(),
+            query: { channel },
+        }),
+        enabled: Boolean(channel),
+        refetchInterval: refreshMs,
+    });
+
     useEffect(() => {
         if (typeof window === 'undefined') return;
         if (hasStoredPositionRef.current) return;
@@ -68,18 +81,6 @@ export const TwitchWidget = ({
         const payload = JSON.stringify({ x: position.x, y: position.y });
         window.localStorage.setItem(STORAGE_KEY, payload);
     }, [position]);
-    const {
-        data,
-        isLoading: loading,
-        error,
-    } = useQuery({
-        ...twitchControllerGetWidgetStatusOptions({
-            client: getPublicClient(),
-            query: { channel },
-        }),
-        enabled: Boolean(channel),
-        refetchInterval: refreshMs,
-    });
 
     const thumbnailUrl = useMemo(() => {
         if (!data?.thumbnailUrl) return null;
