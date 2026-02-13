@@ -1,15 +1,9 @@
 import styles from './AppLayout.module.css';
 import { ReactNode } from 'react';
-import dynamic from 'next/dynamic';
 import { GameType } from '@/lib/enums/game_type.enum';
 import { UserResponseDto } from '@/lib/api_client/gen';
 import { Header } from '@/domain/Layout/Header/Header';
-// const Header = dynamic(() => import('./Header/Header').then((mod) => mod.Header), { ssr: false });
-
-const TwitchWidget = dynamic(
-    () => import('@/components/twitch-widget/TwitchWidget').then((mod) => mod.TwitchWidget),
-  { ssr: false }
-);
+import { ClientWidgets } from './ClientWidgets';
 export const AppLayout = ({
     children,
     game,
@@ -28,7 +22,7 @@ export const AppLayout = ({
             <Header user={user} isMobileServer={isMobileServer} />
 
             {children}
-            <TwitchWidget channel={twitchChannel} />
+            <ClientWidgets channel={twitchChannel} />
         </div>
     );
 };
