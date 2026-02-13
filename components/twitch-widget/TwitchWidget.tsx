@@ -164,7 +164,9 @@ export const TwitchWidget = ({
                             <span>{data?.title ?? 'Нет трансляции'}</span>
                             {data?.gameName && <span>• {data.gameName}</span>}
                             {typeof data?.viewerCount === 'number' && (
-                                <span>• {data.viewerCount.toLocaleString('ru-RU')} зрителей</span>
+                                <span className={styles.viewerCount}>
+                                    • {data.viewerCount.toLocaleString('ru-RU')} зрителей
+                                </span>
                             )}
                         </div>
                         <div className={styles.updated}>

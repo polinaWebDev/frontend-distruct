@@ -102,6 +102,12 @@
     color: rgba(255, 255, 255, 0.7);
 }
 
+.viewerCount {
+    font-family: 'Space Grotesk', var(--font-thicker, 'Thicker Variable Trial', sans-serif), sans-serif;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1, 'liga' 0;
+}
+
 .updated {
     font-size: 10px;
     opacity: 0.5;
