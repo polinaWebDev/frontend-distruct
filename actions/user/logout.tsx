@@ -14,8 +14,44 @@ export const logout = async () => {
     }
 
     const cookieStore = await cookies();
-    cookieStore.delete('accessToken');
-    cookieStore.delete('refreshToken');
+    const domain = process.env.COOKIE_DOMAIN;
+    const secureCookies = process.env.NODE_ENV === 'production';
+    const baseOptions = {
+        path: '/',
+        sameSite: 'none' as const,
+        secure: secureCookies,
+    };
+
+    if (domain) {
+        cookieStore.set({
+            name: 'accessToken',
+            value: '',
+            expires: new Date(0),
+            domain,
+            ...baseOptions,
+        });
+        cookieStore.set({
+            name: 'refreshToken',
+            value: '',
+            expires: new Date(0),
+            domain,
+            ...baseOptions,
+        });
+    }
+
+    // Also clear host-only cookies as a fallback.
+    cookieStore.set({
+        name: 'accessToken',
+        value: '',
+        expires: new Date(0),
+        ...baseOptions,
+    });
+    cookieStore.set({
+        name: 'refreshToken',
+        value: '',
+        expires: new Date(0),
+        ...baseOptions,
+    });
 
     return true;
 };
