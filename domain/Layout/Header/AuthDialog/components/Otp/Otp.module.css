@@ -1,0 +1,103 @@
+.container {
+    width: 100%;
+
+    .text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 26px;
+
+        width: 100%;
+
+        h1 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        p {
+            color: #79808e;
+            font-size: 15px;
+            font-weight: 500;
+        }
+    }
+}
+
+.otp_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+
+    margin-top: 63px;
+    margin-bottom: 63px;
+}
+
+.otp_input {
+    border-bottom: 2px solid #45454b;
+    padding: 0;
+    padding-bottom: 21px;
+    width: 45px !important;
+
+    text-align: center;
+
+    outline: none;
+
+    font-size: 36px;
+    font-weight: 500;
+    color: #ffffff;
+
+    &.errored {
+        border-color: #e74c3c;
+    }
+}
+
+.error_message {
+    font-size: 14px;
+    font-weight: 400;
+    color: #e74c3c;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.go_back {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 23px;
+
+    margin-top: 32px;
+
+    p {
+        font-size: 13px;
+        font-weight: 500;
+        color: white;
+
+        transition: 0.3s;
+    }
+
+    .icon {
+        width: 59px;
+        height: 39px;
+
+        path {
+            transition: 0.3s;
+        }
+    }
+
+    &:hover {
+        cursor: pointer;
+
+        p {
+            color: #f5a02f;
+        }
+
+        .icon {
+            path {
+                stroke: #f5a02f;
+            }
+        }
+    }
+}

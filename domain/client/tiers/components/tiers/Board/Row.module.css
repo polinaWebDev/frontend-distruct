@@ -1,0 +1,116 @@
+.row {
+    display: grid;
+    grid-template-columns: 160px 1fr 52px;
+    /*gap: 12px;*/
+    align-items: stretch;
+    /*background: rgba(255, 255, 255, 0.02);*/
+    /*border: 1px solid transparent;*/
+    /*border-radius: 12px;*/
+    /*padding: 10px;*/
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease;
+}
+
+.row_muted .row_label {
+    background: #444;
+}
+
+.row_active {
+    background: rgba(245, 160, 47, 0.05);
+    box-shadow: 0 0 0 2px rgba(245, 160, 47, 0.2);
+}
+
+.row_label {
+    border-radius: 10px 0px 0px 10px;
+    padding: 12px;
+    height: 100%;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    text-shadow: none;
+    text-align: center;
+}
+
+.row_label_text {
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-size: 30px;
+}
+
+.row_actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(6px);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.row:hover .row_actions,
+.row:focus-within .row_actions {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+}
+
+.row_action_btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid #34363d;
+    background: linear-gradient(
+        225deg,
+        rgba(38.83, 41.31, 44.13, 0.07) 0%,
+        rgba(10, 11, 11, 0.28) 100%
+    );
+    color: #0f0f0f;
+    cursor: pointer;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        opacity 0.12s ease;
+}
+
+.row_action_btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.row_action_btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.row_placeholder {
+    color: gray;
+    opacity: 0.3;
+}
+
+.items_zone {
+    min-height: 120px;
+    border-radius: 0px 10px 10px 0px;
+    border: 1px solid var(--row-border-color, rgba(255, 255, 255, 0.1));
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    background: var(--row-bg-color, rgba(255, 255, 255, 0.02));
+}
+
+.items_list {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}

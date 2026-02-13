@@ -1,0 +1,178 @@
+.wrapper {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 20px;
+
+    @media (max-width: 1036px) {
+        padding: 0 10px;
+        padding-bottom: 60px;
+    }
+}
+
+.content {
+    margin-top: 70px;
+
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 119px;
+
+    @media (max-width: 1036px) {
+        flex-direction: column;
+        gap: 60px;
+    }
+
+    @media (max-width: 1000px) {
+        margin-top: 0px;
+    }
+
+    .left {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        width: 100%;
+
+        max-width: 670px;
+
+        h1 {
+            font-family: var(--font-thicker);
+            font-weight: 500;
+            font-size: 52px;
+            color: white;
+
+            margin-bottom: 44px;
+
+            @media (max-width: 1036px) {
+                font-size: 26px;
+            }
+        }
+
+        .challenge_info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 31px;
+
+            .challenge_info_item {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 10px;
+
+                .title {
+                    font-size: 15px;
+                    font-weight: 500;
+                    color: #79808e;
+                }
+
+                .value {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .right {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 20px;
+
+        .gear_list {
+            width: 100%;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-start;
+
+            row-gap: 70px;
+            column-gap: 45px;
+
+            flex-wrap: wrap;
+        }
+
+        .additional_challenges_container {
+            margin-top: 70px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 22px;
+            width: 100%;
+
+            .title {
+                font-size: 18px;
+                font-family: var(--font-thicker);
+                font-weight: 600;
+                color: white;
+            }
+
+            .items {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 20px;
+
+                .item {
+                    padding: 25px;
+                    border-radius: 10px;
+
+                    border: 1px solid #232527;
+
+                    background: linear-gradient(
+                        -101.701deg,
+                        rgba(39, 41, 44, 7%) 0%,
+                        rgba(10, 11, 11, 28%) 100%
+                    );
+
+                    p {
+                        color: #f5a02f;
+                        font-weight: 500;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    margin-top: 93px;
+
+    @media (max-width: 600px) {
+        flex-direction: column;
+    }
+
+    .btn {
+        max-width: 384px;
+
+        @media (max-width: 600px) {
+            max-width: unset;
+        }
+    }
+
+    .go_back_btn {
+        width: 100%;
+        @media (max-width: 600px) {
+            justify-content: space-between;
+        }
+    }
+}

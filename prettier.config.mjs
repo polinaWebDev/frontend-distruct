@@ -1,0 +1,14 @@
+const config = {
+    endOfLine: 'auto',
+    printWidth: 100,
+    semi: true,
+    singleQuote: true,
+    trailingComma: 'es5',
+    bracketSpacing: true,
+    arrowParens: 'always',
+    jsxSingleQuote: false,
+    bracketSameLine: false,
+    tabWidth: 4,
+};
+
+export default config;

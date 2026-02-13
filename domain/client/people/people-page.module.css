@@ -1,0 +1,91 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.searchRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.card {
+    border: 1px solid var(--color-stroke);
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--color-secondary-bg);
+}
+
+.userRow {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #2a2f3a;
+}
+
+.placeholder {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #2a2f3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #c5c9d3;
+}
+
+.username {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.emptyState {
+    padding: 32px;
+    text-align: center;
+    color: #8b94a6;
+    border: 1px dashed var(--color-stroke);
+    border-radius: 16px;
+}
+
+.loadMoreRow {
+    display: flex;
+    justify-content: center;
+}

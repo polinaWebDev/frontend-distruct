@@ -1,0 +1,25 @@
+.content {
+    width: 92vw;
+    max-width: 720px;
+    overflow: hidden;
+}
+
+.title {
+    word-break: break-word;
+}
+
+.description {
+    word-break: break-word;
+    white-space: normal;
+}
+
+.footer {
+    gap: 8px;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}

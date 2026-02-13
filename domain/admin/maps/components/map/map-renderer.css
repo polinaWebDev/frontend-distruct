@@ -1,0 +1,33 @@
+.leaflet-marker-icon {
+    /* background-color: transparent !important;
+  border: none !important; */
+}
+
+.leaflet-popup-content-wrapper {
+    background: var(--color-map-overlay-bg) !important;
+    border: none !important;
+}
+
+.leaflet-popup-tip {
+    background: var(--color-map-overlay-bg) !important;
+}
+
+.leaflet-popup {
+    border-radius: 6px !important;
+
+    color: white;
+}
+
+/* Reduce tile seams caused by subpixel rendering */
+.leaflet-container,
+.leaflet-tile-container {
+    background-color: rgb(58, 58, 58);
+}
+
+.leaflet-tile {
+    outline: 0;
+    backface-visibility: hidden;
+    image-rendering: auto;
+    transform: translateZ(0) scale(1.01);
+    transform-origin: 0 0;
+}

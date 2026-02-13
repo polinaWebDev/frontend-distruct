@@ -1,0 +1,36 @@
+.container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    margin-top: 42px;
+    margin-bottom: 22px;
+
+    .item {
+        padding: 12px 15px;
+        border-radius: 10px;
+
+        color: #79808e;
+
+        background: rgba(17, 17, 18, 70%);
+        border: 1px solid #79808e;
+
+        cursor: pointer;
+
+        transition: 0.15s ease-in-out;
+        line-height: normal;
+        text-transform: capitalize;
+
+        &:hover,
+        &.active {
+            border-color: #f5a02f;
+            color: white;
+        }
+
+        font-size: 15px;
+        font-weight: 500;
+    }
+}

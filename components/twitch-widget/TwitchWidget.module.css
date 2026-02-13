@@ -1,0 +1,149 @@
+.widget {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    background: rgba(14, 14, 16, 0.88);
+    color: #f7f2ff;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    font-family: var(--font-thicker, 'Thicker Variable Trial', sans-serif);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px 12px 0 0;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+}
+
+.header:active {
+    cursor: grabbing;
+}
+
+.title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.dragHint {
+    font-size: 10px;
+    opacity: 0.6;
+    margin-left: auto;
+}
+
+.close {
+    border: none;
+    background: transparent;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+}
+
+.close:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.body {
+    padding: 10px 12px 12px;
+    display: grid;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.channel {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.live {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: #ff6b6b;
+}
+
+.live::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ff5252;
+    box-shadow: 0 0 6px rgba(255, 82, 82, 0.9);
+}
+
+.offline {
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.updated {
+    font-size: 10px;
+    opacity: 0.5;
+}
+
+.statusMuted {
+    font-size: 11px;
+    opacity: 0.6;
+}
+
+.statusError {
+    font-size: 11px;
+    color: #ff7a7a;
+}
+
+.preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.previewPlaceholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+}
+
+@media (max-width: 640px) {
+    .widget {
+        width: 220px;
+    }
+
+    .dragHint {
+        display: none;
+    }
+}

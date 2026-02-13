@@ -1,0 +1,22 @@
+{
+    "Nav": {
+        "news": "News",
+        "maps": "Maps",
+        "randomizer": "Randomizer",
+        "challenges": "Challenges",
+        "user_dashboard": "User Dashboard"
+    },
+    "Games": {
+        "Arena": "Arena Breakout: Infinite",
+        "Tarkov": "Escape from Tarkov",
+        "ActiveMatter": "Active Matter",
+        "ArcRaiders": "Arc Raiders"
+    },
+    "MainPage": {
+        "title": "Your main companion in Extraction shooters"
+    },
+    "Languages": {
+        "en": "EN",
+        "ru": "RU"
+    }
+}

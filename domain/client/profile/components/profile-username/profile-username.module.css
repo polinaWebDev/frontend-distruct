@@ -1,0 +1,48 @@
+.container {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 8px;
+
+    .icon {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        flex-shrink: 0;
+        display: flex;
+
+        path {
+            stroke: #79808e;
+            transition: 0.3s;
+        }
+
+        &:hover {
+            cursor: pointer;
+
+            path {
+                stroke: #f5a02f;
+            }
+        }
+    }
+}
+
+.username {
+    font-size: 36px;
+    font-weight: 500;
+    color: white;
+
+    @media (max-width: 840px) {
+        font-size: 24px;
+    }
+}
+/* 
+
+.input {
+  
+  margin-bottom: 8px;
+} */

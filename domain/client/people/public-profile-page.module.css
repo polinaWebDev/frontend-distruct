@@ -1,0 +1,79 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.header {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #2a2f3a;
+}
+
+.placeholder {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #2a2f3a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #c5c9d3;
+    font-size: 20px;
+}
+
+.title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #fff;
+}
+
+.subtitle {
+    font-size: 14px;
+    color: #8b94a6;
+}
+
+.lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+}
+
+.listCard {
+    border: 1px solid var(--color-stroke);
+    border-radius: 16px;
+    padding: 14px;
+    background: var(--color-secondary-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.listTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.listMeta {
+    font-size: 13px;
+    color: #9aa3b2;
+}
+
+.emptyState {
+    padding: 32px;
+    text-align: center;
+    color: #8b94a6;
+    border: 1px dashed var(--color-stroke);
+    border-radius: 16px;
+}

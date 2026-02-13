@@ -1,0 +1,25 @@
+.random_gear_copy_icon {
+    cursor: pointer;
+
+    #copy_icon_background {
+        fill: #0d0f15;
+
+        transition: 0.3s;
+    }
+
+    #copy_icon_stroke {
+        stroke: #f5a02f;
+
+        transition: 0.3s;
+    }
+
+    &:hover {
+        #copy_icon_background {
+            fill: #f5a02f;
+        }
+
+        #copy_icon_stroke {
+            stroke: white;
+        }
+    }
+}

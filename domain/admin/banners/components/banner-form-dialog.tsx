@@ -1,0 +1,310 @@
+'use client';
+
+import { useEffect, useMemo, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { z } from 'zod';
+import { toast } from 'sonner';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { zCreateBannerAdminDto, zUpdateBannerAdminDto } from '@/lib/api_client/gen/zod.gen';
+import type { BannerAdminResponseDto } from '@/lib/api_client/gen/types.gen';
+import { getFileUrl } from '@/lib/utils';
+import {
+    bannersAdminControllerCreateBanner,
+    bannersAdminControllerUpdateBanner,
+} from '@/lib/api_client/gen/sdk.gen';
+import { getPublicClient } from '@/lib/api_client/public_client';
+
+const TYPE_OPTIONS = [
+    { label: 'image', value: 'image' },
+    { label: 'video', value: 'video' },
+] as const;
+
+type CreateBannerFormData = z.infer<typeof zCreateBannerAdminDto>;
+
+type UpdateBannerFormData = z.infer<typeof zUpdateBannerAdminDto> & {
+    type?: 'image' | 'video';
+};
+
+type BannerFormDialogProps = {
+    open: boolean;
+    mode: 'create' | 'edit';
+    banner?: BannerAdminResponseDto | null;
+    onOpenChange: (open: boolean) => void;
+    onSuccess: () => void;
+};
+
+export function BannerFormDialog({
+    open,
+    mode,
+    banner,
+    onOpenChange,
+    onSuccess,
+}: BannerFormDialogProps) {
+    const [file, setFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    const isEdit = mode === 'edit';
+
+    const form = useForm<CreateBannerFormData | UpdateBannerFormData>({
+        resolver: zodResolver(isEdit ? zUpdateBannerAdminDto : zCreateBannerAdminDto),
+        defaultValues: isEdit
+            ? {
+                  title: banner?.title ?? '',
+                  type: (banner?.type as 'image' | 'video') ?? 'image',
+                  link_url: banner?.linkUrl ?? undefined,
+              }
+            : {
+                  title: '',
+                  type: 'image',
+                  link_url: undefined,
+                  file: '',
+              },
+    });
+
+    const watchedType = form.watch('type');
+
+    useEffect(() => {
+        if (!open) return;
+        if (isEdit) {
+            form.reset({
+                title: banner?.title ?? '',
+                type: (banner?.type as 'image' | 'video') ?? 'image',
+                link_url: banner?.linkUrl ?? undefined,
+            });
+            setFile(null);
+            setPreviewUrl(null);
+        } else {
+            form.reset({
+                title: '',
+                type: 'image',
+                link_url: undefined,
+                file: '',
+            });
+            setFile(null);
+            setPreviewUrl(null);
+        }
+    }, [open, isEdit, banner, form]);
+
+    useEffect(() => {
+        if (!file) return;
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+        return () => URL.revokeObjectURL(url);
+    }, [file]);
+
+    useEffect(() => {
+        if (!open) return;
+        setFile(null);
+        setPreviewUrl(null);
+    }, [watchedType, open]);
+
+    const currentPreview = useMemo(() => {
+        if (previewUrl) return previewUrl;
+        if (isEdit && banner?.fileUrl) return getFileUrl(banner.fileUrl);
+        return null;
+    }, [previewUrl, isEdit, banner]);
+
+    const handleSubmit = async (data: CreateBannerFormData | UpdateBannerFormData) => {
+        const linkUrl = data.link_url?.trim() ? data.link_url : null;
+        const type = data.type as 'image' | 'video';
+
+        if (!isEdit && !file) {
+            toast.error('Файл обязателен');
+            return;
+        }
+
+        if (isEdit && banner && type !== banner.type && !file) {
+            toast.error('При смене типа требуется новый файл');
+            return;
+        }
+
+        try {
+            if (isEdit && banner) {
+                await bannersAdminControllerUpdateBanner({
+                    client: getPublicClient(),
+                    path: { id: banner.id },
+                    body: {
+                        title: data.title,
+                        type,
+                        link_url: linkUrl,
+                        ...(file ? { file } : {}),
+                    } as any,
+                });
+            } else {
+                await bannersAdminControllerCreateBanner({
+                    client: getPublicClient(),
+                    body: {
+                        title: data.title,
+                        type,
+                        link_url: linkUrl,
+                        ...(file ? { file } : {}),
+                    } as any,
+                });
+            }
+
+            toast.success(isEdit ? 'Баннер обновлён' : 'Баннер создан');
+            onSuccess();
+            onOpenChange(false);
+        } catch (error) {
+            console.error(error);
+            toast.error('Ошибка при сохранении баннера');
+        }
+    };
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                    <DialogTitle>{isEdit ? 'Редактировать баннер' : 'Создать баннер'}</DialogTitle>
+                    <DialogDescription>
+                        {isEdit
+                            ? 'Обновите метаданные или замените файл.'
+                            : 'Загрузите изображение или видео для баннера.'}
+                    </DialogDescription>
+                </DialogHeader>
+
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+                        <FormField
+                            control={form.control}
+                            name="title"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Заголовок *</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Например: Winter Sale" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="type"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Тип *</FormLabel>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value as string}
+                                    >
+                                        <FormControl>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Выберите тип" />
+                                            </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            {TYPE_OPTIONS.map((option) => (
+                                                <SelectItem key={option.value} value={option.value}>
+                                                    {option.label}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormItem>
+                            <FormLabel>{isEdit ? 'Заменить файл' : 'Файл *'}</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="file"
+                                    accept={
+                                        watchedType === 'video'
+                                            ? 'video/mp4,video/webm'
+                                            : 'image/jpeg,image/png,image/webp,image/gif'
+                                    }
+                                    onChange={(e) => {
+                                        const selected = e.target.files?.[0] ?? null;
+                                        setFile(selected);
+                                    }}
+                                />
+                            </FormControl>
+                        </FormItem>
+
+                        <FormField
+                            control={form.control}
+                            name="link_url"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Ссылка</FormLabel>
+                                    <FormControl>
+                                        <Input
+                                            {...field}
+                                            value={field.value ?? ''}
+                                            placeholder="https://example.com"
+                                        />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <div className="rounded-lg border p-4">
+                            <p className="text-sm text-muted-foreground mb-2">Превью</p>
+                            {currentPreview ? (
+                                watchedType === 'video' ? (
+                                    <video
+                                        src={currentPreview}
+                                        muted
+                                        controls={false}
+                                        className="w-full max-h-56 object-contain rounded-md bg-black/10"
+                                    />
+                                ) : (
+                                    <img
+                                        src={currentPreview}
+                                        alt="preview"
+                                        className="w-full max-h-56 object-contain rounded-md bg-black/10"
+                                    />
+                                )
+                            ) : (
+                                <div className="h-32 rounded-md bg-muted flex items-center justify-center text-sm text-muted-foreground">
+                                    Превью появится после выбора файла
+                                </div>
+                            )}
+                        </div>
+
+                        <DialogFooter>
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => onOpenChange(false)}
+                            >
+                                Отмена
+                            </Button>
+                            <Button type="submit">Сохранить</Button>
+                        </DialogFooter>
+                    </form>
+                </Form>
+            </DialogContent>
+        </Dialog>
+    );
+}

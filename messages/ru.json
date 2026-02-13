@@ -1,0 +1,36 @@
+{
+    "Nav": {
+        "news": "Новости",
+        "maps": "Карты",
+        "randomizer": "Рандомайзер",
+        "challenges": "Челленджи",
+        "user_dashboard": "Личный кабинет"
+    },
+    "Games": {
+        "Arena": "Arena Breakout: Infinite",
+        "Tarkov": "Escape from Tarkov",
+        "ActiveMatter": "Active Matter",
+        "ArcRaiders": "Arc Raiders"
+    },
+    "MainPage": {
+        "title": "Твой главный помощник в Extraction шутерах"
+    },
+    "Languages": {
+        "en": "EN",
+        "ru": "RU"
+    },
+    "Randomizer": {
+        "difficulty_picker": {
+            "title": "РАНДОМАЙЗЕР",
+            "desc": "Автоматический и рандомный подбор экипировки в твой следующий рейд",
+            "difficulty": "Уровень сложности",
+            "generate": "Сгенерировать"
+        },
+        "generated": {
+            "picked_difficulty": "Уровень сложности:",
+            "additional_rules": "Дополнительное усложнение",
+            "generate_new": "Новая генерация",
+            "go_back": "Вернуться назад"
+        }
+    }
+}

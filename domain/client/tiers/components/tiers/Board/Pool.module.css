@@ -1,0 +1,14 @@
+.pool {
+    background: #0f0f10;
+    padding: 27px;
+    border: 1px solid #34363d;
+    border-radius: 16px;
+    margin-top: 22px;
+}
+
+.pool_items {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    min-height: 80px;
+}

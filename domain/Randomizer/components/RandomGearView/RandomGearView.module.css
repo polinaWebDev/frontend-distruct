@@ -1,0 +1,124 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+
+    @media (max-width: 1000px) {
+    }
+}
+
+.bottom_btns {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 72px;
+    width: 100%;
+
+    margin-top: 70px;
+
+    .btn {
+        max-width: 384px;
+    }
+
+    @media (max-width: 1000px) {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        gap: 32px;
+
+        padding-bottom: 40px;
+
+        .go_back_btn {
+            width: 100%;
+            justify-content: space-between;
+            max-width: 384px;
+        }
+    }
+}
+
+.loadout_container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+
+    row-gap: 70px;
+    column-gap: 45px;
+    width: 100%;
+}
+
+.difficulty_container {
+    display: flex;
+    width: 100%;
+    margin-bottom: 40px;
+
+    p {
+        font-size: 16px;
+        font-weight: 500;
+        color: #79808e;
+
+        span {
+            font-weight: 600;
+        }
+    }
+}
+
+.additional_challenges_container {
+    margin-top: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 22px;
+    width: 100%;
+
+    .title {
+        font-size: 18px;
+        font-family: var(--font-thicker);
+        font-weight: 600;
+        color: white;
+    }
+
+    .items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        .item {
+            padding: 25px;
+            border-radius: 10px;
+
+            border: 1px solid #232527;
+
+            background: linear-gradient(
+                -101.701deg,
+                rgba(39, 41, 44, 7%) 0%,
+                rgba(10, 11, 11, 28%) 100%
+            );
+
+            p {
+                color: #f5a02f;
+                font-weight: 500;
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+/* .bg_gradient {
+  position: fixed;
+  z-index: -1;
+
+  bottom: 0;
+  right: 0;
+
+  width: 100svw;
+  height: 100svh;
+
+
+  background: linear-gradient(-51.194deg, rgba(75, 98, 241, 10%) 0%, rgba(43, 57, 139, 0%) 100%);
+} */

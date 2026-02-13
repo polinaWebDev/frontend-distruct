@@ -1,0 +1,19 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+        NEXT_PUBLIC_GOOGLE_OAUTH_URL: ${NEXT_PUBLIC_GOOGLE_OAUTH_URL}
+        NEXT_PUBLIC_FILE_URL: ${NEXT_PUBLIC_FILE_URL}
+    environment:
+      SERVER_API_URL: ${SERVER_API_URL}
+    ports:
+      - "3001:3000"
+    networks:
+      - distruct-net
+
+networks:
+  distruct-net:
+    external: true

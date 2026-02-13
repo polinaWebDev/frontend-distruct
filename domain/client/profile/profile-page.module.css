@@ -1,0 +1,65 @@
+.container {
+    min-height: calc(100svh - var(--header-height));
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
+
+    .content {
+        max-width: 733px;
+        width: 100%;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+
+        gap: 50px;
+
+        @media (max-width: 840px) {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    .right {
+        width: 100%;
+
+        .username {
+            font-size: 36px;
+            font-weight: 500;
+            color: white;
+
+            margin-bottom: 8px;
+        }
+
+        .email {
+            font-size: 15px;
+            font-weight: 500;
+            color: #79808e;
+
+            margin-bottom: 32px;
+        }
+    }
+}
+
+.logout_btn {
+    max-width: 150px;
+    margin-top: 32px;
+}
+
+.actionsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+}
+
+.editProfileBtn {
+    background: #f5a02f !important;
+    color: #0f0f10 !important;
+}

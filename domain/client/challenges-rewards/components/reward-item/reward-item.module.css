@@ -1,0 +1,107 @@
+.container {
+    width: 100%;
+
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+
+    overflow: hidden;
+    border-radius: 13px;
+    border: 1px solid #34363d;
+    background: #0f0f10;
+
+    gap: 21px;
+
+    @media (max-width: 620px) {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        @media (max-width: 620px) {
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            gap: 20px;
+
+            padding: 0 20px;
+        }
+    }
+
+    .img {
+        width: 171px;
+        height: 100%;
+        object-fit: cover;
+
+        @media (max-width: 620px) {
+            width: 100%;
+            height: 120px;
+        }
+    }
+
+    .text {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        gap: 31px;
+
+        padding: 28px 0;
+
+        @media (max-width: 620px) {
+            flex-direction: column;
+            padding: 0;
+            padding-bottom: 28px;
+        }
+
+        .item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+
+            gap: 6px;
+
+            border-radius: 13px;
+
+            .title {
+                font-size: 15px;
+                font-weight: 500;
+                color: white;
+                text-align: left;
+            }
+
+            .desc {
+                font-size: 13px;
+                font-weight: 500;
+                color: #79808e;
+                text-align: left;
+            }
+        }
+    }
+}
+
+.btn_container {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding-right: 30px;
+
+    @media (max-width: 620px) {
+        padding-right: 0;
+        margin-left: unset;
+
+        padding-bottom: 20px;
+    }
+
+    .btn {
+        width: 150px;
+    }
+}

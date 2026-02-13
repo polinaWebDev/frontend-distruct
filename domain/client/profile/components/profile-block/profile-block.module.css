@@ -1,0 +1,29 @@
+.block {
+    background-color: #0f0f10;
+    border: 1px solid #34363d;
+    padding: 22px;
+    width: 100%;
+    border-radius: 13px;
+    margin-bottom: 22px;
+
+    .title {
+        font-family: var(--font-thicker);
+        font-size: 15px;
+        font-weight: 600;
+        color: white;
+
+        margin-bottom: 12px;
+    }
+
+    .desc {
+        font-size: 13px;
+        font-weight: 500;
+        color: #79808e;
+
+        margin-bottom: 22px;
+    }
+
+    .soon {
+        max-width: 150px;
+    }
+}

@@ -1,0 +1,123 @@
+.container {
+    background: #0f0f10;
+    border: 1px solid #34363d;
+
+    padding: 16px 36px 20px 16px;
+
+    border-radius: 13px;
+
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+
+    justify-content: flex-start;
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+
+        border-radius: 100%;
+
+        object-fit: cover;
+
+        margin-right: 11px;
+    }
+
+    .content {
+        flex: 1;
+        min-width: 0;
+
+        .user {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-start;
+            gap: 12px;
+
+            .username {
+                font-size: 15px;
+                color: #b3b8c2;
+                font-weight: 500;
+            }
+
+            .date {
+                font-size: 13px;
+                color: #79808e;
+                font-weight: 500;
+            }
+        }
+
+        .text {
+            margin-top: 4px;
+            color: #b3b8c2;
+            font-size: 13px;
+
+            /* Text wrapping and word breaking */
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+
+            /* Prevent text overflow */
+            white-space: pre-wrap;
+
+            /* Ensure content doesn't overflow container */
+            max-width: 100%;
+
+            padding-right: 10px;
+        }
+    }
+
+    .actions {
+        margin-left: auto;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        margin-top: 16px;
+
+        .vote_container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+
+            .icon {
+                width: 10px;
+                height: 12px;
+
+                path {
+                    stroke: #79808e;
+                }
+
+                &.down {
+                    transform: rotate(180deg);
+                }
+            }
+
+            &.active,
+            &:hover {
+                .icon {
+                    path {
+                        stroke: var(--color-brand);
+                    }
+                }
+            }
+
+            &.loading {
+                opacity: 0.5;
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+
+            .count {
+                font-size: 13px;
+                color: #79808e;
+                font-weight: 500;
+            }
+        }
+    }
+}

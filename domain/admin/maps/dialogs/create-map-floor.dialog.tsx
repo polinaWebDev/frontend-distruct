@@ -1,0 +1,127 @@
+import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { mapsControllerGetMapQueryKey } from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import { getPublicClient } from '@/lib/api_client/public_client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { PlusIcon } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import z from 'zod';
+
+const schema = z.object({
+    map_id: z.string(),
+    name: z.string().min(1, 'Введите название'),
+    level: z.coerce.number().int().min(1, 'Номер этажа должен быть >= 1'),
+});
+
+export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
+    const queryClient = useQueryClient();
+    const form = useForm<z.infer<typeof schema>>({
+        resolver: zodResolver(schema),
+        defaultValues: {
+            map_id,
+            name: '',
+            level: 1,
+        },
+        mode: 'onChange',
+    });
+
+    const { mutate: createFloor, isPending } = useMutation({
+        mutationFn: async (body: z.infer<typeof schema>) => {
+            const client = getPublicClient();
+            const response = await client.request({
+                method: 'POST',
+                url: '/api/map/admin/create-floor',
+                headers: { 'Content-Type': 'application/json' },
+                body,
+                throwOnError: true,
+            });
+            return response.data;
+        },
+        onSuccess: () => {
+            toast.success('Этаж создан');
+            queryClient.resetQueries({
+                queryKey: mapsControllerGetMapQueryKey({
+                    path: { id: map_id },
+                    client: getPublicClient(),
+                }),
+            });
+        },
+        onError: (error) => {
+            console.error(error);
+            toast.error('Ошибка при создании этажа');
+        },
+    });
+
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button>
+                    <PlusIcon />
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Создать этаж</DialogTitle>
+                    <DialogDescription>Добавьте новый слой/этаж для карты</DialogDescription>
+                </DialogHeader>
+                <Form {...form}>
+                    <div className="flex flex-col gap-4">
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Название</FormLabel>
+                                    <FormControl>
+                                        <Input {...field} placeholder="Этаж 2" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="level"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Номер этажа</FormLabel>
+                                    <FormControl>
+                                        <Input type="number" min={1} {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                    </div>
+                </Form>
+                <DialogFooter>
+                    <Button
+                        disabled={!form.formState.isValid || isPending}
+                        onClick={() => createFloor(form.getValues())}
+                    >
+                        {isPending ? 'Создание...' : 'Создать'}
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+};

@@ -1,0 +1,18 @@
+.buttons {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-left: 14px;
+    flex-direction: column;
+}
+
+.button {
+    border: 1px solid #34363d;
+    background-color: transparent;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+}

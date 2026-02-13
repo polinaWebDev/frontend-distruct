@@ -1,0 +1,144 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+        font-family: var(--font-thicker);
+        font-weight: 600;
+
+        font-size: 24px;
+
+        margin-bottom: 14px;
+
+        color: white;
+    }
+
+    .desc {
+        font-size: 16px;
+        font-weight: 500;
+
+        color: #929cad;
+
+        max-width: 540px;
+        text-align: center;
+
+        margin-bottom: 46px;
+    }
+
+    .difficulty_picker_title {
+        font-family: var(--font-thicker);
+        font-weight: 500;
+
+        margin-top: 50px;
+        margin-bottom: 23px;
+    }
+}
+
+.difficulty_items {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    @media (max-width: 590px) {
+        flex-wrap: wrap;
+    }
+}
+
+.difficulty_item {
+}
+
+.difficulty_button {
+    position: relative;
+
+    cursor: pointer;
+
+    p {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        font-size: 16px;
+        font-weight: 500;
+
+        color: #c9ced8;
+
+        transition: 0.3s ease-in-out;
+
+        user-select: none;
+    }
+
+    svg {
+        path {
+            transition: 0.3s ease-in-out;
+        }
+    }
+
+    &.hovered {
+        p {
+            color: black;
+        }
+    }
+}
+
+.generate_button {
+    margin-top: 33px;
+}
+
+.group_button {
+    position: relative;
+    cursor: pointer;
+
+    p {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        color: #79808e;
+        transition: 0.15s ease-in-out;
+
+        font-size: 13px;
+        font-weight: 500;
+    }
+
+    path {
+        stroke: #79808e;
+        fill: transparent;
+
+        transition: 0.15s ease-in-out;
+    }
+
+    &.selected,
+    &:hover {
+        p {
+            color: black;
+        }
+
+        path {
+            stroke: white;
+            fill: white;
+        }
+    }
+}
+
+.challenge_selector_container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    margin-bottom: 69px;
+
+    .challenge_picker_title {
+        font-family: var(--font-thicker);
+        font-weight: 500;
+        font-size: 16px;
+
+        margin-bottom: 20px;
+    }
+}

@@ -1,0 +1,31 @@
+.map-info-btn {
+    position: relative;
+
+    cursor: pointer;
+    transition: 0.3s;
+
+    margin-left: auto;
+
+    p {
+        position: absolute;
+        top: 50%;
+        left: 8px;
+
+        transform: translateY(-50%);
+
+        color: black;
+        font-size: 13px;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .map_btn_icon_background {
+        transition: 0.3s;
+    }
+
+    &:hover {
+        .map_btn_icon_background {
+            fill: var(--color-brand);
+        }
+    }
+}

@@ -1,0 +1,137 @@
+.container {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+
+    z-index: 100;
+
+    width: 334px;
+
+    background: var(--color-map-overlay-bg);
+
+    border-radius: 13px;
+
+    padding: 0 0 33px 0;
+
+    &.hidden {
+        width: fit-content !important;
+        background: var(--color-map-overlay-bg);
+        padding: 11px;
+        border-radius: 6px;
+        padding: 11px;
+    }
+
+    @media (max-width: 1000px) {
+        &.open {
+            max-height: 100svh;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100svh;
+            background: var(--color-map-overlay-bg);
+            z-index: 200;
+            border-radius: 0;
+        }
+    }
+
+    .title_container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+
+        padding: 20px 22px 20px 22px;
+
+        p {
+            font-family: var(--font-thicker);
+            font-weight: 500;
+            font-size: 15px;
+            color: #ffffff;
+        }
+    }
+
+    .filters_container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+
+        padding: 0 31px 0 27px;
+
+        width: 100%;
+
+        .filter {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 24px;
+            width: 100%;
+
+            .color {
+                width: 5px;
+                height: 5px;
+                border-radius: 100%;
+            }
+
+            p {
+                font-size: 15px;
+                font-weight: 500;
+                color: #ffffff;
+            }
+
+            .switch_container {
+                margin-left: auto;
+                position: relative;
+                width: 49px;
+                height: 24px;
+
+                transition: 0.3s;
+
+                cursor: pointer;
+                background: #36363b;
+
+                border-radius: 37px;
+
+                .circle {
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 100%;
+                    background: #6f6f74;
+                    position: absolute;
+                    top: 2px;
+                    left: 2px;
+
+                    transition: 0.3s;
+                }
+
+                &.active {
+                    background: #f5a02f;
+
+                    .circle {
+                        left: calc(100% - 22px);
+                        background: black;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.separator {
+    width: 252px;
+    height: 1px;
+    background: #33333c;
+    margin: 15px auto;
+
+    @media (max-width: 1000px) {
+        width: 100%;
+    }
+}

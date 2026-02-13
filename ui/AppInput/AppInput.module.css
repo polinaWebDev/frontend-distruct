@@ -1,0 +1,58 @@
+.input_container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 8px;
+    width: 100%;
+
+    label {
+        font-weight: 500;
+        font-size: 13px;
+        color: #79808e;
+    }
+
+    .input {
+        width: 100%;
+        background: #18191b;
+
+        outline: none;
+        border: 1px solid #303236;
+
+        padding: 10px 12px;
+
+        border-radius: 5px;
+
+        resize: none;
+
+        font-size: 13px;
+        font-weight: 400;
+        color: white;
+
+        transition: 0.3s;
+
+        &:focus {
+            border-color: var(--color-brand);
+        }
+
+        &.errored {
+            border-color: #e74c3c;
+        }
+
+        &::placeholder {
+            color: #7d838c;
+        }
+    }
+
+    .error_message {
+        font-size: 12px;
+        font-weight: 400;
+        color: #e74c3c;
+    }
+
+    .desc {
+        font-size: 12px;
+        font-weight: 400;
+        color: #79808e;
+    }
+}

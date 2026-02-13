@@ -1,0 +1,54 @@
+.header_wrapper {
+    width: 100%;
+
+    position: fixed;
+    top: 20px;
+
+    z-index: 100;
+
+    padding: 0 var(--page-horizontal-padding);
+
+    @media (max-width: 1000px) {
+        display: none !important;
+    }
+}
+
+.header_top_bar {
+    width: 100%;
+    height: 89px;
+
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    background: #111112c9;
+
+    padding: 0 30px;
+
+    border-radius: 10px;
+
+    backdrop-filter: blur(10px);
+}
+
+.games {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+    gap: 11px;
+
+    height: 100%;
+
+    margin-left: 120px;
+}
+
+.logo {
+    margin-left: 39px;
+}
+
+.header_bottom_bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 13px;
+    margin-top: 13px;
+}
