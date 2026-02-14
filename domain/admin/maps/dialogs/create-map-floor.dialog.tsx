@@ -21,7 +21,7 @@ import { mapsControllerGetMapQueryKey } from '@/lib/api_client/gen/@tanstack/rea
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { PlusIcon } from 'lucide-react';
+import { createLucideIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -31,6 +31,23 @@ const schema = z.object({
     name: z.string().min(1, 'Введите название'),
     level: z.coerce.number().int().min(1, 'Номер этажа должен быть >= 1'),
 });
+
+const LayersPlusIcon = createLucideIcon('LayersPlus', [
+    [
+        'path',
+        {
+            d: 'M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 .83.18 2 2 0 0 0 .83-.18l8.58-3.9a1 1 0 0 0 0-1.831z',
+            key: '1',
+        },
+    ],
+    ['path', { d: 'M16 17h6', key: '2' }],
+    ['path', { d: 'M19 14v6', key: '3' }],
+    ['path', { d: 'M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 .825.178', key: '4' }],
+    [
+        'path',
+        { d: 'M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l2.116-.962', key: '5' },
+    ],
+]);
 
 export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
     const queryClient = useQueryClient();
@@ -75,7 +92,7 @@ export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
         <Dialog>
             <DialogTrigger asChild>
                 <Button>
-                    <PlusIcon />
+                    <LayersPlusIcon />
                 </Button>
             </DialogTrigger>
             <DialogContent>

@@ -35,12 +35,15 @@ import type { UserAdminRow } from '../types';
 
 const userRoleValues = ['admin', 'user'] as const;
 
+const fileListSchema =
+    typeof FileList !== 'undefined' ? z.instanceof(FileList) : z.any();
+
 const formSchema = z.object({
     username: z.string().min(1, 'Username is required'),
     email: z.string().email('Invalid email'),
     role: z.enum(userRoleValues),
     points: z.number().min(0),
-    file: z.instanceof(FileList).optional(),
+    file: fileListSchema.optional(),
 });
 
 type UserFormValues = z.infer<typeof formSchema>;

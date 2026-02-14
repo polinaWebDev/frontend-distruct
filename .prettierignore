@@ -1,7 +1,5 @@
-node_modules
-.next
-out
-build
-dist
-lib/api_client/gen
-
+node_modules.next;
+out;
+build;
+dist;
+lib / api_client / gen;

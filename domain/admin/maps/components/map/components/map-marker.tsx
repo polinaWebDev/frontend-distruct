@@ -1,27 +1,24 @@
 import { MapDataMarkerDto, MapDataMarkerTypeDto } from '@/lib/api_client/gen';
 import styles from './map-marker.module.css';
-import { hexToRgba } from '@/lib/utils';
 export const MapMarker = ({
     data,
     marker_type,
     color,
+    draggable = false,
 }: {
     data: MapDataMarkerDto;
     marker_type: MapDataMarkerTypeDto;
     color: string;
+    draggable?: boolean;
 }) => {
     return (
         <div
-            className={styles.container}
+            className={`${styles.icon} ${draggable ? styles.draggable : ''}`}
             style={{
-                border: '1px solid ' + color,
-                boxShadow: `0px 0px 23.899999618530273px 4px ${hexToRgba(color, 0.5)}`,
+                ['--marker-shadow-color' as string]: color,
             }}
         >
-            <div
-                className={styles.icon}
-                dangerouslySetInnerHTML={{ __html: marker_type.icon }}
-            ></div>
+            <div dangerouslySetInnerHTML={{ __html: marker_type.icon }}></div>
         </div>
     );
 };

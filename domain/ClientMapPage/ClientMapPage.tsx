@@ -78,7 +78,6 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
                     selectedTypeId={selectedTypeId}
                 />
             </Activity>
-
         </div>
     );
 };

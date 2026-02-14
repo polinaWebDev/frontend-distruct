@@ -124,8 +124,10 @@ export const AppTextarea = ({
     );
 };
 
-export interface AppControlledInputProps<T extends FieldValues>
-    extends Omit<AppInputProps, 'onText' | 'onFocus' | 'onBlur' | 'value' | 'errorMessage'> {
+export interface AppControlledInputProps<T extends FieldValues> extends Omit<
+    AppInputProps,
+    'onText' | 'onFocus' | 'onBlur' | 'value' | 'errorMessage'
+> {
     control: Control<T>; // `T` is the form schema type
     name: Path<T>; // `Path<T>` ensures that `name` is one of the keys of the form schema
     transform?: (x: string) => string;
@@ -164,8 +166,10 @@ export function AppControlledInput<T extends FieldValues>({
     );
 }
 
-export interface AppControlledTextareaProps<T extends FieldValues>
-    extends Omit<AppTextareaProps, 'onText' | 'onFocus' | 'onBlur' | 'value' | 'errorMessage'> {
+export interface AppControlledTextareaProps<T extends FieldValues> extends Omit<
+    AppTextareaProps,
+    'onText' | 'onFocus' | 'onBlur' | 'value' | 'errorMessage'
+> {
     control: Control<T>; // `T` is the form schema type
     name: Path<T>; // `Path<T>` ensures that `name` is one of the keys of the form schema
     transform?: (x: string) => string;

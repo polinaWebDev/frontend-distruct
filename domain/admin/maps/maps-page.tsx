@@ -186,9 +186,7 @@ export const MapsPage = () => {
                             categories={fullMapDataRes.categories ?? []}
                             onSelect={(x: string) => {
                                 setSelectedCategories((prev) =>
-                                    prev.includes(x)
-                                        ? prev.filter((y) => y !== x)
-                                        : [...prev, x]
+                                    prev.includes(x) ? prev.filter((y) => y !== x) : [...prev, x]
                                 );
                             }}
                             selected={selectedCategories}
@@ -212,7 +210,6 @@ export const MapsPage = () => {
                             selectedTypeId={selectedTypeId}
                         />
                     </Activity>
-
                 </div>
             )}
 

@@ -93,6 +93,7 @@ export const MapRenderer = memo(
     }) => {
         const map = useRef<Map | null>(null);
         const [clickedLatLng, setClickedLatLng] = useState<LatLng | null>(null);
+        const [createDialogOpen, setCreateDialogOpen] = useState(false);
         const queryClient = useQueryClient();
         const floors = map_data.floors ?? [];
         const activeFloorId = selectedFloorId ?? floors[0]?.id;
@@ -101,10 +102,8 @@ export const MapRenderer = memo(
         const maxZoomValue =
             typeof maxZoomOverride === 'string' ? Number(maxZoomOverride) : maxZoomOverride;
         const maxNativeZoom = Number.isFinite(maxZoomValue) && maxZoomValue >= 0 ? maxZoomValue : 0;
-        const allowOverzoom = admin;
-        const userMaxZoom = maxNativeZoom;
-        const maxZoom = allowOverzoom ? maxNativeZoom + 3 : userMaxZoom;
-        const minZoom = Math.min(2, maxZoom);
+        const maxZoom = maxNativeZoom;
+        const minZoom = 0;
         const initialZoom = Math.min(3, maxZoom);
         const safeInitialZoom = initialZoom < minZoom ? minZoom : initialZoom;
 
@@ -286,9 +285,7 @@ export const MapRenderer = memo(
             >
                 <TileLayer
                     url={`${getFileUrl(
-                        `maps/${map_id}${
-                            activeFloorId ? `/floors/${activeFloorId}` : ''
-                        }/{z}-{x}-{y}.webp`
+                        `maps/${map_id}${activeFloorId ? `/floors/${activeFloorId}` : ''}/{z}-{x}-{y}.webp`
                     )}?random=${tileSalt}`}
                     maxZoom={maxZoom}
                     minZoom={minZoom}
@@ -327,6 +324,7 @@ export const MapRenderer = memo(
                                         data={marker.marker}
                                         marker_type={marker.marker_type}
                                         color={marker.color}
+                                        draggable
                                     />
                                 }
                             >
@@ -401,34 +399,34 @@ export const MapRenderer = memo(
                 )}
 
                 {clickedLatLng && admin && (
-                    <EnhancedMarker
-                        position={clickedLatLng}
-                        icon={
-                            <div className="!bg-transparent flex items-center justify-center size-8 p-2 rounded-sm">
-                                <Button size={'icon'}>
-                                    <MapPinPlusInside className="object-contain w-full" />
-                                </Button>
-                            </div>
-                        }
-                        eventHandlers={{
-                            click: (e) => {
-                                console.log(e);
-                            },
-                        }}
-                    >
-                        <Popup className="!bg-map-overlay-bg">
-                            {/* <div className="w-fit h-fit p-2 rounded-sm bg-black"> */}
-                            <CreateOrUpdateMarkerDialog
-                                key={clickedLatLng.toString()}
-                                cords={clickedLatLng}
-                                map_id={map_id}
-                                available_types={available_types}
-                                floors={floors}
-                                selectedFloorId={activeFloorId}
-                            />
-                            {/* </div> */}
-                        </Popup>
-                    </EnhancedMarker>
+                    <>
+                        <EnhancedMarker
+                            position={clickedLatLng}
+                            icon={
+                                <div className="!bg-transparent flex items-center justify-center size-8 p-2 rounded-sm">
+                                    <Button size={'icon'} className="cursor-pointer">
+                                        <MapPinPlusInside className="object-contain w-full" />
+                                    </Button>
+                                </div>
+                            }
+                            eventHandlers={{
+                                click: () => {
+                                    setCreateDialogOpen(true);
+                                },
+                            }}
+                        />
+                        <CreateOrUpdateMarkerDialog
+                            key={clickedLatLng.toString()}
+                            cords={clickedLatLng}
+                            map_id={map_id}
+                            available_types={available_types}
+                            floors={floors}
+                            selectedFloorId={activeFloorId}
+                            open={createDialogOpen}
+                            onOpenChange={setCreateDialogOpen}
+                            hideTrigger
+                        />
+                    </>
                 )}
             </MapContainer>
         );

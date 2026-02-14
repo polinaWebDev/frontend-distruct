@@ -51,6 +51,10 @@ export const CreateOrUpdateMarkerDialog = ({
     selectedFloorId,
     marker_data,
     marker_id,
+    open: controlledOpen,
+    onOpenChange,
+    hideTrigger = false,
+    defaultOpen = false,
 }: {
     cords: LatLng;
     map_id: string;
@@ -59,8 +63,19 @@ export const CreateOrUpdateMarkerDialog = ({
     selectedFloorId?: string;
     marker_id?: string;
     marker_data?: MapDataMarkerDto;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
+    hideTrigger?: boolean;
+    defaultOpen?: boolean;
 }) => {
-    const [open, setOpen] = useState(false);
+    const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+    const open = controlledOpen ?? uncontrolledOpen;
+    const setOpen = (nextOpen: boolean) => {
+        if (controlledOpen === undefined) {
+            setUncontrolledOpen(nextOpen);
+        }
+        onOpenChange?.(nextOpen);
+    };
     const [imageFile, setImageFile] = useState<File | null>(null);
     const queryClient = useQueryClient();
     const form = useForm<z.infer<typeof schema>>({
@@ -143,9 +158,11 @@ export const CreateOrUpdateMarkerDialog = ({
                 }
             }}
         >
-            <DialogTrigger asChild>
-                <Button>{marker_data ? <PencilIcon /> : <PlusIcon />}</Button>
-            </DialogTrigger>
+            {!hideTrigger && (
+                <DialogTrigger asChild>
+                    <Button>{marker_data ? <PencilIcon /> : <PlusIcon />}</Button>
+                </DialogTrigger>
+            )}
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>

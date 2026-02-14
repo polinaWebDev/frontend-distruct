@@ -17,6 +17,11 @@ import {
     Users,
     Newspaper,
     ListOrdered,
+    ChevronDown,
+    Folder,
+    Boxes,
+    Activity,
+    Store,
 } from 'lucide-react';
 
 import {
@@ -24,114 +29,127 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
     SidebarRail,
 } from '@/components/ui/sidebar';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 // Navigation items
-const navItems = [
-    {
-        title: 'Панель управления',
-        href: '/admin',
-        icon: LayoutDashboard,
-    },
-    {
-        title: 'Предметы',
-        href: '/admin/items',
-        icon: Package,
-    },
-    {
-        title: 'Категории',
-        href: '/admin/categories',
-        icon: Layers,
-    },
-    {
-        title: 'Категории тир-листов',
-        href: '/admin/tier-list-categories',
-        icon: ListOrdered,
-    },
-    {
-        title: 'Типы снаряжения',
-        href: '/admin/gear-types',
-        icon: Tag,
-    },
-    {
-        title: 'Редкости',
-        href: '/admin/rarities',
-        icon: Gem,
-    },
-    {
-        title: 'Рандомные челленджи',
-        href: '/admin/loadout-challenges',
-        icon: Dices,
-    },
-    {
-        title: 'Группы рандомных челленджей',
-        href: '/admin/challenge-groups',
-        icon: Package,
-    },
-    {
-        title: 'Карты',
-        href: '/admin/maps',
-        icon: Map,
-    },
-    {
-        title: 'Сезоны',
-        href: '/admin/seasons',
-        icon: Calendar,
-    },
-    {
-        title: 'Челленджи',
-        href: '/admin/challenges',
-        icon: ListChecks,
-    },
-
-    {
-        title: 'Магазин сезонов',
-        href: '/admin/season-shop',
-        icon: ShoppingCart,
-    },
-    {
-        title: 'Пользователи',
-        href: '/admin/users',
-        icon: Users,
-    },
-    {
-        title: 'Новости',
-        href: '/admin/news',
-        icon: Newspaper,
-    },
-    {
-        title: 'Баннеры',
-        href: '/admin/banners',
-        icon: Newspaper,
-    },
-    {
-        title: 'Размещение баннеров',
-        href: '/admin/banner-placements',
-        icon: ListOrdered,
-    },
-    {
-        title: 'Модерация прогресса',
-        href: '/admin/progress',
-        icon: ListChecks,
-    },
-    {
-        title: 'Покупки',
-        href: '/admin/purchases',
-        icon: ShoppingCart,
-    },
-    {
-        title: 'Предложения',
-        href: '/admin/offers',
-        icon: Newspaper,
-    },
-];
+const navItems = {
+    root: [
+        {
+            title: 'Панель управления',
+            href: '/admin',
+            icon: LayoutDashboard,
+        },
+        {
+            title: 'Карты',
+            href: '/admin/maps',
+            icon: Map,
+        },
+        {
+            title: 'Пользователи',
+            href: '/admin/users',
+            icon: Users,
+        },
+    ],
+    navMain: [
+        {
+            title: 'Контент',
+            icon: Folder,
+            items: [
+                {
+                    title: 'Новости',
+                    href: '/admin/news',
+                },
+                {
+                    title: 'Баннеры',
+                    href: '/admin/banners',
+                },
+                {
+                    title: 'Размещение баннеров',
+                    href: '/admin/banner-placements',
+                },
+                {
+                    title: 'Предложения',
+                    href: '/admin/offers',
+                },
+            ],
+        },
+        {
+            title: 'Активность',
+            icon: Activity,
+            items: [
+                {
+                    title: 'Челленджи',
+                    href: '/admin/challenges',
+                },
+                {
+                    title: 'Рандомные челленджи',
+                    href: '/admin/loadout-challenges',
+                },
+                {
+                    title: 'Группы рандомных челленджей',
+                    href: '/admin/challenge-groups',
+                },
+                {
+                    title: 'Модерация прогресса',
+                    href: '/admin/progress',
+                },
+            ],
+        },
+        {
+            title: 'Предметы',
+            icon: Boxes,
+            items: [
+                {
+                    title: 'Предметы',
+                    href: '/admin/items',
+                },
+                {
+                    title: 'Категории',
+                    href: '/admin/categories',
+                },
+                {
+                    title: 'Категории тир-листов',
+                    href: '/admin/tier-list-categories',
+                },
+                {
+                    title: 'Типы снаряжения',
+                    href: '/admin/gear-types',
+                },
+                {
+                    title: 'Редкости',
+                    href: '/admin/rarities',
+                },
+            ],
+        },
+        {
+            title: 'Сезоны и магазин',
+            icon: Store,
+            items: [
+                {
+                    title: 'Сезоны',
+                    href: '/admin/seasons',
+                },
+                {
+                    title: 'Магазин сезонов',
+                    href: '/admin/season-shop',
+                },
+                {
+                    title: 'Покупки',
+                    href: '/admin/purchases',
+                },
+            ],
+        },
+    ],
+};
 
 export function AppSidebar() {
     const pathname = usePathname();
@@ -158,25 +176,61 @@ export function AppSidebar() {
 
             <SidebarContent>
                 <SidebarGroup>
-                    <SidebarGroupLabel>Управление</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {navItems.map((item) => (
-                                <SidebarMenuItem key={item.href}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={pathname === item.href}
-                                        tooltip={item.title}
-                                    >
-                                        <Link href={item.href}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
+                    <SidebarMenu>
+                        {navItems.root.map((item) => (
+                            <SidebarMenuItem key={item.href}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={pathname === item.href}
+                                    tooltip={item.title}
+                                >
+                                    <Link href={item.href}>
+                                        <item.icon />
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        ))}
+
+                        {navItems.navMain.map((group) => (
+                            <Collapsible
+                                key={group.title}
+                                defaultOpen={group.items?.some(
+                                    (item) => pathname === item.href
+                                )}
+                            >
+                                <SidebarMenuItem>
+                                    <CollapsibleTrigger asChild>
+                                        <SidebarMenuButton className="font-medium">
+                                            <group.icon className="size-4" />
+                                            <span className="flex-1 text-left">
+                                                {group.title}
+                                            </span>
+                                            <ChevronDown className="size-4 transition-transform data-[state=open]:rotate-180" />
+                                        </SidebarMenuButton>
+                                    </CollapsibleTrigger>
+                                    {group.items?.length ? (
+                                        <CollapsibleContent>
+                                            <SidebarMenuSub>
+                                                {group.items.map((item) => (
+                                                    <SidebarMenuSubItem key={item.href}>
+                                                        <SidebarMenuSubButton
+                                                            asChild
+                                                            isActive={pathname === item.href}
+                                                        >
+                                                            <Link href={item.href}>
+                                                                {item.title}
+                                                            </Link>
+                                                        </SidebarMenuSubButton>
+                                                    </SidebarMenuSubItem>
+                                                ))}
+                                            </SidebarMenuSub>
+                                        </CollapsibleContent>
+                                    ) : null}
                                 </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
+                            </Collapsible>
+                        ))}
+                    </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
 
