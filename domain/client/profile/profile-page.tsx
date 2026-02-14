@@ -1,12 +1,11 @@
 'use client';
-import { UserResponseDto } from '@/lib/api_client/gen';
+import { UserResponseDto, authControllerLogout } from '@/lib/api_client/gen';
 import styles from './profile-page.module.css';
 import clsx from 'clsx';
 import { ProfileAvatar } from './components/profile-avatar/profile-avatar';
 import { ProfileBlock } from './components/profile-block/profile-block';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import { ProfileUsername } from './components/profile-username/profile-username';
-import { logout } from '@/actions/user/logout';
 import { FriendsBlock } from './components/friends-block/friends-block';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { GameType } from '@/lib/enums/game_type.enum';
@@ -33,6 +32,14 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     });
 
     const incomingCount = incomingRequests?.requests?.length ?? 0;
+    const handleLogout = async () => {
+        try {
+            await authControllerLogout({ client });
+        } finally {
+            window.location.reload();
+        }
+    };
+
     return (
         <div className={clsx(styles.container, 'page_width_wrapper header_margin_top')}>
             <div className={styles.content}>
@@ -44,9 +51,7 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
                         text="Выйти из аккаунта"
                         className={styles.logout_btn}
                         onClick={() => {
-                            logout().then(() => {
-                                window.location.reload();
-                            });
+                            handleLogout();
                         }}
                     />
                 </div>
