@@ -13,8 +13,6 @@ import { GameType } from '@/lib/enums/game_type.enum';
 import { TiersTabs } from '@/domain/client/tiers/components/tiers-header/tiers-tabs';
 import { TiersTitle } from '@/domain/client/tiers/components/tiers-header/tiers-title';
 import { usersPublicControllerFindPublicById } from '@/lib/api_client/gen';
-import { BannerProvider } from '@/components/banners/BannerProvider';
-import { BannerSlot } from '@/components/banners/BannerSlot';
 
 export async function TiersPublicPage({
     tierListId,
@@ -63,18 +61,13 @@ export async function TiersPublicPage({
     ) as Record<string, PublicGearDto>;
 
     return (
-        <BannerProvider page="tiers">
-            <div className={clsx(styles.container, 'page_width_wrapper', 'header_margin_top')}>
-                <GearProvider gearById={gearById}>
-                    <TiersTitle label={ownerLabel} />
-                    <div className="my-4 flex justify-center">
-                        <BannerSlot slotKey="content_inline" />
-                    </div>
-                    <TiersTabs defaultValue={category?.id} categories={category ? [category] : []}>
-                        <TierList tierList={tierRes.data} readOnly />
-                    </TiersTabs>
-                </GearProvider>
-            </div>
-        </BannerProvider>
+        <div className={clsx(styles.container, 'page_width_wrapper', 'header_margin_top')}>
+            <GearProvider gearById={gearById}>
+                <TiersTitle label={ownerLabel} />
+                <TiersTabs defaultValue={category?.id} categories={category ? [category] : []}>
+                    <TierList tierList={tierRes.data} readOnly />
+                </TiersTabs>
+            </GearProvider>
+        </div>
     );
 }

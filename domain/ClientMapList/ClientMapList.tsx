@@ -15,10 +15,6 @@ export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game
     return (
         <BannerProvider page="maps">
             <div className={clsx(styles.container, 'page_width_wrapper')}>
-                <div className="mb-6 flex justify-center">
-                    <BannerSlot slotKey="content_inline" />
-                </div>
-
                 {maps.length > 0 ? (
                     maps.map((map) => (
                         <Link
@@ -26,13 +22,18 @@ export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game
                             className={styles.map_item}
                             key={map.id}
                         >
-                            <Image
-                                className={styles.preview}
-                                width={517}
-                                height={162}
-                                src={getFileUrl(map.image_url ?? '')}
-                                alt={map.name}
-                            />
+                            <div className={styles.preview_wrap}>
+                                <Image
+                                    className={styles.preview}
+                                    width={517}
+                                    height={162}
+                                    src={getFileUrl(map.image_url ?? '')}
+                                    alt={map.name}
+                                />
+                                {map.visibility === 'private' && (
+                                    <span className={styles.admin_badge}>Только админам</span>
+                                )}
+                            </div>
                             <div className={styles.bottom}>
                                 <p className={styles.title}>{map.name}</p>
                                 <div className={styles.info}>

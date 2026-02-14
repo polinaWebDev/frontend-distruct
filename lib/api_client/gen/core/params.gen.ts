@@ -46,7 +46,7 @@ const extraPrefixesMap: Record<string, Slot> = {
   $body_: 'body',
   $headers_: 'headers',
   $path_: 'path',
-  $query_: 'query'
+  $query_: 'query',
 };
 const extraPrefixes = Object.entries(extraPrefixesMap);
 
@@ -72,12 +72,12 @@ const buildKeyMap = (fields: FieldsConfig, map?: KeyMap): KeyMap => {
       if (config.key) {
         map.set(config.key, {
           in: config.in,
-          map: config.map
+          map: config.map,
         });
       }
     } else if ('key' in config) {
       map.set(config.key, {
-        map: config.map
+        map: config.map,
       });
     } else if (config.args) {
       buildKeyMap(config.args, map);
@@ -102,12 +102,15 @@ const stripEmptySlots = (params: Params) => {
   }
 };
 
-export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsConfig) => {
+export const buildClientParams = (
+  args: ReadonlyArray<unknown>,
+  fields: FieldsConfig,
+) => {
   const params: Params = {
     body: {},
     headers: {},
     path: {},
-    query: {}
+    query: {},
   };
 
   const map = buildKeyMap(fields);
@@ -145,11 +148,15 @@ export const buildClientParams = (args: ReadonlyArray<unknown>, fields: FieldsCo
             params[field.map] = value;
           }
         } else {
-          const extra = extraPrefixes.find(([prefix]) => key.startsWith(prefix));
+          const extra = extraPrefixes.find(([prefix]) =>
+            key.startsWith(prefix),
+          );
 
           if (extra) {
             const [prefix, slot] = extra;
-            (params[slot] as Record<string, unknown>)[key.slice(prefix.length)] = value;
+            (params[slot] as Record<string, unknown>)[
+              key.slice(prefix.length)
+            ] = value;
           } else if ('allowExtra' in config && config.allowExtra) {
             for (const [slot, allowed] of Object.entries(config.allowExtra)) {
               if (allowed) {

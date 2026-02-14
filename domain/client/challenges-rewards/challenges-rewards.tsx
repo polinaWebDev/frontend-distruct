@@ -24,6 +24,8 @@ import { RewardItem } from './components/reward-item/reward-item';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import { getPublicClient } from '@/lib/api_client/public_client';
+import { BannerProvider } from '@/components/banners/BannerProvider';
+import { BannerSlot } from '@/components/banners/BannerSlot';
 export type ChallengesRewardsProps = {
     game: GameType;
     season: CurrentSeasonDto;
@@ -75,90 +77,98 @@ export const ChallengesRewards = ({
     }, [shopItems]);
 
     return (
-        <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
-            <div className={styles.content}>
-                <h1 className={styles.title}>Доступные награды</h1>
-                <div className={styles.info_blocks}>
-                    <ChallengeInfoBlock>
-                        <ChallengeInfoBlockTitle icon={<TrophyIcon />}>
-                            Доступные Награды
-                        </ChallengeInfoBlockTitle>
-                        <ChallengeInfoBlockPoints
-                            btnText="Награды"
-                            points={seasonBalance?.balance ?? 0}
-                            subTitle="Кол-во ваших очков"
-                        />
-                    </ChallengeInfoBlock>
-                    <ChallengeInfoBlock noBottomPadding outerChildren={<ChallengeInfoBlockWave />}>
-                        <ChallengeInfoBlockTitle icon={<CurrentSeasonIcon />}>
-                            Текущий сезон
-                        </ChallengeInfoBlockTitle>
-                        <ChallengeInfoBlockSeasonInfo
-                            items={[
-                                {
-                                    subTitle: 'Сезон',
-                                    content: season.name,
-                                },
-                                {
-                                    subTitle: 'Закончится',
-                                    content: formatDate(new Date(season.ends_at), 'dd.MM.yyyy', {
-                                        locale: ru,
-                                    }),
-                                },
-                                {
-                                    subTitle: 'Наград',
-                                    content: season.rewards_count.toString(),
-                                },
-                                {
-                                    subTitle: 'Челленджей',
-                                    content: season.challenges_count.toString(),
-                                },
-                            ]}
-                        />
-                    </ChallengeInfoBlock>
-                </div>
-                {rewards.length > 0 || isPending || isFetchingNextPage ? (
-                    <div className={styles.rewards}>
-                        {rewards.map((reward) => (
-                            <RewardItem
-                                key={reward.id}
-                                reward={reward}
-                                balance={seasonBalance?.balance ?? 0}
+        <BannerProvider page="challenges_rewards">
+            <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
+                <div className={styles.content}>
+                    <h1 className={styles.title}>Доступные награды</h1>
+                    <div className={styles.info_blocks}>
+                        <ChallengeInfoBlock>
+                            <ChallengeInfoBlockTitle icon={<TrophyIcon />}>
+                                Доступные Награды
+                            </ChallengeInfoBlockTitle>
+                            <ChallengeInfoBlockPoints
+                                btnText="Награды"
+                                points={seasonBalance?.balance ?? 0}
+                                subTitle="Кол-во ваших очков"
                             />
-                        ))}
-                        {(isFetchingNextPage || isPending) && (
-                            <Fragment>
-                                <AppSkeleton className={styles.sk} />
-                                <AppSkeleton className={styles.sk} />
-                                <AppSkeleton className={styles.sk} />
-                                <AppSkeleton className={styles.sk} />
-                            </Fragment>
-                        )}
+                        </ChallengeInfoBlock>
+                        <ChallengeInfoBlock
+                            noBottomPadding
+                            outerChildren={<ChallengeInfoBlockWave />}
+                        >
+                            <ChallengeInfoBlockTitle icon={<CurrentSeasonIcon />}>
+                                Текущий сезон
+                            </ChallengeInfoBlockTitle>
+                            <ChallengeInfoBlockSeasonInfo
+                                items={[
+                                    {
+                                        subTitle: 'Сезон',
+                                        content: season.name,
+                                    },
+                                    {
+                                        subTitle: 'Закончится',
+                                        content: formatDate(new Date(season.ends_at), 'dd.MM.yyyy', {
+                                            locale: ru,
+                                        }),
+                                    },
+                                    {
+                                        subTitle: 'Наград',
+                                        content: season.rewards_count.toString(),
+                                    },
+                                    {
+                                        subTitle: 'Челленджей',
+                                        content: season.challenges_count.toString(),
+                                    },
+                                ]}
+                            />
+                        </ChallengeInfoBlock>
+                        <div className="flex items-center justify-center">
+                            <BannerSlot slotKey="top_inline" />
+                        </div>
                     </div>
-                ) : (
-                    <div className={styles.empty_state}>
-                        <PackageOpen className={styles.empty_state_icon} />
-                        <span className={styles.empty_state_text}>
-                            В этом сезоне пока нет доступных вам наград
-                        </span>
-                    </div>
-                )}
-                {hasNextPage && (
-                    <div className={styles.load_more_btn_container}>
-                        <AppBtn
-                            text="Загрузить ещё"
-                            onClick={() => fetchNextPage()}
-                            disabled={isFetchingNextPage}
-                            className={styles.load_more_btn}
-                            style={'outline_dark'}
-                        />
-                    </div>
-                )}
-            </div>
+                    {rewards.length > 0 || isPending || isFetchingNextPage ? (
+                        <div className={styles.rewards}>
+                            {rewards.map((reward) => (
+                                <RewardItem
+                                    key={reward.id}
+                                    reward={reward}
+                                    balance={seasonBalance?.balance ?? 0}
+                                />
+                            ))}
+                            {(isFetchingNextPage || isPending) && (
+                                <Fragment>
+                                    <AppSkeleton className={styles.sk} />
+                                    <AppSkeleton className={styles.sk} />
+                                    <AppSkeleton className={styles.sk} />
+                                    <AppSkeleton className={styles.sk} />
+                                </Fragment>
+                            )}
+                        </div>
+                    ) : (
+                        <div className={styles.empty_state}>
+                            <PackageOpen className={styles.empty_state_icon} />
+                            <span className={styles.empty_state_text}>
+                                В этом сезоне пока нет доступных вам наград
+                            </span>
+                        </div>
+                    )}
+                    {hasNextPage && (
+                        <div className={styles.load_more_btn_container}>
+                            <AppBtn
+                                text="Загрузить ещё"
+                                onClick={() => fetchNextPage()}
+                                disabled={isFetchingNextPage}
+                                className={styles.load_more_btn}
+                                style={'outline_dark'}
+                            />
+                        </div>
+                    )}
+                </div>
 
-            <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
-                <AuthDialog onClose={() => setOpenAuthDialog(false)} />
-            </Dialog.Root>
-        </div>
+                <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
+                    <AuthDialog onClose={() => setOpenAuthDialog(false)} />
+                </Dialog.Root>
+            </div>
+        </BannerProvider>
     );
 };

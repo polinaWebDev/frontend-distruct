@@ -64,6 +64,14 @@ export function EditChallengeDialog({ open, onOpenChange, challenge }: EditChall
     );
     const [newCondition, setNewCondition] = useState('');
     const [color, setColor] = useState(challenge.color || '#ffffff');
+    const formatCategoryDescription = (description?: string) => {
+        if (!description) return null;
+        const maxLen = 20;
+        const trimmed = description.trim();
+        if (!trimmed) return null;
+        if (trimmed.length <= maxLen) return trimmed;
+        return `${trimmed.slice(0, maxLen)}...`;
+    };
 
     const {
         register,
@@ -465,6 +473,12 @@ export function EditChallengeDialog({ open, onOpenChange, challenge }: EditChall
                                             className="text-sm cursor-pointer"
                                         >
                                             {category.name}
+                                            {formatCategoryDescription(category.description) && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {' '}
+                                                    ({formatCategoryDescription(category.description)})
+                                                </span>
+                                            )}
                                         </label>
                                     </div>
                                 ))}
@@ -554,6 +568,12 @@ export function EditChallengeDialog({ open, onOpenChange, challenge }: EditChall
                                             className="text-sm cursor-pointer"
                                         >
                                             {category.name}
+                                            {formatCategoryDescription(category.description) && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {' '}
+                                                    ({formatCategoryDescription(category.description)})
+                                                </span>
+                                            )}
                                         </label>
                                     </div>
                                 ))}

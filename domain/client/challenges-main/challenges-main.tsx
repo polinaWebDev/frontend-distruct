@@ -23,8 +23,6 @@ import { useState } from 'react';
 import { Dialog } from 'radix-ui';
 import { ChallengeOfferDialog } from './components/challenge-offer-dialog/challenge-offer-dialog';
 import { AuthDialog } from '@/domain/Layout/Header/AuthDialog/AuthDialog';
-import { BannerProvider } from '@/components/banners/BannerProvider';
-import { BannerSlot } from '@/components/banners/BannerSlot';
 
 export type ChallengesMainProps = {
     game: GameType;
@@ -42,124 +40,114 @@ export const ChallengesMain = ({
     const [showOfferDialog, setShowOfferDialog] = useState(false);
     const [openAuthDialog, setOpenAuthDialog] = useState(false);
     return (
-        <BannerProvider page="challenges">
-            <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
-                <div className={styles.content}>
-                    <div className={styles.info_blocks}>
-                        <ChallengeInfoBlock>
-                            <ChallengeInfoBlockTitle icon={<TrophyIcon />}>
-                                Доступные Награды
-                            </ChallengeInfoBlockTitle>
-                            <ChallengeInfoBlockPoints
-                                btnText="Награды"
-                                points={seasonBalance?.balance ?? 0}
-                                subTitle="Кол-во ваших очков"
-                                btnLink={authenticated ? `/${game}/challenges/rewards` : undefined}
-                                btnOnClick={
-                                    authenticated ? undefined : () => setOpenAuthDialog(true)
-                                }
-                            />
-                        </ChallengeInfoBlock>
-                        <ChallengeInfoBlock
-                            noBottomPadding
-                            outerChildren={<ChallengeInfoBlockWave />}
+        <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
+            <div className={styles.content}>
+                <div className={styles.info_blocks}>
+                    <ChallengeInfoBlock>
+                        <ChallengeInfoBlockTitle icon={<TrophyIcon />}>
+                            Доступные Награды
+                        </ChallengeInfoBlockTitle>
+                        <ChallengeInfoBlockPoints
+                            btnText="Награды"
+                            points={seasonBalance?.balance ?? 0}
+                            subTitle="Кол-во ваших очков"
+                            btnLink={authenticated ? `/${game}/challenges/rewards` : undefined}
+                            btnOnClick={authenticated ? undefined : () => setOpenAuthDialog(true)}
+                        />
+                    </ChallengeInfoBlock>
+                    <ChallengeInfoBlock
+                        noBottomPadding
+                        outerChildren={<ChallengeInfoBlockWave />}
+                    >
+                        <ChallengeInfoBlockTitle icon={<CurrentSeasonIcon />}>
+                            Текущий сезон
+                        </ChallengeInfoBlockTitle>
+                        <ChallengeInfoBlockSeasonInfo
+                            items={[
+                                {
+                                    subTitle: 'Сезон',
+                                    content: season.name,
+                                },
+                                {
+                                    subTitle: 'Закончится',
+                                    content: formatDate(
+                                        new Date(season.ends_at),
+                                        'dd.MM.yyyy',
+                                        {
+                                            locale: ru,
+                                        }
+                                    ),
+                                },
+                                {
+                                    subTitle: 'Наград',
+                                    content: season.rewards_count.toString(),
+                                },
+                                {
+                                    subTitle: 'Челленджей',
+                                    content: season.challenges_count.toString(),
+                                },
+                            ]}
+                        />
+                    </ChallengeInfoBlock>
+
+                    <ChallengeInfoBlock>
+                        <ChallengeInfoBlockTitle>Мои челленджи</ChallengeInfoBlockTitle>
+                        <ChallengeInfoBlockDesc>
+                            Посмотрите историю ваших выполненных челенджей
+                        </ChallengeInfoBlockDesc>
+
+                        <Link
+                            href={`/${game}/challenges/progress/${season.id}`}
+                            onClick={
+                                authenticated
+                                    ? undefined
+                                    : (e) => {
+                                          e.preventDefault();
+                                          setOpenAuthDialog(true);
+                                      }
+                            }
+                            className="mt-auto max-w-[150px] w-full"
                         >
-                            <ChallengeInfoBlockTitle icon={<CurrentSeasonIcon />}>
-                                Текущий сезон
-                            </ChallengeInfoBlockTitle>
-                            <ChallengeInfoBlockSeasonInfo
-                                items={[
-                                    {
-                                        subTitle: 'Сезон',
-                                        content: season.name,
-                                    },
-                                    {
-                                        subTitle: 'Закончится',
-                                        content: formatDate(
-                                            new Date(season.ends_at),
-                                            'dd.MM.yyyy',
-                                            {
-                                                locale: ru,
-                                            }
-                                        ),
-                                    },
-                                    {
-                                        subTitle: 'Наград',
-                                        content: season.rewards_count.toString(),
-                                    },
-                                    {
-                                        subTitle: 'Челленджей',
-                                        content: season.challenges_count.toString(),
-                                    },
-                                ]}
-                            />
-                        </ChallengeInfoBlock>
+                            <AppBtn text="Перейти" className="w-full" />
+                        </Link>
+                    </ChallengeInfoBlock>
 
-                        <ChallengeInfoBlock>
-                            <ChallengeInfoBlockTitle>Мои челленджи</ChallengeInfoBlockTitle>
-                            <ChallengeInfoBlockDesc>
-                                Посмотрите историю ваших выполненных челенджей
-                            </ChallengeInfoBlockDesc>
+                    <ChallengeInfoBlock>
+                        <ChallengeInfoBlockTitle>Предложить свой челлендж</ChallengeInfoBlockTitle>
+                        <ChallengeInfoBlockDesc>
+                            Если у вас есть идея интересного задания, предложите её нам
+                        </ChallengeInfoBlockDesc>
 
-                            <Link
-                                href={`/${game}/challenges/progress/${season.id}`}
-                                onClick={
-                                    authenticated
-                                        ? undefined
-                                        : (e) => {
-                                              e.preventDefault();
-                                              setOpenAuthDialog(true);
-                                          }
+                        <AppBtn
+                            text="Предложить"
+                            style={'outline_brand'}
+                            className="mt-auto max-w-[150px] w-full"
+                            onClick={() => {
+                                if (!authenticated) {
+                                    setOpenAuthDialog(true);
+                                    return;
                                 }
-                                className="mt-auto max-w-[150px] w-full"
-                            >
-                                <AppBtn text="Перейти" className="w-full" />
-                            </Link>
-                        </ChallengeInfoBlock>
+                                setShowOfferDialog(true);
+                            }}
+                        />
 
-                        <ChallengeInfoBlock>
-                            <ChallengeInfoBlockTitle>
-                                Предложить свой челлендж
-                            </ChallengeInfoBlockTitle>
-                            <ChallengeInfoBlockDesc>
-                                Если у вас есть идея интересного задания, предложите её нам
-                            </ChallengeInfoBlockDesc>
-
-                            <AppBtn
-                                text="Предложить"
-                                style={'outline_brand'}
-                                className="mt-auto max-w-[150px] w-full"
-                                onClick={() => {
-                                    if (!authenticated) {
-                                        setOpenAuthDialog(true);
-                                        return;
-                                    }
-                                    setShowOfferDialog(true);
-                                }}
-                            />
-
-                            <Dialog.Root open={showOfferDialog} onOpenChange={setShowOfferDialog}>
-                                <ChallengeOfferDialog onClose={() => setShowOfferDialog(false)} />
-                            </Dialog.Root>
-                        </ChallengeInfoBlock>
-                    </div>
-
-                    <div className="my-6 flex justify-center">
-                        <BannerSlot slotKey="content_inline" />
-                    </div>
-
-                    <ChallengesList
-                        game={game}
-                        season_id={season.id}
-                        authenticated={authenticated}
-                        onAuthClick={() => setOpenAuthDialog(true)}
-                    />
+                        <Dialog.Root open={showOfferDialog} onOpenChange={setShowOfferDialog}>
+                            <ChallengeOfferDialog onClose={() => setShowOfferDialog(false)} />
+                        </Dialog.Root>
+                    </ChallengeInfoBlock>
                 </div>
 
-                <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
-                    <AuthDialog onClose={() => setOpenAuthDialog(false)} />
-                </Dialog.Root>
+                <ChallengesList
+                    game={game}
+                    season_id={season.id}
+                    authenticated={authenticated}
+                    onAuthClick={() => setOpenAuthDialog(true)}
+                />
             </div>
-        </BannerProvider>
+
+            <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
+                <AuthDialog onClose={() => setOpenAuthDialog(false)} />
+            </Dialog.Root>
+        </div>
     );
 };

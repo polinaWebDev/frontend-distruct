@@ -50,6 +50,14 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
     const [additionalConditions, setAdditionalConditions] = useState<string[]>([]);
     const [newCondition, setNewCondition] = useState('');
     const [color, setColor] = useState('#ffffff');
+    const formatCategoryDescription = (description?: string) => {
+        if (!description) return null;
+        const maxLen = 20;
+        const trimmed = description.trim();
+        if (!trimmed) return null;
+        if (trimmed.length <= maxLen) return trimmed;
+        return `${trimmed.slice(0, maxLen)}...`;
+    };
 
     const {
         register,
@@ -457,6 +465,12 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
                                             className="text-sm cursor-pointer"
                                         >
                                             {category.name}
+                                            {formatCategoryDescription(category.description) && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {' '}
+                                                    ({formatCategoryDescription(category.description)})
+                                                </span>
+                                            )}
                                         </label>
                                     </div>
                                 ))}
@@ -546,6 +560,12 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
                                             className="text-sm cursor-pointer"
                                         >
                                             {category.name}
+                                            {formatCategoryDescription(category.description) && (
+                                                <span className="text-xs text-muted-foreground">
+                                                    {' '}
+                                                    ({formatCategoryDescription(category.description)})
+                                                </span>
+                                            )}
                                         </label>
                                     </div>
                                 ))}

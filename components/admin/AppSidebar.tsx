@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
     LayoutDashboard,
     Package,
@@ -39,6 +41,8 @@ import {
     SidebarRail,
 } from '@/components/ui/sidebar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import { offerControllerGetListOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import { getPublicClient } from '@/lib/api_client/public_client';
 
 // Navigation items
 const navItems = {
@@ -153,6 +157,52 @@ const navItems = {
 
 export function AppSidebar() {
     const pathname = usePathname();
+    const [lastSeenOffersAt, setLastSeenOffersAt] = useState<number | null>(null);
+    const OFFERS_LAST_SEEN_KEY = 'admin_offers_last_seen_at';
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return;
+        const stored = window.localStorage.getItem(OFFERS_LAST_SEEN_KEY);
+        setLastSeenOffersAt(stored ? Number(stored) : null);
+    }, []);
+
+    const { data: latestOffers } = useQuery({
+        ...offerControllerGetListOptions({
+            client: getPublicClient(),
+            query: { page: 1, limit: 1 },
+        }),
+        staleTime: 30_000,
+        refetchInterval: 30_000,
+    });
+
+    const latestOfferTimestamp =
+        latestOffers?.[0]?.createdAt ? new Date(latestOffers[0].createdAt).getTime() : null;
+
+    const { data: newOffersList } = useQuery({
+        ...offerControllerGetListOptions({
+            client: getPublicClient(),
+            query: { page: 1, limit: 100 },
+        }),
+        enabled: lastSeenOffersAt !== null,
+        staleTime: 30_000,
+        refetchInterval: 30_000,
+    });
+
+    const newOffersCount = useMemo(() => {
+        if (!lastSeenOffersAt || !newOffersList) return 0;
+        return newOffersList.filter((offer) => {
+            const createdAt = offer.createdAt ? new Date(offer.createdAt).getTime() : 0;
+            return createdAt > lastSeenOffersAt;
+        }).length;
+    }, [newOffersList, lastSeenOffersAt]);
+
+    useEffect(() => {
+        if (pathname !== '/admin/offers') return;
+        if (latestOfferTimestamp === null) return;
+        if (typeof window === 'undefined') return;
+        window.localStorage.setItem(OFFERS_LAST_SEEN_KEY, String(latestOfferTimestamp));
+        setLastSeenOffersAt(latestOfferTimestamp);
+    }, [pathname, latestOfferTimestamp]);
 
     return (
         <Sidebar collapsible="icon">
@@ -212,18 +262,33 @@ export function AppSidebar() {
                                     {group.items?.length ? (
                                         <CollapsibleContent>
                                             <SidebarMenuSub>
-                                                {group.items.map((item) => (
+                                                {group.items.map((item) => {
+                                                    const isOffersItem =
+                                                        item.href === '/admin/offers';
+                                                    return (
                                                     <SidebarMenuSubItem key={item.href}>
                                                         <SidebarMenuSubButton
                                                             asChild
                                                             isActive={pathname === item.href}
                                                         >
                                                             <Link href={item.href}>
-                                                                {item.title}
+                                                                <span className="flex items-center gap-2">
+                                                                    <span>{item.title}</span>
+                                                                    {isOffersItem &&
+                                                                        newOffersCount > 0 && (
+                                                                        <span
+                                                                            className="inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-semibold leading-4 text-white"
+                                                                            aria-label={`Новые предложения: ${newOffersCount}`}
+                                                                        >
+                                                                            {newOffersCount}
+                                                                        </span>
+                                                                    )}
+                                                                </span>
                                                             </Link>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>
-                                                ))}
+                                                );
+                                                })}
                                             </SidebarMenuSub>
                                         </CollapsibleContent>
                                     ) : null}

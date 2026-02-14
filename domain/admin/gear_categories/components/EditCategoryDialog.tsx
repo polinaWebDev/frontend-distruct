@@ -57,6 +57,14 @@ export function EditCategoryDialog({ open, onOpenChange, category }: EditCategor
     const queryClient = useQueryClient();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const { gameType } = useAdminGameTypeContext();
+    const formatCategoryDescription = (description?: string) => {
+        if (!description) return null;
+        const maxLen = 20;
+        const trimmed = description.trim();
+        if (!trimmed) return null;
+        if (trimmed.length <= maxLen) return trimmed;
+        return `${trimmed.slice(0, maxLen)}...`;
+    };
 
     const form = useForm<UpdateGearCategoryFormData>({
         resolver: zodResolver(zUpdateGearCategoryDto),
@@ -356,6 +364,16 @@ export function EditCategoryDialog({ open, onOpenChange, category }: EditCategor
                                                         className="text-sm cursor-pointer"
                                                     >
                                                         {cat.name}
+                                                        {formatCategoryDescription(cat.description) && (
+                                                            <span className="text-xs text-muted-foreground">
+                                                                {' '}
+                                                                (
+                                                                {formatCategoryDescription(
+                                                                    cat.description
+                                                                )}
+                                                                )
+                                                            </span>
+                                                        )}
                                                     </label>
                                                 </div>
                                             ))

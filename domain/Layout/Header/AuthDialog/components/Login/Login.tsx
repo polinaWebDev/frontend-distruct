@@ -37,6 +37,9 @@ export const Login = ({ onSubmit }: { onSubmit: (data: z.infer<typeof loginSchem
         });
     };
 
+    const apiBase = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '');
+    const twitchLoginUrl = apiBase ? `${apiBase}/api/auth/twitch` : '/api/auth/twitch';
+
     return (
         <div className="flex flex-col w-full ">
             <div className="flex flex-col w-full gap-4">
@@ -70,7 +73,14 @@ export const Login = ({ onSubmit }: { onSubmit: (data: z.infer<typeof loginSchem
             </div>
 
             <div className="flex flex-col w-full gap-3">
-                {/* <AppBtn text="Вход с помощью Twitch" icon="twitch" style="twitch" /> */}
+                <AppBtn
+                    text="Вход с помощью Twitch"
+                    icon="twitch"
+                    style="twitch"
+                    onClick={() => {
+                        window.location.href = twitchLoginUrl;
+                    }}
+                />
                 <AppBtn
                     text="Вход с помощью Google"
                     icon="google"

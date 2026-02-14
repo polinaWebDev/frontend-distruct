@@ -128,7 +128,11 @@ export const TwitchWidget = ({
         return null;
     }
 
-    if (!loading && !error && !data?.isLive) {
+    if (loading) {
+        return null;
+    }
+
+    if (!error && !data?.isLive) {
         return null;
     }
 

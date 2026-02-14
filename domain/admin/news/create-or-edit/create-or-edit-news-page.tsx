@@ -57,8 +57,9 @@ const formSchema = z.object({
     short_description: z.string().min(1, 'Краткое описание обязательно'),
     content: z.string().min(1, 'Содержание обязательно'),
     game_type: z.nativeEnum(GameType).optional(),
-    image_url: z.string().optional().nullable(),
+    image_url: z.string().min(1, 'Изображение обязательно'),
     is_published: z.boolean(),
+    publish_at: z.string().optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -75,6 +76,17 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
         news?.gallery_images || []
     );
 
+    const formatToDateTimeLocal = (value?: string | Date | null) => {
+        if (!value) {
+            return '';
+        }
+
+        const date = typeof value === 'string' ? new Date(value) : value;
+        const offset = date.getTimezoneOffset();
+        const local = new Date(date.getTime() - offset * 60000);
+        return local.toISOString().slice(0, 16);
+    };
+
     const storedGameType = getStoredGameType();
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
@@ -83,8 +95,9 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
             short_description: news?.short_description || '',
             content: news?.content || '',
             game_type: (news?.game_type as GameType) || storedGameType || GameType.ArenaBreakout,
-            image_url: news?.image_url || null,
+            image_url: news?.image_url || '',
             is_published: news?.is_published ?? false,
+            publish_at: formatToDateTimeLocal(news?.publish_at ?? null),
         },
     });
 
@@ -224,10 +237,18 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
     };
 
     const onSubmit = (values: FormValues) => {
+        if (!values.image_url?.trim()) {
+            form.setError('image_url', { message: 'Изображение обязательно' });
+            toast.error('Добавьте изображение к новости');
+            return;
+        }
+        const publishAt = values.publish_at ? new Date(values.publish_at).toISOString() : null;
+
         if (news) {
             updateMutation.mutate({
                 body: {
                     ...values,
+                    publish_at: publishAt,
                     id: news.id,
                 },
             });
@@ -238,6 +259,7 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                     // Ensure optional fields are handled
                     game_type: values.game_type ?? undefined,
                     image_url: values.image_url ?? undefined,
+                    publish_at: publishAt,
                 },
             });
         }
@@ -355,6 +377,27 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                             />
                             <FormField
                                 control={form.control}
+                                name="publish_at"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Дата публикации</FormLabel>
+                                        <FormControl>
+                                            <Input
+                                                type="datetime-local"
+                                                value={field.value || ''}
+                                                onChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                        <div className="text-[0.8rem] text-muted-foreground">
+                                            Если указать будущую дату, новость будет опубликована
+                                            автоматически.
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
                                 name="short_description"
                                 render={({ field }) => (
                                     <FormItem>
@@ -393,7 +436,7 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                                 name="image_url"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Главное изображение</FormLabel>
+                                        <FormLabel>Главное изображение *</FormLabel>
                                         <FormControl>
                                             <div className="flex flex-col gap-4">
                                                 {field.value && (
@@ -457,7 +500,11 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                         </Button>
                         <Button
                             type="submit"
-                            disabled={createMutation.isPending || updateMutation.isPending}
+                            disabled={
+                                createMutation.isPending ||
+                                updateMutation.isPending ||
+                                !form.watch('image_url')?.trim()
+                            }
                         >
                             {createMutation.isPending || updateMutation.isPending
                                 ? 'Сохранение...'

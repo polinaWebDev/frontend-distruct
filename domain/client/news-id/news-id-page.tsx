@@ -43,11 +43,10 @@ export const NewsIdPage = ({
                 <div className={styles.sticky}>
                     <div className={styles.separator}></div>
 
-                    <div className="mb-6">
-                        <BannerSlot slotKey="sidebar_top" />
-                    </div>
-
                     <div className={styles.recommended_news}>
+                        <div className="mb-6">
+                            <BannerSlot slotKey="sidebar_top" />
+                        </div>
                         {recommendedNews.map((news) => (
                             <NewsItem key={news.id} news={news} />
                         ))}

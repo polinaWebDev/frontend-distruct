@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PlusIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import Image from 'next/image';
@@ -37,10 +37,18 @@ import { getFileUrl } from '@/lib/utils';
 export const NewsAdminPage = () => {
     const queryClient = useQueryClient();
     const router = useRouter();
+    const pendingDeletesRef = useRef(
+        new Map<
+            string,
+            { timeoutId: ReturnType<typeof setTimeout>; snapshot: Array<[unknown, unknown]> }
+        >()
+    );
     const [gameType, setGameType] = useAdminGameTypeFilter<GameType | 'all'>(
         GameType.ArenaBreakout,
         'all'
     );
+    const [sortField, setSortField] = useState<'createdAt' | 'publish_at' | 'status'>('createdAt');
+    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
     const limit = 20;
 
     // Fetch news list with infinite query
@@ -69,17 +77,64 @@ export const NewsAdminPage = () => {
 
     // Flatten all pages into a single array
     const newsItems = useMemo(() => {
-        return (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as NewsEntity[];
-    }, [data]);
+        const items = (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as NewsEntity[];
+        return items.sort((a, b) => {
+            const direction = sortOrder === 'asc' ? 1 : -1;
+            if (sortField === 'status') {
+                const aStatus = a.is_published ? 1 : 0;
+                const bStatus = b.is_published ? 1 : 0;
+                return direction * (aStatus - bStatus);
+            }
+            if (sortField === 'publish_at') {
+                const aDate = a.publish_at ? new Date(a.publish_at).getTime() : 0;
+                const bDate = b.publish_at ? new Date(b.publish_at).getTime() : 0;
+                return direction * (aDate - bDate);
+            }
+            const aCreated = new Date(a.createdAt).getTime();
+            const bCreated = new Date(b.createdAt).getTime();
+            return direction * (aCreated - bCreated);
+        });
+    }, [data, sortField, sortOrder]);
 
     // Delete mutation
+    const newsQueryPredicate = (query: { queryKey?: unknown[] }) =>
+        (query.queryKey?.[0] as { _id?: string } | undefined)?._id === 'newsControllerGetAllNews';
+
+    const removeFromCache = (deletedId: string) => {
+        queryClient.setQueriesData({ predicate: newsQueryPredicate }, (oldData: any) => {
+            if (!oldData?.pages) {
+                return oldData;
+            }
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page: any) => {
+                    if (!page?.data) return page;
+                    return {
+                        ...page,
+                        data: page.data.filter((item: NewsEntity) => item.id !== deletedId),
+                    };
+                }),
+            };
+        });
+    };
+
+    const restoreSnapshot = (snapshot: Array<[unknown, unknown]>) => {
+        snapshot.forEach(([key, data]) => {
+            queryClient.setQueryData(key, data);
+        });
+    };
+
     const deleteMutation = useMutation({
         ...newsAdminControllerRemoveNewsMutation({
             client: getPublicClient(),
         }),
-        onSuccess: async () => {
+        onSuccess: async (_data, variables) => {
+            const deletedId = variables?.body?.id;
+            if (deletedId) {
+                pendingDeletesRef.current.delete(deletedId);
+            }
             await queryClient.invalidateQueries({
-                queryKey: ['newsControllerGetAllNews'],
+                predicate: newsQueryPredicate,
                 refetchType: 'all',
             });
             toast.success('Новость успешно удалена');
@@ -89,12 +144,54 @@ export const NewsAdminPage = () => {
         },
     });
 
+    const undoDelete = (id: string) => {
+        const pending = pendingDeletesRef.current.get(id);
+        if (!pending) return;
+        clearTimeout(pending.timeoutId);
+        restoreSnapshot(pending.snapshot);
+        pendingDeletesRef.current.delete(id);
+        toast.success('Удаление отменено');
+    };
+
     const handleDelete = (id: string) => {
         if (confirm('Вы уверены, что хотите удалить эту новость?')) {
-            deleteMutation.mutate({
-                body: { id },
+            if (pendingDeletesRef.current.has(id)) {
+                return;
+            }
+            const snapshot = queryClient.getQueriesData({
+                predicate: newsQueryPredicate,
+            });
+            removeFromCache(id);
+            const timeoutId = setTimeout(() => {
+                deleteMutation.mutate({
+                    body: { id },
+                });
+            }, 5000);
+            pendingDeletesRef.current.set(id, { timeoutId, snapshot });
+            toast('Новость будет удалена', {
+                duration: 5000,
+                action: {
+                    label: 'Отменить',
+                    onClick: () => undoDelete(id),
+                },
             });
         }
+    };
+
+    const formatPublishAt = (news: NewsEntity) => {
+        const createdDate = new Date(news.createdAt);
+        if (!news.publish_at) {
+            return news.is_published ? `Опубликовано: ${createdDate.toLocaleString()}` : '—';
+        }
+
+        const publishDate = new Date(news.publish_at);
+        const isImmediate = Math.abs(publishDate.getTime() - createdDate.getTime()) < 60_000;
+        if (isImmediate) {
+            return news.is_published ? `Опубликовано: ${createdDate.toLocaleString()}` : '—';
+        }
+        const isFuture = publishDate.getTime() > Date.now();
+        const label = isFuture ? 'Запланировано' : 'Опубликовано';
+        return `${label}: ${publishDate.toLocaleString()}`;
     };
 
     return (
@@ -108,7 +205,7 @@ export const NewsAdminPage = () => {
             </div>
 
             {/* Filters */}
-            <div className="flex gap-4 items-end">
+            <div className="flex gap-4 items-end flex-wrap">
                 <div className="w-64 space-y-2">
                     <Label htmlFor="game-type">Тип игры</Label>
                     <Select
@@ -128,6 +225,39 @@ export const NewsAdminPage = () => {
                         </SelectContent>
                     </Select>
                 </div>
+                <div className="w-64 space-y-2">
+                    <Label htmlFor="sort-field">Сортировка</Label>
+                    <Select
+                        value={sortField}
+                        onValueChange={(value) =>
+                            setSortField(value as 'createdAt' | 'publish_at' | 'status')
+                        }
+                    >
+                        <SelectTrigger id="sort-field" className="w-full">
+                            <SelectValue placeholder="Поле сортировки" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="createdAt">Дата создания</SelectItem>
+                            <SelectItem value="publish_at">Дата публикации</SelectItem>
+                            <SelectItem value="status">Статус</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="w-48 space-y-2">
+                    <Label htmlFor="sort-order">Порядок</Label>
+                    <Select
+                        value={sortOrder}
+                        onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}
+                    >
+                        <SelectTrigger id="sort-order" className="w-full">
+                            <SelectValue placeholder="Порядок" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="desc">По убыванию</SelectItem>
+                            <SelectItem value="asc">По возрастанию</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             {/* Table */}
@@ -144,6 +274,7 @@ export const NewsAdminPage = () => {
                                 <TableHead>Заголовок</TableHead>
                                 <TableHead>Тип игры</TableHead>
                                 <TableHead>Статус</TableHead>
+                                <TableHead>Публикация</TableHead>
                                 <TableHead>Дата создания</TableHead>
                                 <TableHead className="text-right">Действия</TableHead>
                             </TableRow>
@@ -181,7 +312,17 @@ export const NewsAdminPage = () => {
                                         </Badge>
                                     </TableCell>
                                     <TableCell>
-                                        {new Date(news.createdAt).toLocaleDateString()}
+                                        <span
+                                            className="text-sm text-muted-foreground"
+                                            suppressHydrationWarning
+                                        >
+                                            {formatPublishAt(news)}
+                                        </span>
+                                    </TableCell>
+                                    <TableCell>
+                                        <span suppressHydrationWarning>
+                                            {new Date(news.createdAt).toLocaleDateString()}
+                                        </span>
                                     </TableCell>
                                     <TableCell className="text-right">
                                         <div className="flex justify-end gap-2">

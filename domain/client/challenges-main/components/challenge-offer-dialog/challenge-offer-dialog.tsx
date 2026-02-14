@@ -22,6 +22,7 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
     const form = useForm<z.infer<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
+            title: '',
             comment: '',
             files: [],
         },

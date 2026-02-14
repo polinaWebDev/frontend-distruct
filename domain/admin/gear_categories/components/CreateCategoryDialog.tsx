@@ -54,6 +54,14 @@ export function CreateCategoryDialog({ open, onOpenChange }: CreateCategoryDialo
     const queryClient = useQueryClient();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const { gameType } = useAdminGameTypeContext();
+    const formatCategoryDescription = (description?: string) => {
+        if (!description) return null;
+        const maxLen = 20;
+        const trimmed = description.trim();
+        if (!trimmed) return null;
+        if (trimmed.length <= maxLen) return trimmed;
+        return `${trimmed.slice(0, maxLen)}...`;
+    };
 
     const form = useForm<CreateGearCategoryFormData>({
         resolver: zodResolver(zCreateGearCategoryDto),
@@ -318,6 +326,18 @@ export function CreateCategoryDialog({ open, onOpenChange }: CreateCategoryDialo
                                                         className="text-sm cursor-pointer"
                                                     >
                                                         {category.name}
+                                                        {formatCategoryDescription(
+                                                            category.description
+                                                        ) && (
+                                                            <span className="text-xs text-muted-foreground">
+                                                                {' '}
+                                                                (
+                                                                {formatCategoryDescription(
+                                                                    category.description
+                                                                )}
+                                                                )
+                                                            </span>
+                                                        )}
                                                     </label>
                                                 </div>
                                             ))

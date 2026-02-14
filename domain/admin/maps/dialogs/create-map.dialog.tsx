@@ -23,6 +23,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { MapListResponseDto } from '@/lib/api_client/gen';
 import {
@@ -35,9 +36,10 @@ import { getPublicClient } from '@/lib/api_client/public_client';
 import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import { useAdminGameTypeContext } from '@/domain/admin/context/admin-game-type-context';
 import { AppControlledInput } from '@/ui/AppInput/AppInput';
+import { getFileUrl } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -62,16 +64,29 @@ export const CreateMapDialog = ({
             name: map_data?.name ?? '',
             description: map_data?.description ?? '',
             game_type: (map_data?.game_type as GameType) ?? GameType.ArenaBreakout,
+            visibility: map_data?.visibility ?? 'public',
             file: undefined,
         },
     });
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const previewUrlRef = useRef<string | null>(null);
     const queryClient = useQueryClient();
 
     useEffect(() => {
         if (!open) return;
         form.setValue('game_type', gameType, { shouldValidate: true });
     }, [form, gameType, open]);
+
+    useEffect(() => {
+        if (!open) return;
+        setImageFile(null);
+        if (previewUrlRef.current) {
+            URL.revokeObjectURL(previewUrlRef.current);
+            previewUrlRef.current = null;
+        }
+        setPreviewUrl(map_data?.image_url ? getFileUrl(map_data.image_url) : null);
+    }, [open, map_data?.image_url]);
 
     const { mutate: createMap, isPending } = useMutation({
         ...mapsAdminControllerCreateMapMutation({
@@ -175,6 +190,30 @@ export const CreateMapDialog = ({
                                     </FormItem>
                                 )}
                             />
+                            <FormField
+                                control={form.control}
+                                name="visibility"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">Публичная</FormLabel>
+                                            <div className="text-[0.8rem] text-muted-foreground">
+                                                Выключено — только для админов
+                                            </div>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={field.value !== 'private'}
+                                                onCheckedChange={(checked) =>
+                                                    field.onChange(
+                                                        checked ? 'public' : 'private'
+                                                    )
+                                                }
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
 
                             <div className="space-y-2">
                                 <FormLabel>Изображение</FormLabel>
@@ -182,8 +221,35 @@ export const CreateMapDialog = ({
                                     id="image"
                                     type="file"
                                     accept="image/*"
-                                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0] || null;
+                                        setImageFile(file);
+                                        if (previewUrlRef.current) {
+                                            URL.revokeObjectURL(previewUrlRef.current);
+                                            previewUrlRef.current = null;
+                                        }
+                                        if (file) {
+                                            const objectUrl = URL.createObjectURL(file);
+                                            previewUrlRef.current = objectUrl;
+                                            setPreviewUrl(objectUrl);
+                                        } else {
+                                            setPreviewUrl(
+                                                map_data?.image_url
+                                                    ? getFileUrl(map_data.image_url)
+                                                    : null
+                                            );
+                                        }
+                                    }}
                                 />
+                                {previewUrl && (
+                                    <div className="mt-2">
+                                        <img
+                                            src={previewUrl}
+                                            alt="Preview"
+                                            className="max-h-40 w-full rounded-md object-cover"
+                                        />
+                                    </div>
+                                )}
                                 {imageFile && (
                                     <p className="text-sm text-muted-foreground">
                                         Выбрано: {imageFile.name} (

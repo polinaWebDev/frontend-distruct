@@ -51,6 +51,7 @@ import { getFileUrl } from '@/lib/utils';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import newsStyles from '@/domain/client/news-id/news-id-page.module.css';
 import challengesStyles from '@/domain/client/challenges-main/challenges-main.module.css';
+import challengesRewardsStyles from '@/domain/client/challenges-rewards/challenges-rewards.module.css';
 import mapsStyles from '@/domain/ClientMapList/ClientMapList.module.css';
 import tiersStyles from '@/domain/client/tiers/tiers-page.module.css';
 import clsx from 'clsx';
@@ -59,10 +60,8 @@ type BannerSlotPage = BannerSlotAdminResponseDto['page'];
 type BannerMediaType = BannerAdminResponseDto['type'];
 
 const PAGE_OPTIONS: Array<{ label: string; value: BannerSlotPage }> = [
-    { label: 'news_article', value: 'news_article' },
-    { label: 'challenges', value: 'challenges' },
-    { label: 'tiers', value: 'tiers' },
-    { label: 'maps', value: 'maps' },
+    { label: 'News article', value: 'news_article' },
+    { label: 'Rewards', value: 'challenges_rewards' },
 ];
 
 type AddBannerDialogProps = {
@@ -369,6 +368,7 @@ function resolveSlotKey(slotKeys: string[], preferred: string[]) {
 
 function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: string[] }) {
     const contentInlineKey = resolveSlotKey(slotKeys, ['content_inline']);
+    const topInlineKey = resolveSlotKey(slotKeys, ['top_inline']);
     const sidebarKey = resolveSlotKey(slotKeys, ['sidebar_top', 'sidebar']);
 
     if (page === 'news_article') {
@@ -413,12 +413,12 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
                         <div className={newsStyles.separator}></div>
                         <div className={newsStyles.recommended_news}>
                             {sidebarKey && (
-                                <div className="flex justify-center">
+                                <div className="mb-6 flex justify-center">
                                     <BannerSlot slotKey={sidebarKey} />
                                 </div>
                             )}
                             {Array.from({ length: 3 }).map((_, idx) => (
-                                <div key={idx} className="h-28">
+                                <div key={idx} className="h-28 w-full">
                                     <AppSkeleton />
                                 </div>
                             ))}
@@ -429,29 +429,29 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
         );
     }
 
-    if (page === 'challenges') {
+    if (page === 'challenges_rewards') {
         return (
             <div className="rounded-xl border p-6 bg-muted/10">
-                <div className={clsx(challengesStyles.wrapper, 'max-w-[1200px] mx-auto')}>
-                    <div className={challengesStyles.content}>
-                        <div className="h-10 max-w-[320px]">
+                <div className={clsx(challengesRewardsStyles.wrapper, 'max-w-[1200px] mx-auto')}>
+                    <div className={challengesRewardsStyles.content}>
+                        <div className="h-7 max-w-[260px]">
                             <AppSkeleton />
                         </div>
-                        <div className={challengesStyles.info_blocks}>
-                            {Array.from({ length: 4 }).map((_, idx) => (
+                        <div className={challengesRewardsStyles.info_blocks}>
+                            {Array.from({ length: 2 }).map((_, idx) => (
                                 <div key={idx} className="h-40">
                                     <AppSkeleton />
                                 </div>
                             ))}
+                            {topInlineKey && (
+                                <div className="flex items-center justify-center h-40">
+                                    <BannerSlot slotKey={topInlineKey} />
+                                </div>
+                            )}
                         </div>
-                        {contentInlineKey && (
-                            <div className="my-6 flex justify-center">
-                                <BannerSlot slotKey={contentInlineKey} />
-                            </div>
-                        )}
-                        <div className="space-y-3">
-                            {Array.from({ length: 8 }).map((_, idx) => (
-                                <div key={idx} className="h-6">
+                        <div className={challengesRewardsStyles.rewards}>
+                            {Array.from({ length: 6 }).map((_, idx) => (
+                                <div key={idx} className="h-28 w-full">
                                     <AppSkeleton />
                                 </div>
                             ))}
@@ -462,45 +462,6 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
         );
     }
 
-    if (page === 'maps') {
-        return (
-            <div className="rounded-xl border p-6 bg-muted/10">
-                <div className={clsx(mapsStyles.container, 'max-w-[1200px] mx-auto')}>
-                    {contentInlineKey && (
-                        <div className="col-span-full flex justify-center mb-6">
-                            <BannerSlot slotKey={contentInlineKey} />
-                        </div>
-                    )}
-                    {Array.from({ length: 6 }).map((_, idx) => (
-                        <div key={idx} className={mapsStyles.map_item}>
-                            <div className={mapsStyles.preview}>
-                                <AppSkeleton />
-                            </div>
-                            <div className={mapsStyles.bottom}>
-                                <div className={mapsStyles.title}>
-                                    <div className="h-4 w-24">
-                                        <AppSkeleton />
-                                    </div>
-                                </div>
-                                <div className={mapsStyles.info}>
-                                    <div className={mapsStyles.p}>
-                                        <div className="h-3 w-20">
-                                            <AppSkeleton />
-                                        </div>
-                                    </div>
-                                    <div className={mapsStyles.p}>
-                                        <div className="h-3 w-16">
-                                            <AppSkeleton />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="rounded-xl border p-6 bg-muted/10">

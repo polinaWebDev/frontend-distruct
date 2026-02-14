@@ -5,7 +5,7 @@ export type { QuerySerializerOptions } from '../core/bodySerializer.gen';
 export {
   formDataBodySerializer,
   jsonBodySerializer,
-  urlSearchParamsBodySerializer
+  urlSearchParamsBodySerializer,
 } from '../core/bodySerializer.gen';
 export { buildClientParams } from '../core/params.gen';
 export { serializeQueryKeyValue } from '../core/queryKeySerializer.gen';
@@ -18,6 +18,6 @@ export type {
   Options,
   RequestOptions,
   RequestResult,
-  TDataShape
+  TDataShape,
 } from './types.gen';
 export { createConfig } from './utils.gen';

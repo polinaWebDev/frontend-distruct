@@ -5,7 +5,7 @@ import type { QuerySerializerOptions } from '../core/bodySerializer.gen';
 import {
   serializeArrayParam,
   serializeObjectParam,
-  serializePrimitiveParam
+  serializePrimitiveParam,
 } from '../core/pathSerializer.gen';
 import { getUrl } from '../core/utils.gen';
 import type { Client, ClientOptions, Config, RequestOptions } from './types.gen';
@@ -33,7 +33,7 @@ export const createQuerySerializer = <T = unknown>({
             name,
             style: 'form',
             value,
-            ...options.array
+            ...options.array,
           });
           if (serializedArray) search.push(serializedArray);
         } else if (typeof value === 'object') {
@@ -43,14 +43,14 @@ export const createQuerySerializer = <T = unknown>({
             name,
             style: 'deepObject',
             value: value as Record<string, unknown>,
-            ...options.object
+            ...options.object,
           });
           if (serializedObject) search.push(serializedObject);
         } else {
           const serializedPrimitive = serializePrimitiveParam({
             allowReserved: options.allowReserved,
             name,
-            value: value as string
+            value: value as string,
           });
           if (serializedPrimitive) search.push(serializedPrimitive);
         }
@@ -65,7 +65,7 @@ const checkForExistence = (
   options: Pick<RequestOptions, 'auth' | 'query'> & {
     headers: Record<any, unknown>;
   },
-  name?: string
+  name?: string,
 ): boolean => {
   if (!name) {
     return false;
@@ -126,11 +126,13 @@ export const setAuthParams = async ({
   }
 };
 
-export const buildUrl: Client['buildUrl'] = options => {
+export const buildUrl: Client['buildUrl'] = (options) => {
   const instanceBaseUrl = options.axios?.defaults?.baseURL;
 
   const baseUrl =
-    !!options.baseURL && typeof options.baseURL === 'string' ? options.baseURL : instanceBaseUrl;
+    !!options.baseURL && typeof options.baseURL === 'string'
+      ? options.baseURL
+      : instanceBaseUrl;
 
   return getUrl({
     baseUrl: baseUrl as string,
@@ -141,7 +143,7 @@ export const buildUrl: Client['buildUrl'] = options => {
       typeof options.querySerializer === 'function'
         ? options.querySerializer
         : createQuerySerializer(options.querySerializer),
-    url: options.url
+    url: options.url,
   });
 };
 
@@ -161,7 +163,7 @@ export const axiosHeadersKeywords = [
   'head',
   'patch',
   'post',
-  'put'
+  'put',
 ] as const;
 
 export const mergeHeaders = (
@@ -177,12 +179,14 @@ export const mergeHeaders = (
 
     for (const [key, value] of iterator) {
       if (
-        axiosHeadersKeywords.includes(key as (typeof axiosHeadersKeywords)[number]) &&
+        axiosHeadersKeywords.includes(
+          key as (typeof axiosHeadersKeywords)[number],
+        ) &&
         typeof value === 'object'
       ) {
         mergedHeaders[key] = {
           ...(mergedHeaders[key] as Record<any, unknown>),
-          ...value
+          ...value,
         };
       } else if (value === null) {
         delete mergedHeaders[key];
@@ -194,7 +198,8 @@ export const mergeHeaders = (
       } else if (value !== undefined) {
         // assume object headers are meant to be JSON stringified, i.e. their
         // content value in OpenAPI specification is 'application/json'
-        mergedHeaders[key] = typeof value === 'object' ? JSON.stringify(value) : (value as string);
+        mergedHeaders[key] =
+          typeof value === 'object' ? JSON.stringify(value) : (value as string);
       }
     }
   }
@@ -202,7 +207,7 @@ export const mergeHeaders = (
 };
 
 export const createConfig = <T extends ClientOptions = ClientOptions>(
-  override: Config<Omit<ClientOptions, keyof T> & T> = {}
+  override: Config<Omit<ClientOptions, keyof T> & T> = {},
 ): Config<Omit<ClientOptions, keyof T> & T> => ({
-  ...override
+  ...override,
 });
