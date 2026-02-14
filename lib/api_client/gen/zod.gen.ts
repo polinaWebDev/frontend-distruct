@@ -1080,6 +1080,18 @@ export const zCreateMapFloorDto = z.object({
     name: z.string()
 });
 
+export const zUpdateMapFloorDto = z.object({
+    id: z.string(),
+    map_id: z.string(),
+    level: z.number().gte(1),
+    name: z.string()
+});
+
+export const zRemoveMapFloorDto = z.object({
+    id: z.string(),
+    map_id: z.string()
+});
+
 export const zGenerateMapTilesDto = z.object({
     id: z.string(),
     floor_level: z.number().gte(1),
@@ -2871,6 +2883,22 @@ export const zMapsAdminControllerCreateMapFloorData = z.object({
 });
 
 export const zMapsAdminControllerCreateMapFloorResponse = z.string();
+
+export const zMapsAdminControllerUpdateMapFloorData = z.object({
+    body: zUpdateMapFloorDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerUpdateMapFloorResponse = z.boolean();
+
+export const zMapsAdminControllerRemoveMapFloorData = z.object({
+    body: zRemoveMapFloorDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerRemoveMapFloorResponse = z.boolean();
 
 export const zMapsAdminControllerGenerateMapTilesData = z.object({
     body: zGenerateMapTilesDto,

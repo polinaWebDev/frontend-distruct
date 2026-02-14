@@ -125,6 +125,12 @@
     }
 }
 
+.inline {
+    position: static;
+    bottom: auto;
+    right: auto;
+}
+
 .separator {
     width: 252px;
     height: 1px;

@@ -28,13 +28,6 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
     return (
         <div className="w-full h-svh relative">
             <div className="w-full flex flex-1 h-full relative z-1">
-                {(map.floors?.length ?? 0) > 1 && (
-                    <MapFloorTabs
-                        floors={map.floors ?? []}
-                        selectedFloorId={selectedFloorId}
-                        onSelect={setSelectedFloorId}
-                    />
-                )}
                 <MapRenderer
                     admin={false}
                     map_id={map.id}
@@ -43,6 +36,28 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
                     selectedCategories={selectedCategories}
                     selectedFloorId={selectedFloorId}
                     onMarkerClick={handleMarkerClick}
+                />
+            </div>
+            <div className="absolute right-10 bottom-10 z-[110] flex flex-col items-end gap-3 pointer-events-none">
+                {(map.floors?.length ?? 0) > 1 && (
+                    <MapFloorTabs
+                        floors={map.floors ?? []}
+                        selectedFloorId={selectedFloorId}
+                        onSelect={setSelectedFloorId}
+                        inline
+                        className="pointer-events-auto -translate-y-[30%]"
+                    />
+                )}
+                <MapFilters
+                    categories={map.categories ?? []}
+                    onSelect={(x: string) => {
+                        setSelectedCategories((prev) =>
+                            prev.includes(x) ? prev.filter((y) => y !== x) : [...prev, x]
+                        );
+                    }}
+                    selected={selectedCategories}
+                    inline
+                    className="pointer-events-auto"
                 />
             </div>
 
@@ -64,15 +79,6 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
                 />
             </Activity>
 
-            <MapFilters
-                categories={map.categories ?? []}
-                onSelect={(x: string) => {
-                    setSelectedCategories((prev) =>
-                        prev.includes(x) ? prev.filter((y) => y !== x) : [...prev, x]
-                    );
-                }}
-                selected={selectedCategories}
-            />
         </div>
     );
 };

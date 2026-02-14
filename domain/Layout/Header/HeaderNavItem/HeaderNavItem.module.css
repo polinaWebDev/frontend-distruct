@@ -10,8 +10,6 @@
     justify-content: flex-start;
     gap: 12px;
 
-    width: fit-content;
-
     background: rgba(17, 17, 18, 70%);
 
     .icon {
@@ -30,7 +28,7 @@
         font-size: 15px;
         font-weight: 500;
 
-        text-align: left;
+        text-align: center;
         color: #c9ced8;
         transition: 0.3s;
     }

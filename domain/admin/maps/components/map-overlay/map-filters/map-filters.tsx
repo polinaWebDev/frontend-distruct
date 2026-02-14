@@ -11,16 +11,28 @@ export const MapFilters = ({
     categories,
     onSelect,
     selected,
+    className,
+    inline = false,
 }: {
     categories: MapDataCategoryDto[];
     selected: string[];
     onSelect: (category_id: string) => void;
+    className?: string;
+    inline?: boolean;
 }) => {
     const isMobile = useMedia('(max-width: 1000px)');
     const [hidden, setHidden] = useState(isMobile);
 
     return (
-        <div className={clsx(styles.container, hidden && styles.hidden, !hidden && styles.open)}>
+        <div
+            className={clsx(
+                styles.container,
+                hidden && styles.hidden,
+                !hidden && styles.open,
+                inline && styles.inline,
+                className
+            )}
+        >
             <Activity mode={hidden ? 'visible' : 'hidden'}>
                 <Button size={'icon'} variant={'ghost'} onClick={() => setHidden(!hidden)}>
                     <FunnelX />

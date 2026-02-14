@@ -927,6 +927,18 @@ export type CreateMapFloorDto = {
     name: string;
 };
 
+export type UpdateMapFloorDto = {
+    id: string;
+    map_id: string;
+    level: number;
+    name: string;
+};
+
+export type RemoveMapFloorDto = {
+    id: string;
+    map_id: string;
+};
+
 export type GenerateMapTilesDto = {
     id: string;
     floor_level: number;
@@ -2804,6 +2816,34 @@ export type MapsAdminControllerCreateMapFloorResponses = {
 };
 
 export type MapsAdminControllerCreateMapFloorResponse = MapsAdminControllerCreateMapFloorResponses[keyof MapsAdminControllerCreateMapFloorResponses];
+
+export type MapsAdminControllerUpdateMapFloorData = {
+    body: UpdateMapFloorDto;
+    path?: never;
+    query?: never;
+    url: '/api/map/admin/update-floor';
+};
+
+export type MapsAdminControllerUpdateMapFloorResponses = {
+    200: boolean;
+    201: boolean;
+};
+
+export type MapsAdminControllerUpdateMapFloorResponse = MapsAdminControllerUpdateMapFloorResponses[keyof MapsAdminControllerUpdateMapFloorResponses];
+
+export type MapsAdminControllerRemoveMapFloorData = {
+    body: RemoveMapFloorDto;
+    path?: never;
+    query?: never;
+    url: '/api/map/admin/delete-floor';
+};
+
+export type MapsAdminControllerRemoveMapFloorResponses = {
+    200: boolean;
+    201: boolean;
+};
+
+export type MapsAdminControllerRemoveMapFloorResponse = MapsAdminControllerRemoveMapFloorResponses[keyof MapsAdminControllerRemoveMapFloorResponses];
 
 export type MapsAdminControllerGenerateMapTilesData = {
     body: GenerateMapTilesDto;

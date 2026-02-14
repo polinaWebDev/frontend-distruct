@@ -162,11 +162,6 @@ export const MapsPage = () => {
             {selectedMap && fullMapDataRes && (
                 <div className="w-full flex flex-col gap-4 h-full relative z-1">
                     <div className="w-full flex flex-1 h-full relative z-1">
-                        <MapFloorTabs
-                            floors={fullMapDataRes.floors ?? []}
-                            selectedFloorId={selectedFloorId}
-                            onSelect={setSelectedFloorId}
-                        />
                         <MapRenderer
                             admin={showAdminControls}
                             map_id={selectedMap.id}
@@ -175,6 +170,30 @@ export const MapsPage = () => {
                             selectedCategories={selectedCategories}
                             selectedFloorId={selectedFloorId}
                             onMarkerClick={handleMarkerClick}
+                        />
+                    </div>
+                    <div className="absolute right-10 bottom-10 z-[110] flex flex-col items-end gap-3 pointer-events-none">
+                        <MapFloorTabs
+                            floors={fullMapDataRes.floors ?? []}
+                            selectedFloorId={selectedFloorId}
+                            onSelect={setSelectedFloorId}
+                            admin={showAdminControls}
+                            mapId={selectedMap.id}
+                            inline
+                            className="pointer-events-auto -translate-y-[30%]"
+                        />
+                        <MapFilters
+                            categories={fullMapDataRes.categories ?? []}
+                            onSelect={(x: string) => {
+                                setSelectedCategories((prev) =>
+                                    prev.includes(x)
+                                        ? prev.filter((y) => y !== x)
+                                        : [...prev, x]
+                                );
+                            }}
+                            selected={selectedCategories}
+                            inline
+                            className="pointer-events-auto"
                         />
                     </div>
                     {selectedMarker && (
@@ -194,15 +213,6 @@ export const MapsPage = () => {
                         />
                     </Activity>
 
-                    <MapFilters
-                        categories={fullMapDataRes.categories ?? []}
-                        onSelect={(x: string) => {
-                            setSelectedCategories((prev) =>
-                                prev.includes(x) ? prev.filter((y) => y !== x) : [...prev, x]
-                            );
-                        }}
-                        selected={selectedCategories}
-                    />
                 </div>
             )}
 
