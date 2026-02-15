@@ -364,7 +364,9 @@ export function EditCategoryDialog({ open, onOpenChange, category }: EditCategor
                                                         className="text-sm cursor-pointer"
                                                     >
                                                         {cat.name}
-                                                        {formatCategoryDescription(cat.description) && (
+                                                        {formatCategoryDescription(
+                                                            cat.description
+                                                        ) && (
                                                             <span className="text-xs text-muted-foreground">
                                                                 {' '}
                                                                 (

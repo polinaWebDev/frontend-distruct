@@ -1,3 +1,5 @@
+'use client';
+
 import { GoogleIcon } from '@/lib/icons/GoogleIcon';
 import styles from './SmallBtn.module.css';
 import { SmallBtnPart, SmallBtnPartOutline } from '@/lib/icons/SmallBtnPart';
@@ -6,6 +8,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 import { TwitchIcon } from '@/lib/icons/TwitchIcon';
 import { InfoIcon } from '@/lib/icons/InfoIcon';
 import clsx from 'clsx';
+import Link from 'next/link';
 
 const variants = cva(styles.btn, {
     variants: {
@@ -48,6 +51,7 @@ interface SmallBtnProps extends VariantProps<typeof variants> {
     onClick?: () => void;
     className?: string;
     disabled?: boolean;
+    href?: string;
 }
 
 const Icon = ({ name }: { name: 'twitch' | 'google' | 'info' }) => {
@@ -72,6 +76,7 @@ export const AppBtn = ({
     style,
     weight,
     big,
+    href,
 }: SmallBtnProps) => {
     const isOutline =
         style === 'outline_bright' ||
@@ -79,15 +84,8 @@ export const AppBtn = ({
         style === 'outline_red' ||
         style === 'outline_brand';
 
-    return (
-        <button
-            className={clsx(variants({ disabled, style, weight, icon, big }), className)}
-            onClick={() => {
-                if (disabled) return;
-                onClick?.();
-            }}
-            disabled={disabled}
-        >
+    const content = (
+        <>
             <div className={styles.content}>
                 {icon && <Icon name={icon} />}
                 {text && <p>{text}</p>}
@@ -106,6 +104,33 @@ export const AppBtn = ({
                 ) : (
                     <SmallBtnPartOutline className={styles.outline_part_icon} />
                 ))}
+        </>
+    );
+
+    const classes = clsx(variants({ disabled, style, weight, icon, big }), className);
+
+    if (href) {
+        if (disabled) {
+            return <span className={classes}>{content}</span>;
+        }
+
+        return (
+            <Link href={href} className={classes} onClick={onClick}>
+                {content}
+            </Link>
+        );
+    }
+
+    return (
+        <button
+            className={classes}
+            onClick={() => {
+                if (disabled) return;
+                onClick?.();
+            }}
+            disabled={disabled}
+        >
+            {content}
         </button>
     );
 };

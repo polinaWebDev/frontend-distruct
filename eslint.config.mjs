@@ -38,7 +38,7 @@ const eslintConfig = defineConfig([
                     bracketSpacing: true,
                     arrowParens: 'always',
                     jsxSingleQuote: false,
-                    jsxBracketSameLine: false,
+                    bracketSameLine: false,
                     tabWidth: 4,
                 },
             ],

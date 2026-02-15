@@ -1408,7 +1408,8 @@ export type AppControllerGetHelloResponses = {
     200: string;
 };
 
-export type AppControllerGetHelloResponse = AppControllerGetHelloResponses[keyof AppControllerGetHelloResponses];
+export type AppControllerGetHelloResponse =
+    AppControllerGetHelloResponses[keyof AppControllerGetHelloResponses];
 
 export type AppControllerGetUserData = {
     body?: never;
@@ -1434,7 +1435,8 @@ export type UsersControllerRemoveResponses = {
     };
 };
 
-export type UsersControllerRemoveResponse = UsersControllerRemoveResponses[keyof UsersControllerRemoveResponses];
+export type UsersControllerRemoveResponse =
+    UsersControllerRemoveResponses[keyof UsersControllerRemoveResponses];
 
 export type UsersControllerFindAllData = {
     body?: never;
@@ -1453,7 +1455,8 @@ export type UsersControllerFindAllResponses = {
     200: GetUserListResponseDto;
 };
 
-export type UsersControllerFindAllResponse = UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses];
+export type UsersControllerFindAllResponse =
+    UsersControllerFindAllResponses[keyof UsersControllerFindAllResponses];
 
 export type UsersControllerGetMeData = {
     body?: never;
@@ -1466,7 +1469,8 @@ export type UsersControllerGetMeResponses = {
     200: UserResponseDto;
 };
 
-export type UsersControllerGetMeResponse = UsersControllerGetMeResponses[keyof UsersControllerGetMeResponses];
+export type UsersControllerGetMeResponse =
+    UsersControllerGetMeResponses[keyof UsersControllerGetMeResponses];
 
 export type UsersControllerFindOneData = {
     body?: never;
@@ -1481,7 +1485,8 @@ export type UsersControllerFindOneResponses = {
     200: UserResponseDto;
 };
 
-export type UsersControllerFindOneResponse = UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses];
+export type UsersControllerFindOneResponse =
+    UsersControllerFindOneResponses[keyof UsersControllerFindOneResponses];
 
 export type UsersControllerEditAvatarData = {
     body: EditAvatarDto;
@@ -1496,7 +1501,8 @@ export type UsersControllerEditAvatarResponses = {
     };
 };
 
-export type UsersControllerEditAvatarResponse = UsersControllerEditAvatarResponses[keyof UsersControllerEditAvatarResponses];
+export type UsersControllerEditAvatarResponse =
+    UsersControllerEditAvatarResponses[keyof UsersControllerEditAvatarResponses];
 
 export type UsersControllerEditUsernameData = {
     body: EditUsernameDto;
@@ -1511,7 +1517,8 @@ export type UsersControllerEditUsernameResponses = {
     };
 };
 
-export type UsersControllerEditUsernameResponse = UsersControllerEditUsernameResponses[keyof UsersControllerEditUsernameResponses];
+export type UsersControllerEditUsernameResponse =
+    UsersControllerEditUsernameResponses[keyof UsersControllerEditUsernameResponses];
 
 export type UsersAdminControllerEditUserData = {
     body: AdminEditUserDto;
@@ -1524,7 +1531,8 @@ export type UsersAdminControllerEditUserResponses = {
     201: boolean;
 };
 
-export type UsersAdminControllerEditUserResponse = UsersAdminControllerEditUserResponses[keyof UsersAdminControllerEditUserResponses];
+export type UsersAdminControllerEditUserResponse =
+    UsersAdminControllerEditUserResponses[keyof UsersAdminControllerEditUserResponses];
 
 export type UsersPublicControllerFindPublicData = {
     body?: never;
@@ -1541,7 +1549,8 @@ export type UsersPublicControllerFindPublicResponses = {
     200: PublicUserListResponseDto;
 };
 
-export type UsersPublicControllerFindPublicResponse = UsersPublicControllerFindPublicResponses[keyof UsersPublicControllerFindPublicResponses];
+export type UsersPublicControllerFindPublicResponse =
+    UsersPublicControllerFindPublicResponses[keyof UsersPublicControllerFindPublicResponses];
 
 export type UsersPublicControllerFindPublicByIdData = {
     body?: never;
@@ -1556,7 +1565,8 @@ export type UsersPublicControllerFindPublicByIdResponses = {
     200: PublicUserResponseDto;
 };
 
-export type UsersPublicControllerFindPublicByIdResponse = UsersPublicControllerFindPublicByIdResponses[keyof UsersPublicControllerFindPublicByIdResponses];
+export type UsersPublicControllerFindPublicByIdResponse =
+    UsersPublicControllerFindPublicByIdResponses[keyof UsersPublicControllerFindPublicByIdResponses];
 
 export type AuthControllerRequestLoginData = {
     body: RequestLoginDto;
@@ -1662,7 +1672,8 @@ export type NewsControllerGetAllNewsResponses = {
     200: GetNewsListResponseDto;
 };
 
-export type NewsControllerGetAllNewsResponse = NewsControllerGetAllNewsResponses[keyof NewsControllerGetAllNewsResponses];
+export type NewsControllerGetAllNewsResponse =
+    NewsControllerGetAllNewsResponses[keyof NewsControllerGetAllNewsResponses];
 
 export type NewsControllerGetAllNewsClientData = {
     body?: never;
@@ -1680,7 +1691,8 @@ export type NewsControllerGetAllNewsClientResponses = {
     200: GetNewsListResponseDto;
 };
 
-export type NewsControllerGetAllNewsClientResponse = NewsControllerGetAllNewsClientResponses[keyof NewsControllerGetAllNewsClientResponses];
+export type NewsControllerGetAllNewsClientResponse =
+    NewsControllerGetAllNewsClientResponses[keyof NewsControllerGetAllNewsClientResponses];
 
 export type NewsControllerGetNewsByIdData = {
     body?: never;
@@ -1695,7 +1707,8 @@ export type NewsControllerGetNewsByIdResponses = {
     200: NewsEntity;
 };
 
-export type NewsControllerGetNewsByIdResponse = NewsControllerGetNewsByIdResponses[keyof NewsControllerGetNewsByIdResponses];
+export type NewsControllerGetNewsByIdResponse =
+    NewsControllerGetNewsByIdResponses[keyof NewsControllerGetNewsByIdResponses];
 
 export type NewsAdminControllerCreateNewsData = {
     body: CreateNewsRequestDto;
@@ -1708,7 +1721,8 @@ export type NewsAdminControllerCreateNewsResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerCreateNewsResponse = NewsAdminControllerCreateNewsResponses[keyof NewsAdminControllerCreateNewsResponses];
+export type NewsAdminControllerCreateNewsResponse =
+    NewsAdminControllerCreateNewsResponses[keyof NewsAdminControllerCreateNewsResponses];
 
 export type NewsAdminControllerUpdateNewsData = {
     body: UpdateNewsRequestDto;
@@ -1721,7 +1735,8 @@ export type NewsAdminControllerUpdateNewsResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerUpdateNewsResponse = NewsAdminControllerUpdateNewsResponses[keyof NewsAdminControllerUpdateNewsResponses];
+export type NewsAdminControllerUpdateNewsResponse =
+    NewsAdminControllerUpdateNewsResponses[keyof NewsAdminControllerUpdateNewsResponses];
 
 export type NewsAdminControllerRemoveNewsData = {
     body: RemoveNewsRequestDto;
@@ -1734,7 +1749,8 @@ export type NewsAdminControllerRemoveNewsResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerRemoveNewsResponse = NewsAdminControllerRemoveNewsResponses[keyof NewsAdminControllerRemoveNewsResponses];
+export type NewsAdminControllerRemoveNewsResponse =
+    NewsAdminControllerRemoveNewsResponses[keyof NewsAdminControllerRemoveNewsResponses];
 
 export type NewsAdminControllerAddGalleryImageData = {
     body: AddGalleryImageRequestDto;
@@ -1747,7 +1763,8 @@ export type NewsAdminControllerAddGalleryImageResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerAddGalleryImageResponse = NewsAdminControllerAddGalleryImageResponses[keyof NewsAdminControllerAddGalleryImageResponses];
+export type NewsAdminControllerAddGalleryImageResponse =
+    NewsAdminControllerAddGalleryImageResponses[keyof NewsAdminControllerAddGalleryImageResponses];
 
 export type NewsAdminControllerReorderGalleryImagesData = {
     body: ReorderGalleryImagesRequestDto;
@@ -1760,7 +1777,8 @@ export type NewsAdminControllerReorderGalleryImagesResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerReorderGalleryImagesResponse = NewsAdminControllerReorderGalleryImagesResponses[keyof NewsAdminControllerReorderGalleryImagesResponses];
+export type NewsAdminControllerReorderGalleryImagesResponse =
+    NewsAdminControllerReorderGalleryImagesResponses[keyof NewsAdminControllerReorderGalleryImagesResponses];
 
 export type NewsAdminControllerRemoveGalleryImageData = {
     body: RemoveGalleryImageRequestDto;
@@ -1773,7 +1791,8 @@ export type NewsAdminControllerRemoveGalleryImageResponses = {
     201: boolean;
 };
 
-export type NewsAdminControllerRemoveGalleryImageResponse = NewsAdminControllerRemoveGalleryImageResponses[keyof NewsAdminControllerRemoveGalleryImageResponses];
+export type NewsAdminControllerRemoveGalleryImageResponse =
+    NewsAdminControllerRemoveGalleryImageResponses[keyof NewsAdminControllerRemoveGalleryImageResponses];
 
 export type CommentsControllerGetNewsCommentsData = {
     body?: never;
@@ -1790,7 +1809,8 @@ export type CommentsControllerGetNewsCommentsResponses = {
     200: Array<GetNewsCommentsResponseItemDto>;
 };
 
-export type CommentsControllerGetNewsCommentsResponse = CommentsControllerGetNewsCommentsResponses[keyof CommentsControllerGetNewsCommentsResponses];
+export type CommentsControllerGetNewsCommentsResponse =
+    CommentsControllerGetNewsCommentsResponses[keyof CommentsControllerGetNewsCommentsResponses];
 
 export type CommentsControllerVoteNewsCommentData = {
     body: VoteNewsCommentRequestDto;
@@ -1804,7 +1824,8 @@ export type CommentsControllerVoteNewsCommentResponses = {
     201: boolean;
 };
 
-export type CommentsControllerVoteNewsCommentResponse = CommentsControllerVoteNewsCommentResponses[keyof CommentsControllerVoteNewsCommentResponses];
+export type CommentsControllerVoteNewsCommentResponse =
+    CommentsControllerVoteNewsCommentResponses[keyof CommentsControllerVoteNewsCommentResponses];
 
 export type CommentsControllerCreateNewsCommentData = {
     body: CreateNewsCommentRequestDto;
@@ -1818,7 +1839,8 @@ export type CommentsControllerCreateNewsCommentResponses = {
     201: boolean;
 };
 
-export type CommentsControllerCreateNewsCommentResponse = CommentsControllerCreateNewsCommentResponses[keyof CommentsControllerCreateNewsCommentResponses];
+export type CommentsControllerCreateNewsCommentResponse =
+    CommentsControllerCreateNewsCommentResponses[keyof CommentsControllerCreateNewsCommentResponses];
 
 export type LoadoutControllerGetRandomChallengeGroupsData = {
     body?: never;
@@ -1833,7 +1855,8 @@ export type LoadoutControllerGetRandomChallengeGroupsResponses = {
     200: Array<RandomGearChallengeGroupEntity>;
 };
 
-export type LoadoutControllerGetRandomChallengeGroupsResponse = LoadoutControllerGetRandomChallengeGroupsResponses[keyof LoadoutControllerGetRandomChallengeGroupsResponses];
+export type LoadoutControllerGetRandomChallengeGroupsResponse =
+    LoadoutControllerGetRandomChallengeGroupsResponses[keyof LoadoutControllerGetRandomChallengeGroupsResponses];
 
 export type LoadoutControllerGetRandomChallengesListData = {
     body?: never;
@@ -1849,7 +1872,8 @@ export type LoadoutControllerGetRandomChallengesListResponses = {
     200: Array<RandomChallengeWithCategoriesDto>;
 };
 
-export type LoadoutControllerGetRandomChallengesListResponse = LoadoutControllerGetRandomChallengesListResponses[keyof LoadoutControllerGetRandomChallengesListResponses];
+export type LoadoutControllerGetRandomChallengesListResponse =
+    LoadoutControllerGetRandomChallengesListResponses[keyof LoadoutControllerGetRandomChallengesListResponses];
 
 export type LoadoutControllerGetRandomChallengesListWithFullDataData = {
     body?: never;
@@ -1865,7 +1889,8 @@ export type LoadoutControllerGetRandomChallengesListWithFullDataResponses = {
     200: Array<RandomChallengeFullDto>;
 };
 
-export type LoadoutControllerGetRandomChallengesListWithFullDataResponse = LoadoutControllerGetRandomChallengesListWithFullDataResponses[keyof LoadoutControllerGetRandomChallengesListWithFullDataResponses];
+export type LoadoutControllerGetRandomChallengesListWithFullDataResponse =
+    LoadoutControllerGetRandomChallengesListWithFullDataResponses[keyof LoadoutControllerGetRandomChallengesListWithFullDataResponses];
 
 export type LoadoutControllerGetRandomChallengeFullDataData = {
     body?: never;
@@ -1880,7 +1905,8 @@ export type LoadoutControllerGetRandomChallengeFullDataResponses = {
     200: RandomChallengeFullDto;
 };
 
-export type LoadoutControllerGetRandomChallengeFullDataResponse = LoadoutControllerGetRandomChallengeFullDataResponses[keyof LoadoutControllerGetRandomChallengeFullDataResponses];
+export type LoadoutControllerGetRandomChallengeFullDataResponse =
+    LoadoutControllerGetRandomChallengeFullDataResponses[keyof LoadoutControllerGetRandomChallengeFullDataResponses];
 
 export type LoadoutAdminControllerCreateRandomChallengeData = {
     body: CreateRandomChallengeDto;
@@ -1893,7 +1919,8 @@ export type LoadoutAdminControllerCreateRandomChallengeResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerCreateRandomChallengeResponse = LoadoutAdminControllerCreateRandomChallengeResponses[keyof LoadoutAdminControllerCreateRandomChallengeResponses];
+export type LoadoutAdminControllerCreateRandomChallengeResponse =
+    LoadoutAdminControllerCreateRandomChallengeResponses[keyof LoadoutAdminControllerCreateRandomChallengeResponses];
 
 export type LoadoutAdminControllerUpdateRandomChallengeData = {
     body: UpdateRandomChallengeDto;
@@ -1906,7 +1933,8 @@ export type LoadoutAdminControllerUpdateRandomChallengeResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerUpdateRandomChallengeResponse = LoadoutAdminControllerUpdateRandomChallengeResponses[keyof LoadoutAdminControllerUpdateRandomChallengeResponses];
+export type LoadoutAdminControllerUpdateRandomChallengeResponse =
+    LoadoutAdminControllerUpdateRandomChallengeResponses[keyof LoadoutAdminControllerUpdateRandomChallengeResponses];
 
 export type LoadoutAdminControllerRemoveRandomChallengeData = {
     body: RemoveRandomChallengeDto;
@@ -1919,7 +1947,8 @@ export type LoadoutAdminControllerRemoveRandomChallengeResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerRemoveRandomChallengeResponse = LoadoutAdminControllerRemoveRandomChallengeResponses[keyof LoadoutAdminControllerRemoveRandomChallengeResponses];
+export type LoadoutAdminControllerRemoveRandomChallengeResponse =
+    LoadoutAdminControllerRemoveRandomChallengeResponses[keyof LoadoutAdminControllerRemoveRandomChallengeResponses];
 
 export type LoadoutAdminControllerCreateRandomChallengeGroupData = {
     body: CreateRandomChallengeGroupDto;
@@ -1932,7 +1961,8 @@ export type LoadoutAdminControllerCreateRandomChallengeGroupResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerCreateRandomChallengeGroupResponse = LoadoutAdminControllerCreateRandomChallengeGroupResponses[keyof LoadoutAdminControllerCreateRandomChallengeGroupResponses];
+export type LoadoutAdminControllerCreateRandomChallengeGroupResponse =
+    LoadoutAdminControllerCreateRandomChallengeGroupResponses[keyof LoadoutAdminControllerCreateRandomChallengeGroupResponses];
 
 export type LoadoutAdminControllerUpdateRandomChallengeGroupData = {
     body: UpdateRandomChallengeGroupDto;
@@ -1945,7 +1975,8 @@ export type LoadoutAdminControllerUpdateRandomChallengeGroupResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerUpdateRandomChallengeGroupResponse = LoadoutAdminControllerUpdateRandomChallengeGroupResponses[keyof LoadoutAdminControllerUpdateRandomChallengeGroupResponses];
+export type LoadoutAdminControllerUpdateRandomChallengeGroupResponse =
+    LoadoutAdminControllerUpdateRandomChallengeGroupResponses[keyof LoadoutAdminControllerUpdateRandomChallengeGroupResponses];
 
 export type LoadoutAdminControllerRemoveRandomChallengeGroupData = {
     body: RemoveRandomChallengeGroupDto;
@@ -1958,7 +1989,8 @@ export type LoadoutAdminControllerRemoveRandomChallengeGroupResponses = {
     201: boolean;
 };
 
-export type LoadoutAdminControllerRemoveRandomChallengeGroupResponse = LoadoutAdminControllerRemoveRandomChallengeGroupResponses[keyof LoadoutAdminControllerRemoveRandomChallengeGroupResponses];
+export type LoadoutAdminControllerRemoveRandomChallengeGroupResponse =
+    LoadoutAdminControllerRemoveRandomChallengeGroupResponses[keyof LoadoutAdminControllerRemoveRandomChallengeGroupResponses];
 
 export type LoadoutRandomizerControllerGenerateRandomLoadoutData = {
     body: GetRandomLoadoutDto;
@@ -1972,7 +2004,8 @@ export type LoadoutRandomizerControllerGenerateRandomLoadoutResponses = {
     201: GetRandomLoadoutResponseDto;
 };
 
-export type LoadoutRandomizerControllerGenerateRandomLoadoutResponse = LoadoutRandomizerControllerGenerateRandomLoadoutResponses[keyof LoadoutRandomizerControllerGenerateRandomLoadoutResponses];
+export type LoadoutRandomizerControllerGenerateRandomLoadoutResponse =
+    LoadoutRandomizerControllerGenerateRandomLoadoutResponses[keyof LoadoutRandomizerControllerGenerateRandomLoadoutResponses];
 
 export type SeedControllerSeedGearData = {
     body?: never;
@@ -1998,7 +2031,8 @@ export type SeedControllerSeedGearFromExcelResponses = {
     201: boolean;
 };
 
-export type SeedControllerSeedGearFromExcelResponse = SeedControllerSeedGearFromExcelResponses[keyof SeedControllerSeedGearFromExcelResponses];
+export type SeedControllerSeedGearFromExcelResponse =
+    SeedControllerSeedGearFromExcelResponses[keyof SeedControllerSeedGearFromExcelResponses];
 
 export type ChallengesAdminControllerCreateChallengeData = {
     body: CreateChallengeDto;
@@ -2011,7 +2045,8 @@ export type ChallengesAdminControllerCreateChallengeResponses = {
     201: boolean;
 };
 
-export type ChallengesAdminControllerCreateChallengeResponse = ChallengesAdminControllerCreateChallengeResponses[keyof ChallengesAdminControllerCreateChallengeResponses];
+export type ChallengesAdminControllerCreateChallengeResponse =
+    ChallengesAdminControllerCreateChallengeResponses[keyof ChallengesAdminControllerCreateChallengeResponses];
 
 export type ChallengesAdminControllerUpdateChallengeData = {
     body: UpdateChallengeDto;
@@ -2024,7 +2059,8 @@ export type ChallengesAdminControllerUpdateChallengeResponses = {
     201: boolean;
 };
 
-export type ChallengesAdminControllerUpdateChallengeResponse = ChallengesAdminControllerUpdateChallengeResponses[keyof ChallengesAdminControllerUpdateChallengeResponses];
+export type ChallengesAdminControllerUpdateChallengeResponse =
+    ChallengesAdminControllerUpdateChallengeResponses[keyof ChallengesAdminControllerUpdateChallengeResponses];
 
 export type ChallengesAdminControllerRemoveChallengeData = {
     body: RemoveChallengeDto;
@@ -2037,7 +2073,8 @@ export type ChallengesAdminControllerRemoveChallengeResponses = {
     201: boolean;
 };
 
-export type ChallengesAdminControllerRemoveChallengeResponse = ChallengesAdminControllerRemoveChallengeResponses[keyof ChallengesAdminControllerRemoveChallengeResponses];
+export type ChallengesAdminControllerRemoveChallengeResponse =
+    ChallengesAdminControllerRemoveChallengeResponses[keyof ChallengesAdminControllerRemoveChallengeResponses];
 
 export type ChallengesAdminControllerGetChallengeProgressByIdData = {
     body?: never;
@@ -2052,7 +2089,8 @@ export type ChallengesAdminControllerGetChallengeProgressByIdResponses = {
     200: ChallengeProgressEntity;
 };
 
-export type ChallengesAdminControllerGetChallengeProgressByIdResponse = ChallengesAdminControllerGetChallengeProgressByIdResponses[keyof ChallengesAdminControllerGetChallengeProgressByIdResponses];
+export type ChallengesAdminControllerGetChallengeProgressByIdResponse =
+    ChallengesAdminControllerGetChallengeProgressByIdResponses[keyof ChallengesAdminControllerGetChallengeProgressByIdResponses];
 
 export type ChallengesAdminControllerGetChallengesProgressListData = {
     body?: never;
@@ -2072,7 +2110,8 @@ export type ChallengesAdminControllerGetChallengesProgressListResponses = {
     200: Array<ChallengeProgressEntity>;
 };
 
-export type ChallengesAdminControllerGetChallengesProgressListResponse = ChallengesAdminControllerGetChallengesProgressListResponses[keyof ChallengesAdminControllerGetChallengesProgressListResponses];
+export type ChallengesAdminControllerGetChallengesProgressListResponse =
+    ChallengesAdminControllerGetChallengesProgressListResponses[keyof ChallengesAdminControllerGetChallengesProgressListResponses];
 
 export type ChallengesAdminControllerSetChallengeProgressData = {
     body: SetChallengeProgressDto;
@@ -2085,7 +2124,8 @@ export type ChallengesAdminControllerSetChallengeProgressResponses = {
     201: boolean;
 };
 
-export type ChallengesAdminControllerSetChallengeProgressResponse = ChallengesAdminControllerSetChallengeProgressResponses[keyof ChallengesAdminControllerSetChallengeProgressResponses];
+export type ChallengesAdminControllerSetChallengeProgressResponse =
+    ChallengesAdminControllerSetChallengeProgressResponses[keyof ChallengesAdminControllerSetChallengeProgressResponses];
 
 export type ChallengesClientControllerSendChallengeToReviewData = {
     body: SendChallengeToReviewDto;
@@ -2098,7 +2138,8 @@ export type ChallengesClientControllerSendChallengeToReviewResponses = {
     201: boolean;
 };
 
-export type ChallengesClientControllerSendChallengeToReviewResponse = ChallengesClientControllerSendChallengeToReviewResponses[keyof ChallengesClientControllerSendChallengeToReviewResponses];
+export type ChallengesClientControllerSendChallengeToReviewResponse =
+    ChallengesClientControllerSendChallengeToReviewResponses[keyof ChallengesClientControllerSendChallengeToReviewResponses];
 
 export type ChallengesClientControllerAcceptChallengeData = {
     body: AcceptChallengeRequestDto;
@@ -2111,7 +2152,8 @@ export type ChallengesClientControllerAcceptChallengeResponses = {
     201: boolean;
 };
 
-export type ChallengesClientControllerAcceptChallengeResponse = ChallengesClientControllerAcceptChallengeResponses[keyof ChallengesClientControllerAcceptChallengeResponses];
+export type ChallengesClientControllerAcceptChallengeResponse =
+    ChallengesClientControllerAcceptChallengeResponses[keyof ChallengesClientControllerAcceptChallengeResponses];
 
 export type ChallengesClientControllerCancelChallengeData = {
     body: CancelOrRetryChallengeRequestDto;
@@ -2135,7 +2177,8 @@ export type ChallengesClientControllerRetryChallengeResponses = {
     201: boolean;
 };
 
-export type ChallengesClientControllerRetryChallengeResponse = ChallengesClientControllerRetryChallengeResponses[keyof ChallengesClientControllerRetryChallengeResponses];
+export type ChallengesClientControllerRetryChallengeResponse =
+    ChallengesClientControllerRetryChallengeResponses[keyof ChallengesClientControllerRetryChallengeResponses];
 
 export type ChallengesClientControllerGetProgressingChallengesData = {
     body?: never;
@@ -2157,7 +2200,8 @@ export type ChallengesClientControllerGetProgressingChallengesResponses = {
     200: Array<GetAllChallengesWithProgressItemDto>;
 };
 
-export type ChallengesClientControllerGetProgressingChallengesResponse = ChallengesClientControllerGetProgressingChallengesResponses[keyof ChallengesClientControllerGetProgressingChallengesResponses];
+export type ChallengesClientControllerGetProgressingChallengesResponse =
+    ChallengesClientControllerGetProgressingChallengesResponses[keyof ChallengesClientControllerGetProgressingChallengesResponses];
 
 export type ChallengesClientControllerGetAvailableChallengesData = {
     body?: never;
@@ -2178,7 +2222,8 @@ export type ChallengesClientControllerGetAvailableChallengesResponses = {
     200: Array<GetAllChallengesResponseItemDto>;
 };
 
-export type ChallengesClientControllerGetAvailableChallengesResponse = ChallengesClientControllerGetAvailableChallengesResponses[keyof ChallengesClientControllerGetAvailableChallengesResponses];
+export type ChallengesClientControllerGetAvailableChallengesResponse =
+    ChallengesClientControllerGetAvailableChallengesResponses[keyof ChallengesClientControllerGetAvailableChallengesResponses];
 
 export type ChallengesClientControllerGetChallengeByIdWithProgressData = {
     body?: never;
@@ -2193,7 +2238,8 @@ export type ChallengesClientControllerGetChallengeByIdWithProgressResponses = {
     200: GetChallengeByIdWithProgressResponseDto;
 };
 
-export type ChallengesClientControllerGetChallengeByIdWithProgressResponse = ChallengesClientControllerGetChallengeByIdWithProgressResponses[keyof ChallengesClientControllerGetChallengeByIdWithProgressResponses];
+export type ChallengesClientControllerGetChallengeByIdWithProgressResponse =
+    ChallengesClientControllerGetChallengeByIdWithProgressResponses[keyof ChallengesClientControllerGetChallengeByIdWithProgressResponses];
 
 export type SeasonControllerGetCurrentSeasonData = {
     body?: never;
@@ -2208,7 +2254,8 @@ export type SeasonControllerGetCurrentSeasonResponses = {
     200: CurrentSeasonDto;
 };
 
-export type SeasonControllerGetCurrentSeasonResponse = SeasonControllerGetCurrentSeasonResponses[keyof SeasonControllerGetCurrentSeasonResponses];
+export type SeasonControllerGetCurrentSeasonResponse =
+    SeasonControllerGetCurrentSeasonResponses[keyof SeasonControllerGetCurrentSeasonResponses];
 
 export type SeasonControllerGetCurrentSeasonBalanceData = {
     body?: never;
@@ -2223,7 +2270,8 @@ export type SeasonControllerGetCurrentSeasonBalanceResponses = {
     200: ChallengeSeasonUserBalanceEntity;
 };
 
-export type SeasonControllerGetCurrentSeasonBalanceResponse = SeasonControllerGetCurrentSeasonBalanceResponses[keyof SeasonControllerGetCurrentSeasonBalanceResponses];
+export type SeasonControllerGetCurrentSeasonBalanceResponse =
+    SeasonControllerGetCurrentSeasonBalanceResponses[keyof SeasonControllerGetCurrentSeasonBalanceResponses];
 
 export type ChallengesShopAdminControllerGetListData = {
     body?: never;
@@ -2239,7 +2287,8 @@ export type ChallengesShopAdminControllerGetListResponses = {
     200: Array<ChallengeShopItemEntity>;
 };
 
-export type ChallengesShopAdminControllerGetListResponse = ChallengesShopAdminControllerGetListResponses[keyof ChallengesShopAdminControllerGetListResponses];
+export type ChallengesShopAdminControllerGetListResponse =
+    ChallengesShopAdminControllerGetListResponses[keyof ChallengesShopAdminControllerGetListResponses];
 
 export type ChallengesShopAdminControllerCreateData = {
     body: CreateChallengeShopItemDto;
@@ -2253,7 +2302,8 @@ export type ChallengesShopAdminControllerCreateResponses = {
     201: string;
 };
 
-export type ChallengesShopAdminControllerCreateResponse = ChallengesShopAdminControllerCreateResponses[keyof ChallengesShopAdminControllerCreateResponses];
+export type ChallengesShopAdminControllerCreateResponse =
+    ChallengesShopAdminControllerCreateResponses[keyof ChallengesShopAdminControllerCreateResponses];
 
 export type ChallengesShopAdminControllerUpdateData = {
     body: UpdateChallengeShopItemDto;
@@ -2267,7 +2317,8 @@ export type ChallengesShopAdminControllerUpdateResponses = {
     201: boolean;
 };
 
-export type ChallengesShopAdminControllerUpdateResponse = ChallengesShopAdminControllerUpdateResponses[keyof ChallengesShopAdminControllerUpdateResponses];
+export type ChallengesShopAdminControllerUpdateResponse =
+    ChallengesShopAdminControllerUpdateResponses[keyof ChallengesShopAdminControllerUpdateResponses];
 
 export type ChallengesShopAdminControllerRemoveData = {
     body: RemoveChallengeShopItemDto;
@@ -2281,7 +2332,8 @@ export type ChallengesShopAdminControllerRemoveResponses = {
     201: boolean;
 };
 
-export type ChallengesShopAdminControllerRemoveResponse = ChallengesShopAdminControllerRemoveResponses[keyof ChallengesShopAdminControllerRemoveResponses];
+export type ChallengesShopAdminControllerRemoveResponse =
+    ChallengesShopAdminControllerRemoveResponses[keyof ChallengesShopAdminControllerRemoveResponses];
 
 export type ChallengesShopAdminControllerReversePurchaseData = {
     body: ReversePurchaseDto;
@@ -2295,7 +2347,8 @@ export type ChallengesShopAdminControllerReversePurchaseResponses = {
     201: boolean;
 };
 
-export type ChallengesShopAdminControllerReversePurchaseResponse = ChallengesShopAdminControllerReversePurchaseResponses[keyof ChallengesShopAdminControllerReversePurchaseResponses];
+export type ChallengesShopAdminControllerReversePurchaseResponse =
+    ChallengesShopAdminControllerReversePurchaseResponses[keyof ChallengesShopAdminControllerReversePurchaseResponses];
 
 export type ChallengesShopAdminControllerGetPurchasesListData = {
     body?: never;
@@ -2312,7 +2365,8 @@ export type ChallengesShopAdminControllerGetPurchasesListResponses = {
     200: Array<ChallengeShopPurchaseEntity>;
 };
 
-export type ChallengesShopAdminControllerGetPurchasesListResponse = ChallengesShopAdminControllerGetPurchasesListResponses[keyof ChallengesShopAdminControllerGetPurchasesListResponses];
+export type ChallengesShopAdminControllerGetPurchasesListResponse =
+    ChallengesShopAdminControllerGetPurchasesListResponses[keyof ChallengesShopAdminControllerGetPurchasesListResponses];
 
 export type ChallengeSeasonAdminControllerGetListData = {
     body?: never;
@@ -2328,7 +2382,8 @@ export type ChallengeSeasonAdminControllerGetListResponses = {
     200: Array<ChallengeSeason>;
 };
 
-export type ChallengeSeasonAdminControllerGetListResponse = ChallengeSeasonAdminControllerGetListResponses[keyof ChallengeSeasonAdminControllerGetListResponses];
+export type ChallengeSeasonAdminControllerGetListResponse =
+    ChallengeSeasonAdminControllerGetListResponses[keyof ChallengeSeasonAdminControllerGetListResponses];
 
 export type ChallengeSeasonAdminControllerCreateData = {
     body: CreateChallengeSeasonDto;
@@ -2342,7 +2397,8 @@ export type ChallengeSeasonAdminControllerCreateResponses = {
     201: ChallengeSeason;
 };
 
-export type ChallengeSeasonAdminControllerCreateResponse = ChallengeSeasonAdminControllerCreateResponses[keyof ChallengeSeasonAdminControllerCreateResponses];
+export type ChallengeSeasonAdminControllerCreateResponse =
+    ChallengeSeasonAdminControllerCreateResponses[keyof ChallengeSeasonAdminControllerCreateResponses];
 
 export type ChallengeSeasonAdminControllerUpdateData = {
     body: UpdateChallengeSeasonDto;
@@ -2356,7 +2412,8 @@ export type ChallengeSeasonAdminControllerUpdateResponses = {
     201: ChallengeSeason;
 };
 
-export type ChallengeSeasonAdminControllerUpdateResponse = ChallengeSeasonAdminControllerUpdateResponses[keyof ChallengeSeasonAdminControllerUpdateResponses];
+export type ChallengeSeasonAdminControllerUpdateResponse =
+    ChallengeSeasonAdminControllerUpdateResponses[keyof ChallengeSeasonAdminControllerUpdateResponses];
 
 export type ChallengeSeasonAdminControllerRemoveData = {
     body: RemoveChallengeSeasonDto;
@@ -2370,7 +2427,8 @@ export type ChallengeSeasonAdminControllerRemoveResponses = {
     201: boolean;
 };
 
-export type ChallengeSeasonAdminControllerRemoveResponse = ChallengeSeasonAdminControllerRemoveResponses[keyof ChallengeSeasonAdminControllerRemoveResponses];
+export type ChallengeSeasonAdminControllerRemoveResponse =
+    ChallengeSeasonAdminControllerRemoveResponses[keyof ChallengeSeasonAdminControllerRemoveResponses];
 
 export type OfferControllerCreateOfferData = {
     body: CreateChallengeOfferDto;
@@ -2397,7 +2455,8 @@ export type OfferControllerGetListResponses = {
     200: Array<ChallengeOfferEntity>;
 };
 
-export type OfferControllerGetListResponse = OfferControllerGetListResponses[keyof OfferControllerGetListResponses];
+export type OfferControllerGetListResponse =
+    OfferControllerGetListResponses[keyof OfferControllerGetListResponses];
 
 export type OfferControllerGetByIdData = {
     body?: never;
@@ -2412,7 +2471,8 @@ export type OfferControllerGetByIdResponses = {
     200: ChallengeOfferEntity;
 };
 
-export type OfferControllerGetByIdResponse = OfferControllerGetByIdResponses[keyof OfferControllerGetByIdResponses];
+export type OfferControllerGetByIdResponse =
+    OfferControllerGetByIdResponses[keyof OfferControllerGetByIdResponses];
 
 export type ShopControllerGetListData = {
     body?: never;
@@ -2429,7 +2489,8 @@ export type ShopControllerGetListResponses = {
     200: Array<ChallengeShopItemEntity>;
 };
 
-export type ShopControllerGetListResponse = ShopControllerGetListResponses[keyof ShopControllerGetListResponses];
+export type ShopControllerGetListResponse =
+    ShopControllerGetListResponses[keyof ShopControllerGetListResponses];
 
 export type ShopControllerPurchaseData = {
     body: PurchaseShopItemDto;
@@ -2443,7 +2504,8 @@ export type ShopControllerPurchaseResponses = {
     201: boolean;
 };
 
-export type ShopControllerPurchaseResponse = ShopControllerPurchaseResponses[keyof ShopControllerPurchaseResponses];
+export type ShopControllerPurchaseResponse =
+    ShopControllerPurchaseResponses[keyof ShopControllerPurchaseResponses];
 
 export type GearAdminControllerCreateGearData = {
     body: CreateGearDto;
@@ -2456,7 +2518,8 @@ export type GearAdminControllerCreateGearResponses = {
     201: string;
 };
 
-export type GearAdminControllerCreateGearResponse = GearAdminControllerCreateGearResponses[keyof GearAdminControllerCreateGearResponses];
+export type GearAdminControllerCreateGearResponse =
+    GearAdminControllerCreateGearResponses[keyof GearAdminControllerCreateGearResponses];
 
 export type GearAdminControllerUpdateGearData = {
     body: UpdateGearDto;
@@ -2469,7 +2532,8 @@ export type GearAdminControllerUpdateGearResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerUpdateGearResponse = GearAdminControllerUpdateGearResponses[keyof GearAdminControllerUpdateGearResponses];
+export type GearAdminControllerUpdateGearResponse =
+    GearAdminControllerUpdateGearResponses[keyof GearAdminControllerUpdateGearResponses];
 
 export type GearAdminControllerGetGearData = {
     body?: never;
@@ -2484,7 +2548,8 @@ export type GearAdminControllerGetGearResponses = {
     200: GearEntity;
 };
 
-export type GearAdminControllerGetGearResponse = GearAdminControllerGetGearResponses[keyof GearAdminControllerGetGearResponses];
+export type GearAdminControllerGetGearResponse =
+    GearAdminControllerGetGearResponses[keyof GearAdminControllerGetGearResponses];
 
 export type GearAdminControllerGetGearListData = {
     body?: never;
@@ -2502,7 +2567,8 @@ export type GearAdminControllerGetGearListResponses = {
     200: GetGearListResponseDto;
 };
 
-export type GearAdminControllerGetGearListResponse = GearAdminControllerGetGearListResponses[keyof GearAdminControllerGetGearListResponses];
+export type GearAdminControllerGetGearListResponse =
+    GearAdminControllerGetGearListResponses[keyof GearAdminControllerGetGearListResponses];
 
 export type GearAdminControllerRemoveGearData = {
     body: RemoveGearDto;
@@ -2515,7 +2581,8 @@ export type GearAdminControllerRemoveGearResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerRemoveGearResponse = GearAdminControllerRemoveGearResponses[keyof GearAdminControllerRemoveGearResponses];
+export type GearAdminControllerRemoveGearResponse =
+    GearAdminControllerRemoveGearResponses[keyof GearAdminControllerRemoveGearResponses];
 
 export type GearAdminControllerCreateGearRarityData = {
     body: CreateGearRarityDto;
@@ -2528,7 +2595,8 @@ export type GearAdminControllerCreateGearRarityResponses = {
     201: string;
 };
 
-export type GearAdminControllerCreateGearRarityResponse = GearAdminControllerCreateGearRarityResponses[keyof GearAdminControllerCreateGearRarityResponses];
+export type GearAdminControllerCreateGearRarityResponse =
+    GearAdminControllerCreateGearRarityResponses[keyof GearAdminControllerCreateGearRarityResponses];
 
 export type GearAdminControllerUpdateGearRarityData = {
     body: UpdateGearRarityDto;
@@ -2541,7 +2609,8 @@ export type GearAdminControllerUpdateGearRarityResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerUpdateGearRarityResponse = GearAdminControllerUpdateGearRarityResponses[keyof GearAdminControllerUpdateGearRarityResponses];
+export type GearAdminControllerUpdateGearRarityResponse =
+    GearAdminControllerUpdateGearRarityResponses[keyof GearAdminControllerUpdateGearRarityResponses];
 
 export type GearAdminControllerGetGearRarityData = {
     body?: never;
@@ -2556,7 +2625,8 @@ export type GearAdminControllerGetGearRarityResponses = {
     200: GearRarityEntity;
 };
 
-export type GearAdminControllerGetGearRarityResponse = GearAdminControllerGetGearRarityResponses[keyof GearAdminControllerGetGearRarityResponses];
+export type GearAdminControllerGetGearRarityResponse =
+    GearAdminControllerGetGearRarityResponses[keyof GearAdminControllerGetGearRarityResponses];
 
 export type GearAdminControllerGetGearRarityListData = {
     body?: never;
@@ -2574,7 +2644,8 @@ export type GearAdminControllerGetGearRarityListResponses = {
     200: GetGearRarityListResponseDto;
 };
 
-export type GearAdminControllerGetGearRarityListResponse = GearAdminControllerGetGearRarityListResponses[keyof GearAdminControllerGetGearRarityListResponses];
+export type GearAdminControllerGetGearRarityListResponse =
+    GearAdminControllerGetGearRarityListResponses[keyof GearAdminControllerGetGearRarityListResponses];
 
 export type GearAdminControllerRemoveGearRarityData = {
     body: RemoveGearRarityDto;
@@ -2587,7 +2658,8 @@ export type GearAdminControllerRemoveGearRarityResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerRemoveGearRarityResponse = GearAdminControllerRemoveGearRarityResponses[keyof GearAdminControllerRemoveGearRarityResponses];
+export type GearAdminControllerRemoveGearRarityResponse =
+    GearAdminControllerRemoveGearRarityResponses[keyof GearAdminControllerRemoveGearRarityResponses];
 
 export type GearAdminControllerCreateGearTypeData = {
     body: CreateGearTypeDto;
@@ -2600,7 +2672,8 @@ export type GearAdminControllerCreateGearTypeResponses = {
     201: string;
 };
 
-export type GearAdminControllerCreateGearTypeResponse = GearAdminControllerCreateGearTypeResponses[keyof GearAdminControllerCreateGearTypeResponses];
+export type GearAdminControllerCreateGearTypeResponse =
+    GearAdminControllerCreateGearTypeResponses[keyof GearAdminControllerCreateGearTypeResponses];
 
 export type GearAdminControllerUpdateGearTypeData = {
     body: UpdateGearTypeDto;
@@ -2613,7 +2686,8 @@ export type GearAdminControllerUpdateGearTypeResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerUpdateGearTypeResponse = GearAdminControllerUpdateGearTypeResponses[keyof GearAdminControllerUpdateGearTypeResponses];
+export type GearAdminControllerUpdateGearTypeResponse =
+    GearAdminControllerUpdateGearTypeResponses[keyof GearAdminControllerUpdateGearTypeResponses];
 
 export type GearAdminControllerGetGearTypeData = {
     body?: never;
@@ -2628,7 +2702,8 @@ export type GearAdminControllerGetGearTypeResponses = {
     200: GearTypeEntity;
 };
 
-export type GearAdminControllerGetGearTypeResponse = GearAdminControllerGetGearTypeResponses[keyof GearAdminControllerGetGearTypeResponses];
+export type GearAdminControllerGetGearTypeResponse =
+    GearAdminControllerGetGearTypeResponses[keyof GearAdminControllerGetGearTypeResponses];
 
 export type GearAdminControllerGetGearTypeListData = {
     body?: never;
@@ -2646,7 +2721,8 @@ export type GearAdminControllerGetGearTypeListResponses = {
     200: GetGearTypeListResponseDto;
 };
 
-export type GearAdminControllerGetGearTypeListResponse = GearAdminControllerGetGearTypeListResponses[keyof GearAdminControllerGetGearTypeListResponses];
+export type GearAdminControllerGetGearTypeListResponse =
+    GearAdminControllerGetGearTypeListResponses[keyof GearAdminControllerGetGearTypeListResponses];
 
 export type GearAdminControllerRemoveGearTypeData = {
     body: RemoveGearTypeDto;
@@ -2659,7 +2735,8 @@ export type GearAdminControllerRemoveGearTypeResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerRemoveGearTypeResponse = GearAdminControllerRemoveGearTypeResponses[keyof GearAdminControllerRemoveGearTypeResponses];
+export type GearAdminControllerRemoveGearTypeResponse =
+    GearAdminControllerRemoveGearTypeResponses[keyof GearAdminControllerRemoveGearTypeResponses];
 
 export type GearAdminControllerCreateGearCategoryData = {
     body: CreateGearCategoryDto;
@@ -2672,7 +2749,8 @@ export type GearAdminControllerCreateGearCategoryResponses = {
     201: string;
 };
 
-export type GearAdminControllerCreateGearCategoryResponse = GearAdminControllerCreateGearCategoryResponses[keyof GearAdminControllerCreateGearCategoryResponses];
+export type GearAdminControllerCreateGearCategoryResponse =
+    GearAdminControllerCreateGearCategoryResponses[keyof GearAdminControllerCreateGearCategoryResponses];
 
 export type GearAdminControllerUpdateGearCategoryData = {
     body: UpdateGearCategoryDto;
@@ -2685,7 +2763,8 @@ export type GearAdminControllerUpdateGearCategoryResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerUpdateGearCategoryResponse = GearAdminControllerUpdateGearCategoryResponses[keyof GearAdminControllerUpdateGearCategoryResponses];
+export type GearAdminControllerUpdateGearCategoryResponse =
+    GearAdminControllerUpdateGearCategoryResponses[keyof GearAdminControllerUpdateGearCategoryResponses];
 
 export type GearAdminControllerGetGearCategoryData = {
     body?: never;
@@ -2700,7 +2779,8 @@ export type GearAdminControllerGetGearCategoryResponses = {
     200: GearCategoryEntity;
 };
 
-export type GearAdminControllerGetGearCategoryResponse = GearAdminControllerGetGearCategoryResponses[keyof GearAdminControllerGetGearCategoryResponses];
+export type GearAdminControllerGetGearCategoryResponse =
+    GearAdminControllerGetGearCategoryResponses[keyof GearAdminControllerGetGearCategoryResponses];
 
 export type GearAdminControllerGetGearCategoryListData = {
     body?: never;
@@ -2718,7 +2798,8 @@ export type GearAdminControllerGetGearCategoryListResponses = {
     200: GetGearCategoryListResponseDto;
 };
 
-export type GearAdminControllerGetGearCategoryListResponse = GearAdminControllerGetGearCategoryListResponses[keyof GearAdminControllerGetGearCategoryListResponses];
+export type GearAdminControllerGetGearCategoryListResponse =
+    GearAdminControllerGetGearCategoryListResponses[keyof GearAdminControllerGetGearCategoryListResponses];
 
 export type GearAdminControllerRemoveGearCategoryData = {
     body: RemoveGearCategoryDto;
@@ -2731,7 +2812,8 @@ export type GearAdminControllerRemoveGearCategoryResponses = {
     201: boolean;
 };
 
-export type GearAdminControllerRemoveGearCategoryResponse = GearAdminControllerRemoveGearCategoryResponses[keyof GearAdminControllerRemoveGearCategoryResponses];
+export type GearAdminControllerRemoveGearCategoryResponse =
+    GearAdminControllerRemoveGearCategoryResponses[keyof GearAdminControllerRemoveGearCategoryResponses];
 
 export type GearControllerGetPublicGearByIdsData = {
     body?: never;
@@ -2746,7 +2828,8 @@ export type GearControllerGetPublicGearByIdsResponses = {
     200: Array<PublicGearDto>;
 };
 
-export type GearControllerGetPublicGearByIdsResponse = GearControllerGetPublicGearByIdsResponses[keyof GearControllerGetPublicGearByIdsResponses];
+export type GearControllerGetPublicGearByIdsResponse =
+    GearControllerGetPublicGearByIdsResponses[keyof GearControllerGetPublicGearByIdsResponses];
 
 export type UploadsControllerUploadFileData = {
     body: UploadFileDto;
@@ -2763,7 +2846,8 @@ export type UploadsControllerUploadFileResponses = {
     201: string;
 };
 
-export type UploadsControllerUploadFileResponse = UploadsControllerUploadFileResponses[keyof UploadsControllerUploadFileResponses];
+export type UploadsControllerUploadFileResponse =
+    UploadsControllerUploadFileResponses[keyof UploadsControllerUploadFileResponses];
 
 export type MapsAdminControllerCreateMapData = {
     body: CreateMapDto;
@@ -2777,7 +2861,8 @@ export type MapsAdminControllerCreateMapResponses = {
     201: string;
 };
 
-export type MapsAdminControllerCreateMapResponse = MapsAdminControllerCreateMapResponses[keyof MapsAdminControllerCreateMapResponses];
+export type MapsAdminControllerCreateMapResponse =
+    MapsAdminControllerCreateMapResponses[keyof MapsAdminControllerCreateMapResponses];
 
 export type MapsAdminControllerUpdateMapData = {
     body: UpdateMapDto;
@@ -2791,7 +2876,8 @@ export type MapsAdminControllerUpdateMapResponses = {
     201: boolean;
 };
 
-export type MapsAdminControllerUpdateMapResponse = MapsAdminControllerUpdateMapResponses[keyof MapsAdminControllerUpdateMapResponses];
+export type MapsAdminControllerUpdateMapResponse =
+    MapsAdminControllerUpdateMapResponses[keyof MapsAdminControllerUpdateMapResponses];
 
 export type MapsAdminControllerRemoveMapData = {
     body: RemoveMapDto;
@@ -2805,7 +2891,8 @@ export type MapsAdminControllerRemoveMapResponses = {
     201: boolean;
 };
 
-export type MapsAdminControllerRemoveMapResponse = MapsAdminControllerRemoveMapResponses[keyof MapsAdminControllerRemoveMapResponses];
+export type MapsAdminControllerRemoveMapResponse =
+    MapsAdminControllerRemoveMapResponses[keyof MapsAdminControllerRemoveMapResponses];
 
 export type MapsAdminControllerCreateMapFloorData = {
     body: CreateMapFloorDto;
@@ -2819,7 +2906,8 @@ export type MapsAdminControllerCreateMapFloorResponses = {
     201: string;
 };
 
-export type MapsAdminControllerCreateMapFloorResponse = MapsAdminControllerCreateMapFloorResponses[keyof MapsAdminControllerCreateMapFloorResponses];
+export type MapsAdminControllerCreateMapFloorResponse =
+    MapsAdminControllerCreateMapFloorResponses[keyof MapsAdminControllerCreateMapFloorResponses];
 
 export type MapsAdminControllerUpdateMapFloorData = {
     body: UpdateMapFloorDto;
@@ -2833,7 +2921,8 @@ export type MapsAdminControllerUpdateMapFloorResponses = {
     201: boolean;
 };
 
-export type MapsAdminControllerUpdateMapFloorResponse = MapsAdminControllerUpdateMapFloorResponses[keyof MapsAdminControllerUpdateMapFloorResponses];
+export type MapsAdminControllerUpdateMapFloorResponse =
+    MapsAdminControllerUpdateMapFloorResponses[keyof MapsAdminControllerUpdateMapFloorResponses];
 
 export type MapsAdminControllerRemoveMapFloorData = {
     body: RemoveMapFloorDto;
@@ -2847,7 +2936,8 @@ export type MapsAdminControllerRemoveMapFloorResponses = {
     201: boolean;
 };
 
-export type MapsAdminControllerRemoveMapFloorResponse = MapsAdminControllerRemoveMapFloorResponses[keyof MapsAdminControllerRemoveMapFloorResponses];
+export type MapsAdminControllerRemoveMapFloorResponse =
+    MapsAdminControllerRemoveMapFloorResponses[keyof MapsAdminControllerRemoveMapFloorResponses];
 
 export type MapsAdminControllerGenerateMapTilesData = {
     body: GenerateMapTilesDto;
@@ -2861,7 +2951,8 @@ export type MapsAdminControllerGenerateMapTilesResponses = {
     201: unknown;
 };
 
-export type MapsAdminControllerGenerateMapTilesResponse = MapsAdminControllerGenerateMapTilesResponses[keyof MapsAdminControllerGenerateMapTilesResponses];
+export type MapsAdminControllerGenerateMapTilesResponse =
+    MapsAdminControllerGenerateMapTilesResponses[keyof MapsAdminControllerGenerateMapTilesResponses];
 
 export type MapsControllerGetMapData = {
     body?: never;
@@ -2876,7 +2967,8 @@ export type MapsControllerGetMapResponses = {
     200: MapDataResponseDto;
 };
 
-export type MapsControllerGetMapResponse = MapsControllerGetMapResponses[keyof MapsControllerGetMapResponses];
+export type MapsControllerGetMapResponse =
+    MapsControllerGetMapResponses[keyof MapsControllerGetMapResponses];
 
 export type MapsControllerGetMapListData = {
     body?: never;
@@ -2891,7 +2983,8 @@ export type MapsControllerGetMapListResponses = {
     200: Array<MapListResponseDto>;
 };
 
-export type MapsControllerGetMapListResponse = MapsControllerGetMapListResponses[keyof MapsControllerGetMapListResponses];
+export type MapsControllerGetMapListResponse =
+    MapsControllerGetMapListResponses[keyof MapsControllerGetMapListResponses];
 
 export type MapsCategoriesAdminControllerGetMapCategoriesData = {
     body?: never;
@@ -2907,7 +3000,8 @@ export type MapsCategoriesAdminControllerGetMapCategoriesResponses = {
     200: Array<MapMarkerCategoryEntity>;
 };
 
-export type MapsCategoriesAdminControllerGetMapCategoriesResponse = MapsCategoriesAdminControllerGetMapCategoriesResponses[keyof MapsCategoriesAdminControllerGetMapCategoriesResponses];
+export type MapsCategoriesAdminControllerGetMapCategoriesResponse =
+    MapsCategoriesAdminControllerGetMapCategoriesResponses[keyof MapsCategoriesAdminControllerGetMapCategoriesResponses];
 
 export type MapsCategoriesAdminControllerGetMapCategoryData = {
     body?: never;
@@ -2922,7 +3016,8 @@ export type MapsCategoriesAdminControllerGetMapCategoryResponses = {
     200: MapMarkerCategoryEntity;
 };
 
-export type MapsCategoriesAdminControllerGetMapCategoryResponse = MapsCategoriesAdminControllerGetMapCategoryResponses[keyof MapsCategoriesAdminControllerGetMapCategoryResponses];
+export type MapsCategoriesAdminControllerGetMapCategoryResponse =
+    MapsCategoriesAdminControllerGetMapCategoryResponses[keyof MapsCategoriesAdminControllerGetMapCategoryResponses];
 
 export type MapsCategoriesAdminControllerCreateMapCategoryData = {
     body: CreateMapsCategoryDto;
@@ -2936,7 +3031,8 @@ export type MapsCategoriesAdminControllerCreateMapCategoryResponses = {
     201: string;
 };
 
-export type MapsCategoriesAdminControllerCreateMapCategoryResponse = MapsCategoriesAdminControllerCreateMapCategoryResponses[keyof MapsCategoriesAdminControllerCreateMapCategoryResponses];
+export type MapsCategoriesAdminControllerCreateMapCategoryResponse =
+    MapsCategoriesAdminControllerCreateMapCategoryResponses[keyof MapsCategoriesAdminControllerCreateMapCategoryResponses];
 
 export type MapsCategoriesAdminControllerUpdateMapCategoryData = {
     body: UpdateMapsCategoryDto;
@@ -2950,7 +3046,8 @@ export type MapsCategoriesAdminControllerUpdateMapCategoryResponses = {
     201: boolean;
 };
 
-export type MapsCategoriesAdminControllerUpdateMapCategoryResponse = MapsCategoriesAdminControllerUpdateMapCategoryResponses[keyof MapsCategoriesAdminControllerUpdateMapCategoryResponses];
+export type MapsCategoriesAdminControllerUpdateMapCategoryResponse =
+    MapsCategoriesAdminControllerUpdateMapCategoryResponses[keyof MapsCategoriesAdminControllerUpdateMapCategoryResponses];
 
 export type MapsCategoriesAdminControllerRemoveMapCategoryData = {
     body: RemoveMapsCategoryDto;
@@ -2964,7 +3061,8 @@ export type MapsCategoriesAdminControllerRemoveMapCategoryResponses = {
     201: boolean;
 };
 
-export type MapsCategoriesAdminControllerRemoveMapCategoryResponse = MapsCategoriesAdminControllerRemoveMapCategoryResponses[keyof MapsCategoriesAdminControllerRemoveMapCategoryResponses];
+export type MapsCategoriesAdminControllerRemoveMapCategoryResponse =
+    MapsCategoriesAdminControllerRemoveMapCategoryResponses[keyof MapsCategoriesAdminControllerRemoveMapCategoryResponses];
 
 export type MapsTypesAdminControllerGetMapTypesData = {
     body?: never;
@@ -2979,7 +3077,8 @@ export type MapsTypesAdminControllerGetMapTypesResponses = {
     200: Array<GetMapTypeResponseDto>;
 };
 
-export type MapsTypesAdminControllerGetMapTypesResponse = MapsTypesAdminControllerGetMapTypesResponses[keyof MapsTypesAdminControllerGetMapTypesResponses];
+export type MapsTypesAdminControllerGetMapTypesResponse =
+    MapsTypesAdminControllerGetMapTypesResponses[keyof MapsTypesAdminControllerGetMapTypesResponses];
 
 export type MapsTypesAdminControllerGetMapTypeData = {
     body?: never;
@@ -2994,7 +3093,8 @@ export type MapsTypesAdminControllerGetMapTypeResponses = {
     200: GetMapTypeResponseDto;
 };
 
-export type MapsTypesAdminControllerGetMapTypeResponse = MapsTypesAdminControllerGetMapTypeResponses[keyof MapsTypesAdminControllerGetMapTypeResponses];
+export type MapsTypesAdminControllerGetMapTypeResponse =
+    MapsTypesAdminControllerGetMapTypeResponses[keyof MapsTypesAdminControllerGetMapTypeResponses];
 
 export type MapsTypesAdminControllerCreateMapTypeData = {
     body: CreateMapTypeDto;
@@ -3008,7 +3108,8 @@ export type MapsTypesAdminControllerCreateMapTypeResponses = {
     201: string;
 };
 
-export type MapsTypesAdminControllerCreateMapTypeResponse = MapsTypesAdminControllerCreateMapTypeResponses[keyof MapsTypesAdminControllerCreateMapTypeResponses];
+export type MapsTypesAdminControllerCreateMapTypeResponse =
+    MapsTypesAdminControllerCreateMapTypeResponses[keyof MapsTypesAdminControllerCreateMapTypeResponses];
 
 export type MapsTypesAdminControllerUpdateMapTypeData = {
     body: UpdateMapTypeDto;
@@ -3022,7 +3123,8 @@ export type MapsTypesAdminControllerUpdateMapTypeResponses = {
     201: boolean;
 };
 
-export type MapsTypesAdminControllerUpdateMapTypeResponse = MapsTypesAdminControllerUpdateMapTypeResponses[keyof MapsTypesAdminControllerUpdateMapTypeResponses];
+export type MapsTypesAdminControllerUpdateMapTypeResponse =
+    MapsTypesAdminControllerUpdateMapTypeResponses[keyof MapsTypesAdminControllerUpdateMapTypeResponses];
 
 export type MapsTypesAdminControllerRemoveMapTypeData = {
     body: RemoveMapTypeDto;
@@ -3036,7 +3138,8 @@ export type MapsTypesAdminControllerRemoveMapTypeResponses = {
     201: boolean;
 };
 
-export type MapsTypesAdminControllerRemoveMapTypeResponse = MapsTypesAdminControllerRemoveMapTypeResponses[keyof MapsTypesAdminControllerRemoveMapTypeResponses];
+export type MapsTypesAdminControllerRemoveMapTypeResponse =
+    MapsTypesAdminControllerRemoveMapTypeResponses[keyof MapsTypesAdminControllerRemoveMapTypeResponses];
 
 export type MapsMarkerAdminControllerCreateMapMarkerData = {
     body: CreateMapMarkerDto;
@@ -3050,7 +3153,8 @@ export type MapsMarkerAdminControllerCreateMapMarkerResponses = {
     201: string;
 };
 
-export type MapsMarkerAdminControllerCreateMapMarkerResponse = MapsMarkerAdminControllerCreateMapMarkerResponses[keyof MapsMarkerAdminControllerCreateMapMarkerResponses];
+export type MapsMarkerAdminControllerCreateMapMarkerResponse =
+    MapsMarkerAdminControllerCreateMapMarkerResponses[keyof MapsMarkerAdminControllerCreateMapMarkerResponses];
 
 export type MapsMarkerAdminControllerUpdateMapMarkerData = {
     body: UpdateMapMarkerDto;
@@ -3064,7 +3168,8 @@ export type MapsMarkerAdminControllerUpdateMapMarkerResponses = {
     201: boolean;
 };
 
-export type MapsMarkerAdminControllerUpdateMapMarkerResponse = MapsMarkerAdminControllerUpdateMapMarkerResponses[keyof MapsMarkerAdminControllerUpdateMapMarkerResponses];
+export type MapsMarkerAdminControllerUpdateMapMarkerResponse =
+    MapsMarkerAdminControllerUpdateMapMarkerResponses[keyof MapsMarkerAdminControllerUpdateMapMarkerResponses];
 
 export type MapsMarkerAdminControllerRemoveMapMarkerData = {
     body: RemoveMapMarkerDto;
@@ -3078,7 +3183,8 @@ export type MapsMarkerAdminControllerRemoveMapMarkerResponses = {
     201: boolean;
 };
 
-export type MapsMarkerAdminControllerRemoveMapMarkerResponse = MapsMarkerAdminControllerRemoveMapMarkerResponses[keyof MapsMarkerAdminControllerRemoveMapMarkerResponses];
+export type MapsMarkerAdminControllerRemoveMapMarkerResponse =
+    MapsMarkerAdminControllerRemoveMapMarkerResponses[keyof MapsMarkerAdminControllerRemoveMapMarkerResponses];
 
 export type DashboardControllerGetAllStatsData = {
     body?: never;
@@ -3094,7 +3200,8 @@ export type DashboardControllerGetAllStatsResponses = {
     200: DashboardAllStatsResponseDto;
 };
 
-export type DashboardControllerGetAllStatsResponse = DashboardControllerGetAllStatsResponses[keyof DashboardControllerGetAllStatsResponses];
+export type DashboardControllerGetAllStatsResponse =
+    DashboardControllerGetAllStatsResponses[keyof DashboardControllerGetAllStatsResponses];
 
 export type DashboardControllerGetUsersStatsData = {
     body?: never;
@@ -3110,7 +3217,8 @@ export type DashboardControllerGetUsersStatsResponses = {
     200: DashboardResponseDto;
 };
 
-export type DashboardControllerGetUsersStatsResponse = DashboardControllerGetUsersStatsResponses[keyof DashboardControllerGetUsersStatsResponses];
+export type DashboardControllerGetUsersStatsResponse =
+    DashboardControllerGetUsersStatsResponses[keyof DashboardControllerGetUsersStatsResponses];
 
 export type DashboardControllerGetChallengesStatsData = {
     body?: never;
@@ -3126,7 +3234,8 @@ export type DashboardControllerGetChallengesStatsResponses = {
     200: DashboardResponseDto;
 };
 
-export type DashboardControllerGetChallengesStatsResponse = DashboardControllerGetChallengesStatsResponses[keyof DashboardControllerGetChallengesStatsResponses];
+export type DashboardControllerGetChallengesStatsResponse =
+    DashboardControllerGetChallengesStatsResponses[keyof DashboardControllerGetChallengesStatsResponses];
 
 export type DashboardControllerGetSalesStatsData = {
     body?: never;
@@ -3142,7 +3251,8 @@ export type DashboardControllerGetSalesStatsResponses = {
     200: DashboardResponseDto;
 };
 
-export type DashboardControllerGetSalesStatsResponse = DashboardControllerGetSalesStatsResponses[keyof DashboardControllerGetSalesStatsResponses];
+export type DashboardControllerGetSalesStatsResponse =
+    DashboardControllerGetSalesStatsResponses[keyof DashboardControllerGetSalesStatsResponses];
 
 export type DashboardControllerGetNewsViewsStatsData = {
     body?: never;
@@ -3158,7 +3268,8 @@ export type DashboardControllerGetNewsViewsStatsResponses = {
     200: DashboardResponseDto;
 };
 
-export type DashboardControllerGetNewsViewsStatsResponse = DashboardControllerGetNewsViewsStatsResponses[keyof DashboardControllerGetNewsViewsStatsResponses];
+export type DashboardControllerGetNewsViewsStatsResponse =
+    DashboardControllerGetNewsViewsStatsResponses[keyof DashboardControllerGetNewsViewsStatsResponses];
 
 export type TiersControllerGetTierListByCategoryData = {
     body?: never;
@@ -3173,7 +3284,8 @@ export type TiersControllerGetTierListByCategoryResponses = {
     200: TierListResponseDto;
 };
 
-export type TiersControllerGetTierListByCategoryResponse = TiersControllerGetTierListByCategoryResponses[keyof TiersControllerGetTierListByCategoryResponses];
+export type TiersControllerGetTierListByCategoryResponse =
+    TiersControllerGetTierListByCategoryResponses[keyof TiersControllerGetTierListByCategoryResponses];
 
 export type TiersControllerGetTierListData = {
     body?: never;
@@ -3188,7 +3300,8 @@ export type TiersControllerGetTierListResponses = {
     200: TierListResponseDto;
 };
 
-export type TiersControllerGetTierListResponse = TiersControllerGetTierListResponses[keyof TiersControllerGetTierListResponses];
+export type TiersControllerGetTierListResponse =
+    TiersControllerGetTierListResponses[keyof TiersControllerGetTierListResponses];
 
 export type TiersControllerUpdateTierListData = {
     body: UpdateTierListDto;
@@ -3203,7 +3316,8 @@ export type TiersControllerUpdateTierListResponses = {
     200: TierListResponseDto;
 };
 
-export type TiersControllerUpdateTierListResponse = TiersControllerUpdateTierListResponses[keyof TiersControllerUpdateTierListResponses];
+export type TiersControllerUpdateTierListResponse =
+    TiersControllerUpdateTierListResponses[keyof TiersControllerUpdateTierListResponses];
 
 export type TiersControllerUpdateTierListPrivacyData = {
     body: UpdateTierListPrivacyDto;
@@ -3218,7 +3332,8 @@ export type TiersControllerUpdateTierListPrivacyResponses = {
     200: TierListResponseDto;
 };
 
-export type TiersControllerUpdateTierListPrivacyResponse = TiersControllerUpdateTierListPrivacyResponses[keyof TiersControllerUpdateTierListPrivacyResponses];
+export type TiersControllerUpdateTierListPrivacyResponse =
+    TiersControllerUpdateTierListPrivacyResponses[keyof TiersControllerUpdateTierListPrivacyResponses];
 
 export type TiersControllerGetPublicTierListData = {
     body?: never;
@@ -3233,7 +3348,8 @@ export type TiersControllerGetPublicTierListResponses = {
     200: TierListResponseDto;
 };
 
-export type TiersControllerGetPublicTierListResponse = TiersControllerGetPublicTierListResponses[keyof TiersControllerGetPublicTierListResponses];
+export type TiersControllerGetPublicTierListResponse =
+    TiersControllerGetPublicTierListResponses[keyof TiersControllerGetPublicTierListResponses];
 
 export type TiersControllerGetPublicTierListsByUserData = {
     body?: never;
@@ -3250,7 +3366,8 @@ export type TiersControllerGetPublicTierListsByUserResponses = {
     200: Array<PublicTierListListItemDto>;
 };
 
-export type TiersControllerGetPublicTierListsByUserResponse = TiersControllerGetPublicTierListsByUserResponses[keyof TiersControllerGetPublicTierListsByUserResponses];
+export type TiersControllerGetPublicTierListsByUserResponse =
+    TiersControllerGetPublicTierListsByUserResponses[keyof TiersControllerGetPublicTierListsByUserResponses];
 
 export type TiersControllerGetTierListCategoriesByGameData = {
     body?: never;
@@ -3265,7 +3382,8 @@ export type TiersControllerGetTierListCategoriesByGameResponses = {
     200: Array<TierListCategoryListItemDto>;
 };
 
-export type TiersControllerGetTierListCategoriesByGameResponse = TiersControllerGetTierListCategoriesByGameResponses[keyof TiersControllerGetTierListCategoriesByGameResponses];
+export type TiersControllerGetTierListCategoriesByGameResponse =
+    TiersControllerGetTierListCategoriesByGameResponses[keyof TiersControllerGetTierListCategoriesByGameResponses];
 
 export type TiersControllerGetTierListCategoryByGameData = {
     body?: never;
@@ -3281,7 +3399,8 @@ export type TiersControllerGetTierListCategoryByGameResponses = {
     200: TierListCategoryListItemDto;
 };
 
-export type TiersControllerGetTierListCategoryByGameResponse = TiersControllerGetTierListCategoryByGameResponses[keyof TiersControllerGetTierListCategoryByGameResponses];
+export type TiersControllerGetTierListCategoryByGameResponse =
+    TiersControllerGetTierListCategoryByGameResponses[keyof TiersControllerGetTierListCategoryByGameResponses];
 
 export type TiersAdminControllerListData = {
     body?: never;
@@ -3294,7 +3413,8 @@ export type TiersAdminControllerListResponses = {
     200: Array<TierListCategoryResponseAdminDto>;
 };
 
-export type TiersAdminControllerListResponse = TiersAdminControllerListResponses[keyof TiersAdminControllerListResponses];
+export type TiersAdminControllerListResponse =
+    TiersAdminControllerListResponses[keyof TiersAdminControllerListResponses];
 
 export type TiersAdminControllerCreateData = {
     body: CreateTierListCategoryAdminDto;
@@ -3308,7 +3428,8 @@ export type TiersAdminControllerCreateResponses = {
     201: TierListCategoryResponseAdminDto;
 };
 
-export type TiersAdminControllerCreateResponse = TiersAdminControllerCreateResponses[keyof TiersAdminControllerCreateResponses];
+export type TiersAdminControllerCreateResponse =
+    TiersAdminControllerCreateResponses[keyof TiersAdminControllerCreateResponses];
 
 export type TiersAdminControllerRemoveData = {
     body?: never;
@@ -3323,7 +3444,8 @@ export type TiersAdminControllerRemoveResponses = {
     200: boolean;
 };
 
-export type TiersAdminControllerRemoveResponse = TiersAdminControllerRemoveResponses[keyof TiersAdminControllerRemoveResponses];
+export type TiersAdminControllerRemoveResponse =
+    TiersAdminControllerRemoveResponses[keyof TiersAdminControllerRemoveResponses];
 
 export type TiersAdminControllerGetByIdData = {
     body?: never;
@@ -3338,7 +3460,8 @@ export type TiersAdminControllerGetByIdResponses = {
     200: TierListCategoryResponseAdminDto;
 };
 
-export type TiersAdminControllerGetByIdResponse = TiersAdminControllerGetByIdResponses[keyof TiersAdminControllerGetByIdResponses];
+export type TiersAdminControllerGetByIdResponse =
+    TiersAdminControllerGetByIdResponses[keyof TiersAdminControllerGetByIdResponses];
 
 export type TiersAdminControllerUpdateData = {
     body: UpdateTierListCategoryAdminDto;
@@ -3353,7 +3476,8 @@ export type TiersAdminControllerUpdateResponses = {
     200: TierListCategoryResponseAdminDto;
 };
 
-export type TiersAdminControllerUpdateResponse = TiersAdminControllerUpdateResponses[keyof TiersAdminControllerUpdateResponses];
+export type TiersAdminControllerUpdateResponse =
+    TiersAdminControllerUpdateResponses[keyof TiersAdminControllerUpdateResponses];
 
 export type FriendsControllerGetFriendsData = {
     body?: never;
@@ -3366,7 +3490,8 @@ export type FriendsControllerGetFriendsResponses = {
     200: FriendsListResponseDto;
 };
 
-export type FriendsControllerGetFriendsResponse = FriendsControllerGetFriendsResponses[keyof FriendsControllerGetFriendsResponses];
+export type FriendsControllerGetFriendsResponse =
+    FriendsControllerGetFriendsResponses[keyof FriendsControllerGetFriendsResponses];
 
 export type FriendsControllerRemoveFriendData = {
     body: RemoveFriendDto;
@@ -3380,7 +3505,8 @@ export type FriendsControllerRemoveFriendResponses = {
     201: boolean;
 };
 
-export type FriendsControllerRemoveFriendResponse = FriendsControllerRemoveFriendResponses[keyof FriendsControllerRemoveFriendResponses];
+export type FriendsControllerRemoveFriendResponse =
+    FriendsControllerRemoveFriendResponses[keyof FriendsControllerRemoveFriendResponses];
 
 export type FriendsControllerIncomingData = {
     body?: never;
@@ -3393,7 +3519,8 @@ export type FriendsControllerIncomingResponses = {
     200: FriendRequestsResponseDto;
 };
 
-export type FriendsControllerIncomingResponse = FriendsControllerIncomingResponses[keyof FriendsControllerIncomingResponses];
+export type FriendsControllerIncomingResponse =
+    FriendsControllerIncomingResponses[keyof FriendsControllerIncomingResponses];
 
 export type FriendsControllerOutgoingData = {
     body?: never;
@@ -3406,7 +3533,8 @@ export type FriendsControllerOutgoingResponses = {
     200: FriendRequestsResponseDto;
 };
 
-export type FriendsControllerOutgoingResponse = FriendsControllerOutgoingResponses[keyof FriendsControllerOutgoingResponses];
+export type FriendsControllerOutgoingResponse =
+    FriendsControllerOutgoingResponses[keyof FriendsControllerOutgoingResponses];
 
 export type FriendsControllerSendData = {
     body: FriendRequestDto;
@@ -3420,7 +3548,8 @@ export type FriendsControllerSendResponses = {
     201: boolean;
 };
 
-export type FriendsControllerSendResponse = FriendsControllerSendResponses[keyof FriendsControllerSendResponses];
+export type FriendsControllerSendResponse =
+    FriendsControllerSendResponses[keyof FriendsControllerSendResponses];
 
 export type FriendsControllerAcceptData = {
     body: FriendRequestActionDto;
@@ -3434,7 +3563,8 @@ export type FriendsControllerAcceptResponses = {
     201: boolean;
 };
 
-export type FriendsControllerAcceptResponse = FriendsControllerAcceptResponses[keyof FriendsControllerAcceptResponses];
+export type FriendsControllerAcceptResponse =
+    FriendsControllerAcceptResponses[keyof FriendsControllerAcceptResponses];
 
 export type FriendsControllerRejectData = {
     body: FriendRequestActionDto;
@@ -3448,7 +3578,8 @@ export type FriendsControllerRejectResponses = {
     201: boolean;
 };
 
-export type FriendsControllerRejectResponse = FriendsControllerRejectResponses[keyof FriendsControllerRejectResponses];
+export type FriendsControllerRejectResponse =
+    FriendsControllerRejectResponses[keyof FriendsControllerRejectResponses];
 
 export type FriendsControllerCancelData = {
     body: FriendRequestActionDto;
@@ -3462,7 +3593,8 @@ export type FriendsControllerCancelResponses = {
     201: boolean;
 };
 
-export type FriendsControllerCancelResponse = FriendsControllerCancelResponses[keyof FriendsControllerCancelResponses];
+export type FriendsControllerCancelResponse =
+    FriendsControllerCancelResponses[keyof FriendsControllerCancelResponses];
 
 export type BannersControllerGetBannersData = {
     body?: never;
@@ -3477,7 +3609,8 @@ export type BannersControllerGetBannersResponses = {
     200: Array<BannerPublicSlotDto>;
 };
 
-export type BannersControllerGetBannersResponse = BannersControllerGetBannersResponses[keyof BannersControllerGetBannersResponses];
+export type BannersControllerGetBannersResponse =
+    BannersControllerGetBannersResponses[keyof BannersControllerGetBannersResponses];
 
 export type BannersAdminControllerListBannersData = {
     body?: never;
@@ -3490,7 +3623,8 @@ export type BannersAdminControllerListBannersResponses = {
     200: Array<BannerAdminResponseDto>;
 };
 
-export type BannersAdminControllerListBannersResponse = BannersAdminControllerListBannersResponses[keyof BannersAdminControllerListBannersResponses];
+export type BannersAdminControllerListBannersResponse =
+    BannersAdminControllerListBannersResponses[keyof BannersAdminControllerListBannersResponses];
 
 export type BannersAdminControllerCreateBannerData = {
     body: CreateBannerAdminDto;
@@ -3503,7 +3637,8 @@ export type BannersAdminControllerCreateBannerResponses = {
     201: BannerAdminResponseDto;
 };
 
-export type BannersAdminControllerCreateBannerResponse = BannersAdminControllerCreateBannerResponses[keyof BannersAdminControllerCreateBannerResponses];
+export type BannersAdminControllerCreateBannerResponse =
+    BannersAdminControllerCreateBannerResponses[keyof BannersAdminControllerCreateBannerResponses];
 
 export type BannersAdminControllerDeleteBannerData = {
     body?: never;
@@ -3518,7 +3653,8 @@ export type BannersAdminControllerDeleteBannerResponses = {
     200: boolean;
 };
 
-export type BannersAdminControllerDeleteBannerResponse = BannersAdminControllerDeleteBannerResponses[keyof BannersAdminControllerDeleteBannerResponses];
+export type BannersAdminControllerDeleteBannerResponse =
+    BannersAdminControllerDeleteBannerResponses[keyof BannersAdminControllerDeleteBannerResponses];
 
 export type BannersAdminControllerGetBannerData = {
     body?: never;
@@ -3533,7 +3669,8 @@ export type BannersAdminControllerGetBannerResponses = {
     200: BannerAdminResponseDto;
 };
 
-export type BannersAdminControllerGetBannerResponse = BannersAdminControllerGetBannerResponses[keyof BannersAdminControllerGetBannerResponses];
+export type BannersAdminControllerGetBannerResponse =
+    BannersAdminControllerGetBannerResponses[keyof BannersAdminControllerGetBannerResponses];
 
 export type BannersAdminControllerUpdateBannerData = {
     body: UpdateBannerAdminDto;
@@ -3548,7 +3685,8 @@ export type BannersAdminControllerUpdateBannerResponses = {
     200: BannerAdminResponseDto;
 };
 
-export type BannersAdminControllerUpdateBannerResponse = BannersAdminControllerUpdateBannerResponses[keyof BannersAdminControllerUpdateBannerResponses];
+export type BannersAdminControllerUpdateBannerResponse =
+    BannersAdminControllerUpdateBannerResponses[keyof BannersAdminControllerUpdateBannerResponses];
 
 export type BannerSlotsAdminControllerListSlotsData = {
     body?: never;
@@ -3561,7 +3699,8 @@ export type BannerSlotsAdminControllerListSlotsResponses = {
     200: Array<BannerSlotAdminResponseDto>;
 };
 
-export type BannerSlotsAdminControllerListSlotsResponse = BannerSlotsAdminControllerListSlotsResponses[keyof BannerSlotsAdminControllerListSlotsResponses];
+export type BannerSlotsAdminControllerListSlotsResponse =
+    BannerSlotsAdminControllerListSlotsResponses[keyof BannerSlotsAdminControllerListSlotsResponses];
 
 export type BannerPlacementsAdminControllerListPlacementsData = {
     body?: never;
@@ -3576,7 +3715,8 @@ export type BannerPlacementsAdminControllerListPlacementsResponses = {
     200: Array<BannerPlacementsSlotAdminDto>;
 };
 
-export type BannerPlacementsAdminControllerListPlacementsResponse = BannerPlacementsAdminControllerListPlacementsResponses[keyof BannerPlacementsAdminControllerListPlacementsResponses];
+export type BannerPlacementsAdminControllerListPlacementsResponse =
+    BannerPlacementsAdminControllerListPlacementsResponses[keyof BannerPlacementsAdminControllerListPlacementsResponses];
 
 export type BannerPlacementsAdminControllerCreatePlacementData = {
     body: CreateBannerPlacementAdminDto;
@@ -3589,7 +3729,8 @@ export type BannerPlacementsAdminControllerCreatePlacementResponses = {
     201: string;
 };
 
-export type BannerPlacementsAdminControllerCreatePlacementResponse = BannerPlacementsAdminControllerCreatePlacementResponses[keyof BannerPlacementsAdminControllerCreatePlacementResponses];
+export type BannerPlacementsAdminControllerCreatePlacementResponse =
+    BannerPlacementsAdminControllerCreatePlacementResponses[keyof BannerPlacementsAdminControllerCreatePlacementResponses];
 
 export type BannerPlacementsAdminControllerDeletePlacementData = {
     body?: never;
@@ -3604,7 +3745,8 @@ export type BannerPlacementsAdminControllerDeletePlacementResponses = {
     200: boolean;
 };
 
-export type BannerPlacementsAdminControllerDeletePlacementResponse = BannerPlacementsAdminControllerDeletePlacementResponses[keyof BannerPlacementsAdminControllerDeletePlacementResponses];
+export type BannerPlacementsAdminControllerDeletePlacementResponse =
+    BannerPlacementsAdminControllerDeletePlacementResponses[keyof BannerPlacementsAdminControllerDeletePlacementResponses];
 
 export type BannerPlacementsAdminControllerUpdatePlacementData = {
     body: UpdateBannerPlacementAdminDto;
@@ -3619,7 +3761,8 @@ export type BannerPlacementsAdminControllerUpdatePlacementResponses = {
     200: boolean;
 };
 
-export type BannerPlacementsAdminControllerUpdatePlacementResponse = BannerPlacementsAdminControllerUpdatePlacementResponses[keyof BannerPlacementsAdminControllerUpdatePlacementResponses];
+export type BannerPlacementsAdminControllerUpdatePlacementResponse =
+    BannerPlacementsAdminControllerUpdatePlacementResponses[keyof BannerPlacementsAdminControllerUpdatePlacementResponses];
 
 export type TwitchControllerGetStreamStatusData = {
     body?: never;
@@ -3637,7 +3780,8 @@ export type TwitchControllerGetStreamStatusResponses = {
     200: TwitchStreamStatusDto;
 };
 
-export type TwitchControllerGetStreamStatusResponse = TwitchControllerGetStreamStatusResponses[keyof TwitchControllerGetStreamStatusResponses];
+export type TwitchControllerGetStreamStatusResponse =
+    TwitchControllerGetStreamStatusResponses[keyof TwitchControllerGetStreamStatusResponses];
 
 export type TwitchControllerGetWidgetStatusData = {
     body?: never;
@@ -3655,4 +3799,5 @@ export type TwitchControllerGetWidgetStatusResponses = {
     200: TwitchStreamWidgetDto;
 };
 
-export type TwitchControllerGetWidgetStatusResponse = TwitchControllerGetWidgetStatusResponses[keyof TwitchControllerGetWidgetStatusResponses];
+export type TwitchControllerGetWidgetStatusResponse =
+    TwitchControllerGetWidgetStatusResponses[keyof TwitchControllerGetWidgetStatusResponses];

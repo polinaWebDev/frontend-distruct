@@ -9,7 +9,6 @@ import Link from 'next/link';
 import { GameType } from '@/lib/enums/game_type.enum';
 import { Map } from 'lucide-react';
 import { BannerProvider } from '@/components/banners/BannerProvider';
-import { BannerSlot } from '@/components/banners/BannerSlot';
 
 export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game: GameType }) => {
     return (

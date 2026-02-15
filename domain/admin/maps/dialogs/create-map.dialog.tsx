@@ -205,9 +205,7 @@ export const CreateMapDialog = ({
                                             <Switch
                                                 checked={field.value !== 'private'}
                                                 onCheckedChange={(checked) =>
-                                                    field.onChange(
-                                                        checked ? 'public' : 'private'
-                                                    )
+                                                    field.onChange(checked ? 'public' : 'private')
                                                 }
                                             />
                                         </FormControl>

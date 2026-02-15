@@ -50,9 +50,7 @@ import { BannerSlot } from '@/components/banners/BannerSlot';
 import { getFileUrl } from '@/lib/utils';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import newsStyles from '@/domain/client/news-id/news-id-page.module.css';
-import challengesStyles from '@/domain/client/challenges-main/challenges-main.module.css';
 import challengesRewardsStyles from '@/domain/client/challenges-rewards/challenges-rewards.module.css';
-import mapsStyles from '@/domain/ClientMapList/ClientMapList.module.css';
 import tiersStyles from '@/domain/client/tiers/tiers-page.module.css';
 import clsx from 'clsx';
 
@@ -461,7 +459,6 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
             </div>
         );
     }
-
 
     return (
         <div className="rounded-xl border p-6 bg-muted/10">

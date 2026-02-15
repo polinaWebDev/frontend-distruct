@@ -55,10 +55,7 @@ export const ChallengesMain = ({
                             btnOnClick={authenticated ? undefined : () => setOpenAuthDialog(true)}
                         />
                     </ChallengeInfoBlock>
-                    <ChallengeInfoBlock
-                        noBottomPadding
-                        outerChildren={<ChallengeInfoBlockWave />}
-                    >
+                    <ChallengeInfoBlock noBottomPadding outerChildren={<ChallengeInfoBlockWave />}>
                         <ChallengeInfoBlockTitle icon={<CurrentSeasonIcon />}>
                             Текущий сезон
                         </ChallengeInfoBlockTitle>
@@ -70,13 +67,9 @@ export const ChallengesMain = ({
                                 },
                                 {
                                     subTitle: 'Закончится',
-                                    content: formatDate(
-                                        new Date(season.ends_at),
-                                        'dd.MM.yyyy',
-                                        {
-                                            locale: ru,
-                                        }
-                                    ),
+                                    content: formatDate(new Date(season.ends_at), 'dd.MM.yyyy', {
+                                        locale: ru,
+                                    }),
                                 },
                                 {
                                     subTitle: 'Наград',

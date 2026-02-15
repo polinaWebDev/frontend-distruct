@@ -103,9 +103,18 @@
 }
 
 .viewerCount {
-    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family:
+        system-ui,
+        -apple-system,
+        'Segoe UI',
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
     font-variant-numeric: tabular-nums;
-    font-feature-settings: 'tnum' 1, 'liga' 0;
+    font-feature-settings:
+        'tnum' 1,
+        'liga' 0;
 }
 
 .updated {

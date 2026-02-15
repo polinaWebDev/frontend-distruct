@@ -6,19 +6,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import {
     LayoutDashboard,
-    Package,
-    Layers,
-    Tag,
-    Gem,
-    Dices,
     LogOut,
     Map,
-    Calendar,
-    ListChecks,
-    ShoppingCart,
     Users,
-    Newspaper,
-    ListOrdered,
     ChevronDown,
     Folder,
     Boxes,
@@ -175,8 +165,9 @@ export function AppSidebar() {
         refetchInterval: 30_000,
     });
 
-    const latestOfferTimestamp =
-        latestOffers?.[0]?.createdAt ? new Date(latestOffers[0].createdAt).getTime() : null;
+    const latestOfferTimestamp = latestOffers?.[0]?.createdAt
+        ? new Date(latestOffers[0].createdAt).getTime()
+        : null;
 
     const { data: newOffersList } = useQuery({
         ...offerControllerGetListOptions({
@@ -245,17 +236,13 @@ export function AppSidebar() {
                         {navItems.navMain.map((group) => (
                             <Collapsible
                                 key={group.title}
-                                defaultOpen={group.items?.some(
-                                    (item) => pathname === item.href
-                                )}
+                                defaultOpen={group.items?.some((item) => pathname === item.href)}
                             >
                                 <SidebarMenuItem>
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuButton className="font-medium">
                                             <group.icon className="size-4" />
-                                            <span className="flex-1 text-left">
-                                                {group.title}
-                                            </span>
+                                            <span className="flex-1 text-left">{group.title}</span>
                                             <ChevronDown className="size-4 transition-transform data-[state=open]:rotate-180" />
                                         </SidebarMenuButton>
                                     </CollapsibleTrigger>
@@ -266,28 +253,28 @@ export function AppSidebar() {
                                                     const isOffersItem =
                                                         item.href === '/admin/offers';
                                                     return (
-                                                    <SidebarMenuSubItem key={item.href}>
-                                                        <SidebarMenuSubButton
-                                                            asChild
-                                                            isActive={pathname === item.href}
-                                                        >
-                                                            <Link href={item.href}>
-                                                                <span className="flex items-center gap-2">
-                                                                    <span>{item.title}</span>
-                                                                    {isOffersItem &&
-                                                                        newOffersCount > 0 && (
-                                                                        <span
-                                                                            className="inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-semibold leading-4 text-white"
-                                                                            aria-label={`Новые предложения: ${newOffersCount}`}
-                                                                        >
-                                                                            {newOffersCount}
-                                                                        </span>
-                                                                    )}
-                                                                </span>
-                                                            </Link>
-                                                        </SidebarMenuSubButton>
-                                                    </SidebarMenuSubItem>
-                                                );
+                                                        <SidebarMenuSubItem key={item.href}>
+                                                            <SidebarMenuSubButton
+                                                                asChild
+                                                                isActive={pathname === item.href}
+                                                            >
+                                                                <Link href={item.href}>
+                                                                    <span className="flex items-center gap-2">
+                                                                        <span>{item.title}</span>
+                                                                        {isOffersItem &&
+                                                                            newOffersCount > 0 && (
+                                                                                <span
+                                                                                    className="inline-flex min-w-5 items-center justify-center rounded-full bg-emerald-500 px-1.5 text-[10px] font-semibold leading-4 text-white"
+                                                                                    aria-label={`Новые предложения: ${newOffersCount}`}
+                                                                                >
+                                                                                    {newOffersCount}
+                                                                                </span>
+                                                                            )}
+                                                                    </span>
+                                                                </Link>
+                                                            </SidebarMenuSubButton>
+                                                        </SidebarMenuSubItem>
+                                                    );
                                                 })}
                                             </SidebarMenuSub>
                                         </CollapsibleContent>

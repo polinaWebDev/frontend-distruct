@@ -43,10 +43,7 @@ const LayersPlusIcon = createLucideIcon('LayersPlus', [
     ['path', { d: 'M16 17h6', key: '2' }],
     ['path', { d: 'M19 14v6', key: '3' }],
     ['path', { d: 'M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 .825.178', key: '4' }],
-    [
-        'path',
-        { d: 'M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l2.116-.962', key: '5' },
-    ],
+    ['path', { d: 'M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l2.116-.962', key: '5' }],
 ]);
 
 export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {

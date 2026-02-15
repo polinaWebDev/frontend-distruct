@@ -468,7 +468,11 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
                                             {formatCategoryDescription(category.description) && (
                                                 <span className="text-xs text-muted-foreground">
                                                     {' '}
-                                                    ({formatCategoryDescription(category.description)})
+                                                    (
+                                                    {formatCategoryDescription(
+                                                        category.description
+                                                    )}
+                                                    )
                                                 </span>
                                             )}
                                         </label>
@@ -563,7 +567,11 @@ export function CreateChallengeDialog({ open, onOpenChange }: CreateChallengeDia
                                             {formatCategoryDescription(category.description) && (
                                                 <span className="text-xs text-muted-foreground">
                                                     {' '}
-                                                    ({formatCategoryDescription(category.description)})
+                                                    (
+                                                    {formatCategoryDescription(
+                                                        category.description
+                                                    )}
+                                                    )
                                                 </span>
                                             )}
                                         </label>

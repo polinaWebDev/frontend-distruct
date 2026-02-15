@@ -107,9 +107,13 @@ export const ChallengesRewards = ({
                                     },
                                     {
                                         subTitle: 'Закончится',
-                                        content: formatDate(new Date(season.ends_at), 'dd.MM.yyyy', {
-                                            locale: ru,
-                                        }),
+                                        content: formatDate(
+                                            new Date(season.ends_at),
+                                            'dd.MM.yyyy',
+                                            {
+                                                locale: ru,
+                                            }
+                                        ),
                                     },
                                     {
                                         subTitle: 'Наград',

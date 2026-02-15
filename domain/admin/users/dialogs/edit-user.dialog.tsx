@@ -35,8 +35,7 @@ import type { UserAdminRow } from '../types';
 
 const userRoleValues = ['admin', 'user'] as const;
 
-const fileListSchema =
-    typeof FileList !== 'undefined' ? z.instanceof(FileList) : z.any();
+const fileListSchema = typeof FileList !== 'undefined' ? z.instanceof(FileList) : z.any();
 
 const formSchema = z.object({
     username: z.string().min(1, 'Username is required'),
