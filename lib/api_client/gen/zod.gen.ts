@@ -6,24 +6,30 @@ export const zUserResponseDto = z.object({
     id: z.string(),
     username: z.string(),
     email: z.string(),
-    avatar_url: z.optional(z.union([z.string(), z.null()])),
-    role: z.enum(['admin', 'user']),
-    points: z.number(),
+    avatar_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    role: z.enum([
+        'admin',
+        'user'
+    ]),
+    points: z.number()
 });
 
 export const zGetUserListResponseDto = z.object({
     users: z.array(zUserResponseDto),
     page: z.number(),
     limit: z.number(),
-    hasNextPage: z.boolean(),
+    hasNextPage: z.boolean()
 });
 
 export const zEditAvatarDto = z.object({
-    avatar: z.optional(z.string()),
+    avatar: z.optional(z.string())
 });
 
 export const zEditUsernameDto = z.object({
-    username: z.string().min(3),
+    username: z.string().min(3)
 });
 
 export const zAdminEditUserDto = z.object({
@@ -31,142 +37,213 @@ export const zAdminEditUserDto = z.object({
     username: z.string(),
     email: z.string(),
     file: z.optional(z.string()),
-    role: z.enum(['admin', 'user']),
-    points: z.number(),
+    role: z.enum([
+        'admin',
+        'user'
+    ]),
+    points: z.number()
 });
 
 export const zPublicUserResponseDto = z.object({
     id: z.string(),
     username: z.string(),
-    avatar_url: z.optional(z.union([z.string(), z.null()])),
+    avatar_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zPublicUserListResponseDto = z.object({
     users: z.array(zPublicUserResponseDto),
     page: z.number(),
     limit: z.number(),
-    hasNextPage: z.boolean(),
+    hasNextPage: z.boolean()
 });
 
 export const zRequestLoginDto = z.object({
-    email: z.email(),
+    email: z.email()
 });
 
 export const zVerifyCodeDto = z.object({
     code: z.string().length(6),
-    email: z.email(),
+    email: z.email()
 });
+
+export const zGetNewsIndicatorResponseDto = z.object({
+    has_new: z.boolean()
+});
+
+export const zMarkNewsSeenRequestDto = z.object({
+    news_id: z.string()
+});
+
+export const zBoolean = z.record(z.string(), z.unknown());
 
 export const zCreateNewsRequestDto = z.object({
     title: z.string(),
     short_description: z.string(),
     content: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.optional(
-        z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov'])
-    ),
+    image_url: z.string(),
+    game_type: z.optional(z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])),
     is_published: z.boolean(),
-    publish_at: z.optional(z.union([z.string(), z.null()])),
+    publish_at: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zUpdateNewsRequestDto = z.object({
     title: z.string(),
     short_description: z.string(),
     content: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.optional(
-        z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov'])
-    ),
+    image_url: z.string(),
+    game_type: z.optional(z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])),
     is_published: z.boolean(),
-    publish_at: z.optional(z.union([z.string(), z.null()])),
-    id: z.string(),
+    publish_at: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    id: z.string()
 });
 
 export const zRemoveNewsRequestDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zAddGalleryImageRequestDto = z.object({
     news_id: z.string(),
-    image_url: z.string(),
+    image_url: z.string()
 });
 
 export const zReorderGalleryImagesRequestDto = z.object({
     news_id: z.string(),
-    image_ids: z.array(z.string()),
+    image_ids: z.array(z.string())
 });
 
 export const zRemoveGalleryImageRequestDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGearCategoryEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     order: z.number(),
     is_long_slot: z.boolean(),
     get excluded_categories() {
-        return z.array(
-            z.lazy((): any => {
-                return zGearCategoryEntity;
-            })
-        );
-    },
+        return z.array(z.lazy((): any => {
+            return zGearCategoryEntity;
+        }));
+    }
 });
 
 export const zGearRarityEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     color: z.string(),
-    weight: z.number(),
+    weight: z.number()
 });
 
 export const zGearTypeEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     get excluded_types() {
-        return z.array(
-            z.lazy((): any => {
-                return zGearTypeEntity;
-            })
-        );
-    },
+        return z.array(z.lazy((): any => {
+            return zGearTypeEntity;
+        }));
+    }
 });
 
 export const zGearEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     tier: z.number(),
     weight: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     category: z.optional(zGearCategoryEntity),
     gear_category_entity_id: z.string(),
-    rarity: z.optional(z.union([zGearRarityEntity, z.null()])),
-    gear_rarity_entity_id: z.optional(z.union([z.string(), z.null()])),
+    rarity: z.optional(z.union([
+        zGearRarityEntity,
+        z.null()
+    ])),
+    gear_rarity_entity_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     type: zGearTypeEntity,
-    gear_type_entity_id: z.string(),
+    gear_type_entity_id: z.string()
 });
 
 export const zTierListCategoryEntity = z.object({
@@ -175,26 +252,42 @@ export const zTierListCategoryEntity = z.object({
     updatedAt: z.string(),
     deletedAt: z.string(),
     name: z.string(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])
 });
 
 export const zVoteNewsCommentRequestDto = z.object({
     comment_id: z.string(),
-    vote: z.enum(['like', 'dislike']),
+    vote: z.enum([
+        'like',
+        'dislike'
+    ])
 });
 
 export const zCreateNewsCommentRequestDto = z.object({
     content: z.string(),
-    news_id: z.string(),
+    news_id: z.string()
 });
 
 export const zRandomGearChallengeGroupEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])
 });
 
 export const zRandomChallengeCategoryDto = z.object({
@@ -202,22 +295,36 @@ export const zRandomChallengeCategoryDto = z.object({
     category_name: z.string(),
     category_order: z.number(),
     category_description: z.string(),
-    category_image_url: z.union([z.string(), z.null()]),
-    is_long_slot: z.boolean(),
+    category_image_url: z.union([
+        z.string(),
+        z.null()
+    ]),
+    is_long_slot: z.boolean()
 });
 
 export const zRandomChallengeWithCategoriesDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
     challenge_level: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     order: z.number(),
     random_gear_challenge_group_id: z.string(),
-    group: z.optional(z.union([zRandomGearChallengeGroupEntity, z.null()])),
+    group: z.optional(z.union([
+        zRandomGearChallengeGroupEntity,
+        z.null()
+    ])),
     categories: z.array(zRandomChallengeCategoryDto),
     types_to_exclude: z.array(zGearTypeEntity),
     rarities_to_exclude: z.array(zGearRarityEntity),
@@ -225,7 +332,7 @@ export const zRandomChallengeWithCategoriesDto = z.object({
     min_tier: z.number(),
     max_tier: z.number(),
     color: z.string(),
-    random_gear_challenge_group: zRandomGearChallengeGroupEntity,
+    random_gear_challenge_group: zRandomGearChallengeGroupEntity
 });
 
 export const zRandomChallengeCategoryItemDto = z.object({
@@ -236,11 +343,19 @@ export const zRandomChallengeCategoryItemDto = z.object({
         id: z.string(),
         name: z.string(),
         description: z.string(),
-        image_url: z.union([z.string(), z.null()]),
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+        image_url: z.union([
+            z.string(),
+            z.null()
+        ]),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ]),
         order: z.number(),
-        is_long_slot: z.boolean(),
-    }),
+        is_long_slot: z.boolean()
+    })
 });
 
 export const zRandomChallengeFullDto = z.object({
@@ -249,7 +364,12 @@ export const zRandomChallengeFullDto = z.object({
     name: z.string(),
     description: z.string(),
     challenge_level: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     min_tier: z.number(),
     max_tier: z.number(),
     color: z.string(),
@@ -257,91 +377,126 @@ export const zRandomChallengeFullDto = z.object({
     types_to_exclude: z.array(z.record(z.string(), z.unknown())),
     rarities_to_exclude: z.array(z.record(z.string(), z.unknown())),
     challenge_items: z.array(zRandomChallengeCategoryItemDto),
-    group: z.optional(z.union([zRandomGearChallengeGroupEntity, z.null()])),
+    group: z.optional(z.union([
+        zRandomGearChallengeGroupEntity,
+        z.null()
+    ]))
 });
 
 export const zCategoriesToGenerateDto = z.object({
     category_id: z.string(),
-    order: z.number(),
+    order: z.number()
 });
 
 export const zCreateRandomChallengeDto = z.object({
     order: z.number(),
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     min_tier: z.number(),
     color: z.string(),
     max_tier: z.number(),
     challenge_level: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     categories_to_generate: z.array(zCategoriesToGenerateDto),
     categories_to_exclude: z.array(z.string()),
     types_to_exclude: z.array(z.string()),
     additional_conditions: z.array(z.string()),
     rarities_to_exclude: z.array(z.string()),
-    random_gear_challenge_group_id: z.string(),
+    random_gear_challenge_group_id: z.string()
 });
 
 export const zUpdateRandomChallengeDto = z.object({
     order: z.number(),
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     min_tier: z.number(),
     color: z.string(),
     max_tier: z.number(),
     challenge_level: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     categories_to_generate: z.array(zCategoriesToGenerateDto),
     categories_to_exclude: z.array(z.string()),
     types_to_exclude: z.array(z.string()),
     additional_conditions: z.array(z.string()),
     rarities_to_exclude: z.array(z.string()),
     random_gear_challenge_group_id: z.string(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zRemoveRandomChallengeDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateRandomChallengeGroupDto = z.object({
     name: z.string(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])
 });
 
 export const zUpdateRandomChallengeGroupDto = z.object({
     name: z.string(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    id: z.string(),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
+    id: z.string()
 });
 
 export const zRemoveRandomChallengeGroupDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetRandomLoadoutDto = z.object({
     id: z.string(),
-    seed: z.string(),
+    seed: z.string()
 });
 
 export const zGetRandomLoadoutCategoryGearDto = z.object({
     category_id: z.string(),
-    gear_id: z.optional(z.union([z.string(), z.null()])),
-    gear: z.optional(z.union([zGearEntity, z.null()])),
+    gear_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    gear: z.optional(z.union([
+        zGearEntity,
+        z.null()
+    ])),
     order: z.number(),
     category_name: z.string(),
-    is_long_slot: z.boolean(),
+    is_long_slot: z.boolean()
 });
 
 export const zGetRandomLoadoutResponseDto = z.object({
     result: z.array(zGetRandomLoadoutCategoryGearDto),
     seed: z.string(),
-    additional_condition: z.optional(z.string()),
+    additional_condition: z.optional(z.string())
 });
 
 export const zChallengeLoadoutItemDto = z.object({
     gear_id: z.string(),
-    order: z.number(),
+    order: z.number()
 });
 
 export const zCreateChallengeDto = z.object({
@@ -352,13 +507,28 @@ export const zCreateChallengeDto = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.optional(z.union([
+        z.iso.datetime(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     loadout_items: z.array(zChallengeLoadoutItemDto),
     season_id: z.string(),
-    time_limit_in_seconds: z.optional(z.union([z.number(), z.null()])),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
-    additional_conditions: z.array(z.string()),
+    time_limit_in_seconds: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
+    additional_conditions: z.array(z.string())
 });
 
 export const zUpdateChallengeDto = z.object({
@@ -369,25 +539,43 @@ export const zUpdateChallengeDto = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.optional(z.union([
+        z.iso.datetime(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     loadout_items: z.array(zChallengeLoadoutItemDto),
     season_id: z.string(),
-    time_limit_in_seconds: z.optional(z.union([z.number(), z.null()])),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
+    time_limit_in_seconds: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
     additional_conditions: z.array(z.string()),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zRemoveChallengeDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zChallengeEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     title: z.string(),
     description: z.string(),
     short_description: z.string(),
@@ -395,12 +583,27 @@ export const zChallengeEntity = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.union([z.iso.datetime(), z.null()]),
-    time_limit_in_seconds: z.union([z.number(), z.null()]),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    time_limit_in_seconds: z.union([
+        z.number(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     season_id: z.string(),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
-    additional_conditions: z.array(z.string()),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
+    additional_conditions: z.array(z.string())
 });
 
 export const zSetChallengeProgressDto = z.object({
@@ -413,29 +616,32 @@ export const zSetChallengeProgressDto = z.object({
         'waiting_for_review',
         'in_review',
         'failed',
-        'completed',
-    ]),
+        'completed'
+    ])
 });
 
 export const zSendChallengeToReviewDto = z.object({
     progress_id: z.string(),
     user_comment: z.string(),
-    file: z.string(),
+    file: z.string()
 });
 
 export const zAcceptChallengeRequestDto = z.object({
-    challenge_id: z.string(),
+    challenge_id: z.string()
 });
 
 export const zCancelOrRetryChallengeRequestDto = z.object({
-    progress_id: z.string(),
+    progress_id: z.string()
 });
 
 export const zGetAllChallengesResponseItemDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     title: z.string(),
     description: z.string(),
     short_description: z.string(),
@@ -443,312 +649,484 @@ export const zGetAllChallengesResponseItemDto = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.union([z.iso.datetime(), z.null()]),
-    time_limit_in_seconds: z.union([z.number(), z.null()]),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    time_limit_in_seconds: z.union([
+        z.number(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     season_id: z.string(),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
     additional_conditions: z.array(z.string()),
-    gears: z.array(zGearEntity),
+    gears: z.array(zGearEntity)
 });
 
 export const zCurrentSeasonDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     active: z.boolean(),
     ends_at: z.iso.datetime(),
-    game: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     rewards_count: z.number(),
-    challenges_count: z.number(),
+    challenges_count: z.number()
 });
 
 export const zChallengeSeason = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     active: z.boolean(),
     ends_at: z.iso.datetime(),
-    game: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])
 });
 
 export const zChallengeShopItemEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
-    description: z.union([z.string(), z.null()]),
-    image_url: z.union([z.string(), z.null()]),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
+    image_url: z.union([
+        z.string(),
+        z.null()
+    ]),
     price: z.number(),
     is_infinite: z.boolean(),
     is_active: z.boolean(),
     order: z.number(),
     quantity: z.number(),
-    challenge_season_id: z.string(),
+    challenge_season_id: z.string()
 });
 
 export const zCreateChallengeShopItemDto = z.object({
     name: z.string(),
-    description: z.union([z.string(), z.null()]),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
     price: z.number(),
     is_infinite: z.boolean(),
     is_active: z.boolean(),
     order: z.number(),
     quantity: z.number(),
     challenge_season_id: z.string(),
-    file: z.optional(z.union([z.string(), z.null()])),
+    file: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zUpdateChallengeShopItemDto = z.object({
     name: z.string(),
-    description: z.union([z.string(), z.null()]),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
     price: z.number(),
     is_infinite: z.boolean(),
     is_active: z.boolean(),
     order: z.number(),
     quantity: z.number(),
     challenge_season_id: z.string(),
-    file: z.optional(z.union([z.string(), z.null()])),
-    id: z.string(),
+    file: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    id: z.string()
 });
 
 export const zRemoveChallengeShopItemDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zReversePurchaseDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateChallengeSeasonDto = z.object({
     name: z.string(),
     active: z.boolean(),
     ends_at: z.iso.datetime(),
-    game: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])
 });
 
 export const zUpdateChallengeSeasonDto = z.object({
     name: z.string(),
     active: z.boolean(),
     ends_at: z.iso.datetime(),
-    game: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    id: z.string(),
+    game: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
+    id: z.string()
 });
 
 export const zRemoveChallengeSeasonDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateChallengeOfferDto = z.object({
     title: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    files: z.optional(z.array(z.string())),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    files: z.optional(z.array(z.string()))
 });
 
 export const zPurchaseShopItemDto = z.object({
     item_id: z.string(),
-    contact_info: z.string(),
+    contact_info: z.string()
 });
 
 export const zCreateGearDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     image: z.optional(z.record(z.string(), z.unknown())),
     tier: z.number(),
     weight: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     category_id: z.string(),
-    rarity_id: z.optional(z.union([z.string(), z.null()])),
-    type_id: z.string(),
+    rarity_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    type_id: z.string()
 });
 
 export const zUpdateGearDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     image: z.optional(z.record(z.string(), z.unknown())),
     tier: z.number(),
     weight: z.number(),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     category_id: z.string(),
-    rarity_id: z.optional(z.union([z.string(), z.null()])),
+    rarity_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     type_id: z.string(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetGearListResponseDto = z.object({
     data: z.array(zGearEntity),
     total: z.number(),
     page: z.number(),
-    limit: z.number(),
+    limit: z.number()
 });
 
 export const zRemoveGearDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateGearRarityDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     color: z.string(),
-    weight: z.number(),
+    weight: z.number()
 });
 
 export const zUpdateGearRarityDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     color: z.string(),
     weight: z.number(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetGearRarityListResponseDto = z.object({
     data: z.array(zGearRarityEntity),
     total: z.number(),
     page: z.number(),
-    limit: z.number(),
+    limit: z.number()
 });
 
 export const zRemoveGearRarityDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateGearTypeDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     image: z.optional(z.record(z.string(), z.unknown())),
-    excluded_types: z.array(z.string()),
+    excluded_types: z.array(z.string())
 });
 
 export const zUpdateGearTypeDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     image: z.optional(z.record(z.string(), z.unknown())),
     excluded_types: z.array(z.string()),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetGearTypeListResponseDto = z.object({
     data: z.array(zGearTypeEntity),
     total: z.number(),
     page: z.number(),
-    limit: z.number(),
+    limit: z.number()
 });
 
 export const zRemoveGearTypeDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateGearCategoryDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     image: z.optional(z.record(z.string(), z.unknown())),
     excluded_categories: z.array(z.string()),
     order: z.number(),
-    is_long_slot: z.boolean(),
+    is_long_slot: z.boolean()
 });
 
 export const zUpdateGearCategoryDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     image: z.optional(z.record(z.string(), z.unknown())),
     excluded_categories: z.array(z.string()),
     order: z.number(),
     is_long_slot: z.boolean(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetGearCategoryListResponseDto = z.object({
     data: z.array(zGearCategoryEntity),
     total: z.number(),
     page: z.number(),
-    limit: z.number(),
+    limit: z.number()
 });
 
 export const zRemoveGearCategoryDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zPublicGearRarityDto = z.object({
     id: z.string(),
-    name: z.optional(z.union([z.string(), z.null()])),
-    color: z.optional(z.union([z.string(), z.null()])),
+    name: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    color: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zPublicGearDto = z.object({
     id: z.string(),
     name: z.string(),
     description: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    rarity: z.optional(z.union([zPublicGearRarityDto, z.null()])),
-    tier: z.number(),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    rarity: z.optional(z.union([
+        zPublicGearRarityDto,
+        z.null()
+    ])),
+    tier: z.number()
 });
 
 export const zUploadFileDto = z.object({
-    file: z.record(z.string(), z.unknown()),
+    file: z.record(z.string(), z.unknown())
 });
 
 export const zCreateMapDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     file: z.optional(z.string()),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    visibility: z.optional(z.enum(['public', 'private'])),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
+    visibility: z.optional(z.enum([
+        'public',
+        'private'
+    ]))
 });
 
 export const zUpdateMapDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     file: z.optional(z.string()),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    visibility: z.optional(z.enum(['public', 'private'])),
-    id: z.string(),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
+    visibility: z.optional(z.enum([
+        'public',
+        'private'
+    ])),
+    id: z.string()
 });
 
 export const zRemoveMapDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateMapFloorDto = z.object({
     map_id: z.string(),
     level: z.number().gte(1),
-    name: z.string(),
+    name: z.string()
 });
 
 export const zUpdateMapFloorDto = z.object({
     id: z.string(),
     map_id: z.string(),
     level: z.number().gte(1),
-    name: z.string(),
+    name: z.string()
 });
 
 export const zRemoveMapFloorDto = z.object({
     id: z.string(),
-    map_id: z.string(),
+    map_id: z.string()
 });
 
 export const zGenerateMapTilesDto = z.object({
     id: z.string(),
     floor_level: z.number().gte(1),
-    floor_name: z.optional(z.union([z.string(), z.null()])),
-    file: z.optional(z.record(z.string(), z.unknown())),
+    floor_name: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    file: z.optional(z.record(z.string(), z.unknown()))
 });
 
 export const zMapFloorDto = z.object({
     id: z.string(),
     name: z.string(),
     level: z.number(),
-    max_zoom: z.number(),
+    max_zoom: z.number()
 });
 
 export const zMapDataMarkerDto = z.object({
@@ -758,16 +1136,28 @@ export const zMapDataMarkerDto = z.object({
     latitude: z.number(),
     longitude: z.number(),
     type_id: z.string(),
-    floor_id: z.optional(z.union([z.string(), z.null()])),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    info_link: z.optional(z.union([z.string(), z.null()])),
+    floor_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    info_link: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zMapDataMarkerTypeDto = z.object({
     id: z.string(),
     name: z.string(),
     icon: z.string(),
-    markers: z.optional(z.union([z.array(zMapDataMarkerDto), z.null()])),
+    markers: z.optional(z.union([
+        z.array(zMapDataMarkerDto),
+        z.null()
+    ]))
 });
 
 export const zMapDataCategoryDto = z.object({
@@ -775,29 +1165,47 @@ export const zMapDataCategoryDto = z.object({
     name: z.string(),
     description: z.string(),
     color: z.string(),
-    marker_types: z.optional(z.union([z.array(zMapDataMarkerTypeDto), z.null()])),
+    marker_types: z.optional(z.union([
+        z.array(zMapDataMarkerTypeDto),
+        z.null()
+    ]))
 });
 
 export const zMapDataResponseDto = z.object({
     createdAt: z.iso.datetime(),
-    deletedAt: z.optional(z.union([z.iso.datetime(), z.null()])),
+    deletedAt: z.optional(z.union([
+        z.iso.datetime(),
+        z.null()
+    ])),
     description: z.string(),
     game_type: z.string(),
     id: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    visibility: z.enum(['public', 'private']),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    visibility: z.enum([
+        'public',
+        'private'
+    ]),
     max_latitude: z.number(),
     max_longitude: z.number(),
     name: z.string(),
     updatedAt: z.iso.datetime(),
-    floors: z.optional(z.union([z.array(zMapFloorDto), z.null()])),
-    categories: z.union([z.array(zMapDataCategoryDto), z.null()]),
+    floors: z.optional(z.union([
+        z.array(zMapFloorDto),
+        z.null()
+    ])),
+    categories: z.union([
+        z.array(zMapDataCategoryDto),
+        z.null()
+    ])
 });
 
 export const zMapListMarkerTypeDto = z.object({
     id: z.string(),
     name: z.string(),
-    icon: z.string(),
+    icon: z.string()
 });
 
 export const zMapListCategoryDto = z.object({
@@ -805,87 +1213,131 @@ export const zMapListCategoryDto = z.object({
     name: z.string(),
     description: z.string(),
     color: z.string(),
-    marker_types: z.optional(z.union([z.array(zMapListMarkerTypeDto), z.null()])),
+    marker_types: z.optional(z.union([
+        z.array(zMapListMarkerTypeDto),
+        z.null()
+    ]))
 });
 
 export const zMapListResponseDto = z.object({
     createdAt: z.iso.datetime(),
-    deletedAt: z.optional(z.union([z.iso.datetime(), z.null()])),
+    deletedAt: z.optional(z.union([
+        z.iso.datetime(),
+        z.null()
+    ])),
     description: z.string(),
     game_type: z.string(),
     id: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    visibility: z.enum(['public', 'private']),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    visibility: z.enum([
+        'public',
+        'private'
+    ]),
     max_latitude: z.number(),
     max_longitude: z.number(),
     name: z.string(),
     updatedAt: z.iso.datetime(),
-    floors: z.optional(z.union([z.array(zMapFloorDto), z.null()])),
-    categories: z.optional(z.union([z.array(zMapListCategoryDto), z.null()])),
+    floors: z.optional(z.union([
+        z.array(zMapFloorDto),
+        z.null()
+    ])),
+    categories: z.optional(z.union([
+        z.array(zMapListCategoryDto),
+        z.null()
+    ]))
 });
 
 export const zMapEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     name: z.string(),
     description: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
-    visibility: z.enum(['public', 'private']),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    visibility: z.enum([
+        'public',
+        'private'
+    ]),
     max_latitude: z.number(),
-    max_longitude: z.number(),
+    max_longitude: z.number()
 });
 
 export const zMapMarkerCategoryEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     description: z.string(),
     map_id: z.string(),
     color: z.string(),
-    map: zMapEntity,
+    map: zMapEntity
 });
 
 export const zCreateMapsCategoryDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     color: z.string(),
-    map_id: z.string(),
+    map_id: z.string()
 });
 
 export const zUpdateMapsCategoryDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     color: z.string(),
     map_id: z.string(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zRemoveMapsCategoryDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zGetMapTypeResponseDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     name: z.string(),
     map_id: z.string(),
     icon: z.string(),
     category_id: z.string(),
-    category: zMapMarkerCategoryEntity,
+    category: zMapMarkerCategoryEntity
 });
 
 export const zCreateMapTypeDto = z.object({
     name: z.string(),
     icon: z.string(),
     category_id: z.string(),
-    map_id: z.string(),
+    map_id: z.string()
 });
 
 export const zUpdateMapTypeDto = z.object({
@@ -893,62 +1345,80 @@ export const zUpdateMapTypeDto = z.object({
     icon: z.string(),
     category_id: z.string(),
     map_id: z.string(),
-    id: z.string(),
+    id: z.string()
 });
 
 export const zRemoveMapTypeDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zCreateMapMarkerDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     latitude: z.number(),
     longitude: z.number(),
     type_id: z.string(),
-    floor_id: z.optional(z.union([z.string(), z.null()])),
+    floor_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     map_id: z.string(),
     file: z.optional(z.string()),
-    info_link: z.optional(z.union([z.string(), z.null()])),
+    info_link: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zUpdateMapMarkerDto = z.object({
     name: z.string(),
-    description: z.optional(z.union([z.string(), z.null()])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     latitude: z.number(),
     longitude: z.number(),
     type_id: z.string(),
-    floor_id: z.optional(z.union([z.string(), z.null()])),
+    floor_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     map_id: z.string(),
     file: z.optional(z.string()),
-    info_link: z.optional(z.union([z.string(), z.null()])),
-    id: z.string(),
+    info_link: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    id: z.string()
 });
 
 export const zRemoveMapMarkerDto = z.object({
-    id: z.string(),
+    id: z.string()
 });
 
 export const zDashboardDailyStatDto = z.object({
     date: z.string(),
-    value: z.number(),
+    value: z.number()
 });
 
 export const zDashboardAllStatsResponseDto = z.object({
     new_users: z.array(zDashboardDailyStatDto),
     challenges: z.array(zDashboardDailyStatDto),
     sales: z.array(zDashboardDailyStatDto),
-    news_views: z.array(zDashboardDailyStatDto),
+    news_views: z.array(zDashboardDailyStatDto)
 });
 
 export const zDashboardResponseDto = z.object({
-    daily_stats: z.array(zDashboardDailyStatDto),
+    daily_stats: z.array(zDashboardDailyStatDto)
 });
 
 export const zItemResponseDto = z.object({
     id: z.string(),
     gearId: z.string(),
-    order: z.number().gte(0),
+    order: z.number().gte(0)
 });
 
 export const zRowResponseDto = z.object({
@@ -957,7 +1427,10 @@ export const zRowResponseDto = z.object({
     items: z.array(zItemResponseDto),
     color: z.string(),
     order: z.number().gte(0),
-    type: z.enum(['pool', 'tier']),
+    type: z.enum([
+        'pool',
+        'tier'
+    ])
 });
 
 export const zTierListResponseDto = z.object({
@@ -967,13 +1440,13 @@ export const zTierListResponseDto = z.object({
     isPublic: z.boolean(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    rows: z.array(zRowResponseDto),
+    rows: z.array(zRowResponseDto)
 });
 
 export const zUpdateItemDto = z.object({
     id: z.optional(z.string()),
     gearId: z.string(),
-    order: z.number().gte(0),
+    order: z.number().gte(0)
 });
 
 export const zUpdateRowDto = z.object({
@@ -981,16 +1454,16 @@ export const zUpdateRowDto = z.object({
     title: z.string(),
     color: z.string(),
     order: z.number().gte(0),
-    items: z.array(zUpdateItemDto),
+    items: z.array(zUpdateItemDto)
 });
 
 export const zUpdateTierListDto = z.object({
     isPublic: z.boolean(),
-    rows: z.array(zUpdateRowDto),
+    rows: z.array(zUpdateRowDto)
 });
 
 export const zUpdateTierListPrivacyDto = z.object({
-    isPublic: z.boolean(),
+    isPublic: z.boolean()
 });
 
 export const zPublicTierListListItemDto = z.object({
@@ -998,119 +1471,179 @@ export const zPublicTierListListItemDto = z.object({
     title: z.string(),
     categoryId: z.string(),
     categoryName: z.string(),
-    gameType: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    gameType: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     createdAt: z.iso.datetime(),
-    updatedAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime()
 });
 
 export const zTierListCategoryListItemDto = z.object({
     id: z.string(),
-    name: z.string(),
+    name: z.string()
 });
 
 export const zCreateTierListCategoryAdminDto = z.object({
-    gameType: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    gameType: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     name: z.string(),
-    gearCategoryIds: z.array(z.string()),
+    gearCategoryIds: z.array(z.string())
 });
 
 export const zGearCategoryShortDto = z.object({
     id: z.string(),
-    name: z.string(),
+    name: z.string()
 });
 
 export const zTierListCategoryResponseAdminDto = z.object({
     id: z.string(),
-    gameType: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    gameType: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     name: z.string(),
-    gearCategories: z.array(zGearCategoryShortDto),
+    gearCategories: z.array(zGearCategoryShortDto)
 });
 
 export const zUpdateTierListCategoryAdminDto = z.object({
-    gameType: z.optional(
-        z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov'])
-    ),
+    gameType: z.optional(z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])),
     name: z.optional(z.string()),
-    gearCategoryIds: z.optional(z.array(z.string())),
+    gearCategoryIds: z.optional(z.array(z.string()))
 });
 
 export const zFriendsListResponseDto = z.object({
-    friends: z.array(zPublicUserResponseDto),
+    friends: z.array(zPublicUserResponseDto)
 });
 
 export const zRemoveFriendDto = z.object({
-    userId: z.string(),
+    userId: z.string()
 });
 
 export const zFriendRequestItemDto = z.object({
     id: z.string(),
     user: zPublicUserResponseDto,
-    createdAt: z.iso.datetime(),
+    createdAt: z.iso.datetime()
 });
 
 export const zFriendRequestsResponseDto = z.object({
-    requests: z.array(zFriendRequestItemDto),
+    requests: z.array(zFriendRequestItemDto)
 });
 
 export const zFriendRequestDto = z.object({
-    userId: z.string(),
+    userId: z.string()
 });
 
 export const zFriendRequestActionDto = z.object({
-    requestId: z.string(),
+    requestId: z.string()
 });
 
 export const zBannerPublicItemDto = z.object({
     id: z.string(),
-    type: z.enum(['image', 'video']),
+    type: z.enum([
+        'image',
+        'video'
+    ]),
     fileUrl: z.string(),
-    previewUrl: z.optional(z.union([z.string(), z.null()])),
-    linkUrl: z.optional(z.union([z.string(), z.null()])),
+    previewUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    linkUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zBannerPublicSlotDto = z.object({
     slotKey: z.string(),
     width: z.number(),
     height: z.number(),
-    banners: z.array(zBannerPublicItemDto),
+    banners: z.array(zBannerPublicItemDto)
 });
 
 export const zCreateBannerAdminDto = z.object({
     title: z.string(),
-    type: z.enum(['image', 'video']),
+    type: z.enum([
+        'image',
+        'video'
+    ]),
     file: z.string(),
-    link_url: z.optional(z.union([z.string(), z.null()])),
+    link_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zBannerAdminResponseDto = z.object({
     id: z.string(),
     title: z.string(),
-    type: z.enum(['image', 'video']),
+    type: z.enum([
+        'image',
+        'video'
+    ]),
     fileUrl: z.string(),
-    previewUrl: z.optional(z.union([z.string(), z.null()])),
-    linkUrl: z.optional(z.union([z.string(), z.null()])),
+    previewUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    linkUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     createdBy: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    isActive: z.boolean(),
+    isActive: z.boolean()
 });
 
 export const zUpdateBannerAdminDto = z.object({
     title: z.optional(z.string()),
-    type: z.optional(z.enum(['image', 'video'])),
-    link_url: z.optional(z.union([z.string(), z.null()])),
-    preview_url: z.optional(z.union([z.string(), z.null()])),
-    file: z.optional(z.string()),
+    type: z.optional(z.enum([
+        'image',
+        'video'
+    ])),
+    link_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    preview_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    file: z.optional(z.string())
 });
 
 export const zBannerSlotAdminResponseDto = z.object({
     id: z.string(),
-    page: z.enum(['news_article', 'challenges_rewards']),
+    page: z.enum([
+        'news_article',
+        'challenges_rewards'
+    ]),
     slotKey: z.string(),
     width: z.number(),
     height: z.number(),
-    allowedTypes: z.array(z.enum(['image', 'video'])),
-    description: z.optional(z.union([z.string(), z.null()])),
+    allowedTypes: z.array(z.enum([
+        'image',
+        'video'
+    ])),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zCreateBannerPlacementAdminDto = z.object({
@@ -1118,26 +1651,41 @@ export const zCreateBannerPlacementAdminDto = z.object({
     bannerId: z.string(),
     priority: z.number().gte(0),
     startAt: z.optional(z.string()),
-    endAt: z.optional(z.string()),
+    endAt: z.optional(z.string())
 });
 
 export const zBannerPlacementBannerAdminDto = z.object({
     id: z.string(),
     title: z.string(),
-    type: z.enum(['image', 'video']),
+    type: z.enum([
+        'image',
+        'video'
+    ]),
     fileUrl: z.string(),
-    previewUrl: z.optional(z.union([z.string(), z.null()])),
-    linkUrl: z.optional(z.union([z.string(), z.null()])),
-    isActive: z.boolean(),
+    previewUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    linkUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    isActive: z.boolean()
 });
 
 export const zBannerPlacementAdminItemDto = z.object({
     id: z.string(),
     priority: z.number(),
-    startAt: z.optional(z.union([z.string(), z.null()])),
-    endAt: z.optional(z.union([z.string(), z.null()])),
+    startAt: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    endAt: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     isActive: z.boolean(),
-    banner: zBannerPlacementBannerAdminDto,
+    banner: zBannerPlacementBannerAdminDto
 });
 
 export const zBannerPlacementsSlotAdminDto = z.object({
@@ -1145,14 +1693,23 @@ export const zBannerPlacementsSlotAdminDto = z.object({
     slotKey: z.string(),
     width: z.number(),
     height: z.number(),
-    allowedTypes: z.array(z.enum(['image', 'video'])),
-    placements: z.array(zBannerPlacementAdminItemDto),
+    allowedTypes: z.array(z.enum([
+        'image',
+        'video'
+    ])),
+    placements: z.array(zBannerPlacementAdminItemDto)
 });
 
 export const zUpdateBannerPlacementAdminDto = z.object({
     priority: z.optional(z.number().gte(0)),
-    startAt: z.optional(z.union([z.string(), z.null()])),
-    endAt: z.optional(z.union([z.string(), z.null()])),
+    startAt: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    endAt: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zTwitchStreamDto = z.object({
@@ -1167,31 +1724,49 @@ export const zTwitchStreamDto = z.object({
     viewer_count: z.number(),
     started_at: z.string(),
     language: z.string(),
-    thumbnail_url: z.string(),
+    thumbnail_url: z.string()
 });
 
 export const zTwitchStreamStatusDto = z.object({
     channel: z.string(),
     isLive: z.boolean(),
     checkedAt: z.string(),
-    stream: z.optional(z.union([zTwitchStreamDto, z.null()])),
+    stream: z.optional(z.union([
+        zTwitchStreamDto,
+        z.null()
+    ]))
 });
 
 export const zTwitchStreamWidgetDto = z.object({
     channel: z.string(),
     isLive: z.boolean(),
     checkedAt: z.string(),
-    title: z.optional(z.union([z.string(), z.null()])),
-    gameName: z.optional(z.union([z.string(), z.null()])),
-    viewerCount: z.optional(z.union([z.number(), z.null()])),
-    thumbnailUrl: z.optional(z.union([z.string(), z.null()])),
+    title: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    gameName: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    viewerCount: z.optional(z.union([
+        z.number(),
+        z.null()
+    ])),
+    thumbnailUrl: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zNewsGalleryImageEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     image_url: z.string(),
     order: z.number(),
     news_id: z.string(),
@@ -1199,32 +1774,45 @@ export const zNewsGalleryImageEntity = z.object({
         return z.lazy((): any => {
             return zNewsEntity;
         });
-    },
+    }
 });
 
 export const zNewsEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     gallery_images: z.array(zNewsGalleryImageEntity),
     likes_count: z.number(),
     views_count: z.number(),
-    game_type: z.optional(
-        z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov'])
-    ),
+    game_type: z.optional(z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ])),
     is_published: z.boolean(),
-    publish_at: z.optional(z.union([z.string(), z.null()])),
+    publish_at: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    is_new: z.optional(z.boolean()),
     title: z.string(),
     short_description: z.string(),
     content: z.string(),
-    image_url: z.optional(z.union([z.string(), z.null()])),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     dislikes_count: z.number(),
-    comments_count: z.number(),
+    comments_count: z.number()
 });
 
 export const zGetNewsListResponseDto = z.object({
-    data: z.array(zNewsEntity),
+    data: z.array(zNewsEntity)
 });
 
 export const zRefreshToken = z.object({
@@ -1240,7 +1828,7 @@ export const zRefreshToken = z.object({
         return z.lazy((): any => {
             return zUser;
         });
-    },
+    }
 });
 
 export const zTierItemEntity = z.object({
@@ -1255,7 +1843,7 @@ export const zTierItemEntity = z.object({
         return z.lazy((): any => {
             return zRowEntity;
         });
-    },
+    }
 });
 
 export const zRowEntity = z.object({
@@ -1266,13 +1854,16 @@ export const zRowEntity = z.object({
     label: z.string(),
     color: z.string(),
     order: z.number(),
-    type: z.enum(['pool', 'normal']),
+    type: z.enum([
+        'pool',
+        'normal'
+    ]),
     get list() {
         return z.lazy((): any => {
             return zTierListEntity;
         });
     },
-    items: z.array(zTierItemEntity),
+    items: z.array(zTierItemEntity)
 });
 
 export const zTierListEntity = z.object({
@@ -1290,7 +1881,7 @@ export const zTierListEntity = z.object({
             return zUser;
         });
     },
-    category: zTierListCategoryEntity,
+    category: zTierListCategoryEntity
 });
 
 export const zUser = z.object({
@@ -1300,18 +1891,31 @@ export const zUser = z.object({
     deletedAt: z.string(),
     username: z.string(),
     email: z.string(),
-    role: z.enum(['admin', 'user']),
-    avatar_url: z.optional(z.union([z.string(), z.null()])),
+    role: z.enum([
+        'admin',
+        'user'
+    ]),
+    avatar_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     refreshTokens: z.array(zRefreshToken),
     tierLists: z.array(zTierListEntity),
     points: z.number(),
+    news_seen_at: z.optional(z.union([
+        z.iso.datetime(),
+        z.null()
+    ]))
 });
 
 export const zGetNewsCommentsResponseItemDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     content: z.string(),
     news: zNewsEntity,
     news_id: z.string(),
@@ -1319,14 +1923,20 @@ export const zGetNewsCommentsResponseItemDto = z.object({
     user_id: z.string(),
     likes_count: z.number(),
     dislikes_count: z.number(),
-    vote: z.optional(z.enum(['like', 'dislike'])),
+    vote: z.optional(z.enum([
+        'like',
+        'dislike'
+    ]))
 });
 
 export const zChallengeProgressEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     challenge: zChallengeEntity,
     challenge_id: z.string(),
     user_id: z.string(),
@@ -1337,20 +1947,26 @@ export const zChallengeProgressEntity = z.object({
         'waiting_for_review',
         'in_review',
         'failed',
-        'completed',
+        'completed'
     ]),
     can_be_retried: z.boolean(),
     user_comment: z.string(),
     upload_url: z.optional(z.string()),
     review_comment: z.string(),
-    time_limited_at: z.optional(z.union([z.string(), z.null()])),
+    time_limited_at: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zGetAllChallengesWithProgressItemDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     title: z.string(),
     description: z.string(),
     short_description: z.string(),
@@ -1358,21 +1974,42 @@ export const zGetAllChallengesWithProgressItemDto = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.union([z.iso.datetime(), z.null()]),
-    time_limit_in_seconds: z.union([z.number(), z.null()]),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    time_limit_in_seconds: z.union([
+        z.number(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     season_id: z.string(),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
     additional_conditions: z.array(z.string()),
-    progress: z.optional(z.union([zChallengeProgressEntity, z.null()])),
-    gears: z.array(zGearEntity),
+    progress: z.optional(z.union([
+        zChallengeProgressEntity,
+        z.null()
+    ])),
+    gears: z.array(zGearEntity)
 });
 
 export const zGetChallengeByIdWithProgressResponseDto = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     title: z.string(),
     description: z.string(),
     short_description: z.string(),
@@ -1380,56 +2017,83 @@ export const zGetChallengeByIdWithProgressResponseDto = z.object({
     prize_amount: z.number(),
     active: z.boolean(),
     start_date: z.iso.datetime(),
-    end_date: z.union([z.iso.datetime(), z.null()]),
-    time_limit_in_seconds: z.union([z.number(), z.null()]),
-    game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
+    end_date: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    time_limit_in_seconds: z.union([
+        z.number(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
     season_id: z.string(),
-    difficulty: z.enum(['easy', 'medium', 'hard']),
+    difficulty: z.enum([
+        'easy',
+        'medium',
+        'hard'
+    ]),
     additional_conditions: z.array(z.string()),
-    progress: z.optional(z.union([zChallengeProgressEntity, z.null()])),
-    gears: z.array(zGearEntity),
+    progress: z.optional(z.union([
+        zChallengeProgressEntity,
+        z.null()
+    ])),
+    gears: z.array(zGearEntity)
 });
 
 export const zChallengeSeasonUserBalanceEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     challenge_season_id: z.string(),
     user_id: z.string(),
     balance: z.number(),
     season: z.optional(zChallengeSeason),
-    user: z.optional(zUser),
+    user: z.optional(zUser)
 });
 
 export const zChallengeShopPurchaseEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     challenge_shop_item_id: z.string(),
     user_id: z.string(),
     contact_info: z.string(),
     item: zChallengeShopItemEntity,
-    user: z.optional(zUser),
+    user: z.optional(zUser)
 });
 
 export const zChallengeOfferEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
-    deletedAt: z.union([z.iso.datetime(), z.null()]),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
     title: z.string(),
     description: z.string(),
     images_urls: z.array(z.string()),
     user: z.optional(zUser),
-    user_id: z.string(),
+    user_id: z.string()
 });
 
 export const zAppControllerGetHelloData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAppControllerGetHelloResponse = z.string();
@@ -1437,13 +2101,13 @@ export const zAppControllerGetHelloResponse = z.string();
 export const zAppControllerGetUserData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerRemoveData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerRemoveResponse = z.record(z.string(), z.unknown());
@@ -1456,8 +2120,8 @@ export const zUsersControllerFindAllData = z.object({
         limit: z.number(),
         username: z.optional(z.string()),
         email: z.optional(z.string()),
-        role: z.optional(z.string()),
-    }),
+        role: z.optional(z.string())
+    })
 });
 
 export const zUsersControllerFindAllResponse = zGetUserListResponseDto;
@@ -1465,7 +2129,7 @@ export const zUsersControllerFindAllResponse = zGetUserListResponseDto;
 export const zUsersControllerGetMeData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerGetMeResponse = zUserResponseDto;
@@ -1473,9 +2137,9 @@ export const zUsersControllerGetMeResponse = zUserResponseDto;
 export const zUsersControllerFindOneData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerFindOneResponse = zUserResponseDto;
@@ -1483,7 +2147,7 @@ export const zUsersControllerFindOneResponse = zUserResponseDto;
 export const zUsersControllerEditAvatarData = z.object({
     body: zEditAvatarDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerEditAvatarResponse = z.record(z.string(), z.unknown());
@@ -1491,7 +2155,7 @@ export const zUsersControllerEditAvatarResponse = z.record(z.string(), z.unknown
 export const zUsersControllerEditUsernameData = z.object({
     body: zEditUsernameDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersControllerEditUsernameResponse = z.record(z.string(), z.unknown());
@@ -1499,7 +2163,7 @@ export const zUsersControllerEditUsernameResponse = z.record(z.string(), z.unkno
 export const zUsersAdminControllerEditUserData = z.object({
     body: zAdminEditUserDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersAdminControllerEditUserResponse = z.boolean();
@@ -1510,8 +2174,8 @@ export const zUsersPublicControllerFindPublicData = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        username: z.optional(z.string()),
-    }),
+        username: z.optional(z.string())
+    })
 });
 
 export const zUsersPublicControllerFindPublicResponse = zPublicUserListResponseDto;
@@ -1519,9 +2183,9 @@ export const zUsersPublicControllerFindPublicResponse = zPublicUserListResponseD
 export const zUsersPublicControllerFindPublicByIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zUsersPublicControllerFindPublicByIdResponse = zPublicUserResponseDto;
@@ -1529,55 +2193,79 @@ export const zUsersPublicControllerFindPublicByIdResponse = zPublicUserResponseD
 export const zAuthControllerRequestLoginData = z.object({
     body: zRequestLoginDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerVerifyData = z.object({
     body: zVerifyCodeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerRefreshData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerOauthLoginData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerOauthCallbackData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerTwitchLoginData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerTwitchCallbackData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zAuthControllerLogoutData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
+
+export const zNewsControllerGetNewsIndicatorData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ]))
+    }))
+});
+
+export const zNewsControllerGetNewsIndicatorResponse = zGetNewsIndicatorResponseDto;
+
+export const zNewsControllerMarkNewsSeenData = z.object({
+    body: zMarkNewsSeenRequestDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zNewsControllerMarkNewsSeenResponse = z.union([
+    zBoolean,
+    z.boolean()
+]);
 
 export const zNewsAdminControllerCreateNewsData = z.object({
     body: zCreateNewsRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerCreateNewsResponse = z.boolean();
@@ -1585,7 +2273,7 @@ export const zNewsAdminControllerCreateNewsResponse = z.boolean();
 export const zNewsAdminControllerUpdateNewsData = z.object({
     body: zUpdateNewsRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerUpdateNewsResponse = z.boolean();
@@ -1593,7 +2281,7 @@ export const zNewsAdminControllerUpdateNewsResponse = z.boolean();
 export const zNewsAdminControllerRemoveNewsData = z.object({
     body: zRemoveNewsRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerRemoveNewsResponse = z.boolean();
@@ -1601,7 +2289,7 @@ export const zNewsAdminControllerRemoveNewsResponse = z.boolean();
 export const zNewsAdminControllerAddGalleryImageData = z.object({
     body: zAddGalleryImageRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerAddGalleryImageResponse = z.boolean();
@@ -1609,7 +2297,7 @@ export const zNewsAdminControllerAddGalleryImageResponse = z.boolean();
 export const zNewsAdminControllerReorderGalleryImagesData = z.object({
     body: zReorderGalleryImagesRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerReorderGalleryImagesResponse = z.boolean();
@@ -1617,7 +2305,7 @@ export const zNewsAdminControllerReorderGalleryImagesResponse = z.boolean();
 export const zNewsAdminControllerRemoveGalleryImageData = z.object({
     body: zRemoveGalleryImageRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsAdminControllerRemoveGalleryImageResponse = z.boolean();
@@ -1625,7 +2313,7 @@ export const zNewsAdminControllerRemoveGalleryImageResponse = z.boolean();
 export const zCommentsControllerVoteNewsCommentData = z.object({
     body: zVoteNewsCommentRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zCommentsControllerVoteNewsCommentResponse = z.boolean();
@@ -1633,7 +2321,7 @@ export const zCommentsControllerVoteNewsCommentResponse = z.boolean();
 export const zCommentsControllerCreateNewsCommentData = z.object({
     body: zCreateNewsCommentRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zCommentsControllerCreateNewsCommentResponse = z.boolean();
@@ -1642,45 +2330,55 @@ export const zLoadoutControllerGetRandomChallengeGroupsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ])
+    })
 });
 
-export const zLoadoutControllerGetRandomChallengeGroupsResponse = z.array(
-    zRandomGearChallengeGroupEntity
-);
+export const zLoadoutControllerGetRandomChallengeGroupsResponse = z.array(zRandomGearChallengeGroupEntity);
 
 export const zLoadoutControllerGetRandomChallengesListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-        group_id: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ]),
+        group_id: z.optional(z.string())
+    })
 });
 
-export const zLoadoutControllerGetRandomChallengesListResponse = z.array(
-    zRandomChallengeWithCategoriesDto
-);
+export const zLoadoutControllerGetRandomChallengesListResponse = z.array(zRandomChallengeWithCategoriesDto);
 
 export const zLoadoutControllerGetRandomChallengesListWithFullDataData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-        group_id: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ]),
+        group_id: z.optional(z.string())
+    })
 });
 
-export const zLoadoutControllerGetRandomChallengesListWithFullDataResponse =
-    z.array(zRandomChallengeFullDto);
+export const zLoadoutControllerGetRandomChallengesListWithFullDataResponse = z.array(zRandomChallengeFullDto);
 
 export const zLoadoutControllerGetRandomChallengeFullDataData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutControllerGetRandomChallengeFullDataResponse = zRandomChallengeFullDto;
@@ -1688,7 +2386,7 @@ export const zLoadoutControllerGetRandomChallengeFullDataResponse = zRandomChall
 export const zLoadoutAdminControllerCreateRandomChallengeData = z.object({
     body: zCreateRandomChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerCreateRandomChallengeResponse = z.boolean();
@@ -1696,7 +2394,7 @@ export const zLoadoutAdminControllerCreateRandomChallengeResponse = z.boolean();
 export const zLoadoutAdminControllerUpdateRandomChallengeData = z.object({
     body: zUpdateRandomChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerUpdateRandomChallengeResponse = z.boolean();
@@ -1704,7 +2402,7 @@ export const zLoadoutAdminControllerUpdateRandomChallengeResponse = z.boolean();
 export const zLoadoutAdminControllerRemoveRandomChallengeData = z.object({
     body: zRemoveRandomChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerRemoveRandomChallengeResponse = z.boolean();
@@ -1712,7 +2410,7 @@ export const zLoadoutAdminControllerRemoveRandomChallengeResponse = z.boolean();
 export const zLoadoutAdminControllerCreateRandomChallengeGroupData = z.object({
     body: zCreateRandomChallengeGroupDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerCreateRandomChallengeGroupResponse = z.boolean();
@@ -1720,7 +2418,7 @@ export const zLoadoutAdminControllerCreateRandomChallengeGroupResponse = z.boole
 export const zLoadoutAdminControllerUpdateRandomChallengeGroupData = z.object({
     body: zUpdateRandomChallengeGroupDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerUpdateRandomChallengeGroupResponse = z.boolean();
@@ -1728,7 +2426,7 @@ export const zLoadoutAdminControllerUpdateRandomChallengeGroupResponse = z.boole
 export const zLoadoutAdminControllerRemoveRandomChallengeGroupData = z.object({
     body: zRemoveRandomChallengeGroupDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zLoadoutAdminControllerRemoveRandomChallengeGroupResponse = z.boolean();
@@ -1736,24 +2434,28 @@ export const zLoadoutAdminControllerRemoveRandomChallengeGroupResponse = z.boole
 export const zLoadoutRandomizerControllerGenerateRandomLoadoutData = z.object({
     body: zGetRandomLoadoutDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
-export const zLoadoutRandomizerControllerGenerateRandomLoadoutResponse =
-    zGetRandomLoadoutResponseDto;
+export const zLoadoutRandomizerControllerGenerateRandomLoadoutResponse = zGetRandomLoadoutResponseDto;
 
 export const zSeedControllerSeedGearData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ])
+    })
 });
 
 export const zSeedControllerSeedGearFromExcelData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zSeedControllerSeedGearFromExcelResponse = z.boolean();
@@ -1761,7 +2463,7 @@ export const zSeedControllerSeedGearFromExcelResponse = z.boolean();
 export const zChallengesAdminControllerCreateChallengeData = z.object({
     body: zCreateChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesAdminControllerCreateChallengeResponse = z.boolean();
@@ -1769,7 +2471,7 @@ export const zChallengesAdminControllerCreateChallengeResponse = z.boolean();
 export const zChallengesAdminControllerUpdateChallengeData = z.object({
     body: zUpdateChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesAdminControllerUpdateChallengeResponse = z.boolean();
@@ -1777,7 +2479,7 @@ export const zChallengesAdminControllerUpdateChallengeResponse = z.boolean();
 export const zChallengesAdminControllerRemoveChallengeData = z.object({
     body: zRemoveChallengeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesAdminControllerRemoveChallengeResponse = z.boolean();
@@ -1785,7 +2487,7 @@ export const zChallengesAdminControllerRemoveChallengeResponse = z.boolean();
 export const zChallengesAdminControllerSetChallengeProgressData = z.object({
     body: zSetChallengeProgressDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesAdminControllerSetChallengeProgressResponse = z.boolean();
@@ -1793,7 +2495,7 @@ export const zChallengesAdminControllerSetChallengeProgressResponse = z.boolean(
 export const zChallengesClientControllerSendChallengeToReviewData = z.object({
     body: zSendChallengeToReviewDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesClientControllerSendChallengeToReviewResponse = z.boolean();
@@ -1801,7 +2503,7 @@ export const zChallengesClientControllerSendChallengeToReviewResponse = z.boolea
 export const zChallengesClientControllerAcceptChallengeData = z.object({
     body: zAcceptChallengeRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesClientControllerAcceptChallengeResponse = z.boolean();
@@ -1809,13 +2511,13 @@ export const zChallengesClientControllerAcceptChallengeResponse = z.boolean();
 export const zChallengesClientControllerCancelChallengeData = z.object({
     body: zCancelOrRetryChallengeRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesClientControllerRetryChallengeData = z.object({
     body: zCancelOrRetryChallengeRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesClientControllerRetryChallengeResponse = z.boolean();
@@ -1824,26 +2526,44 @@ export const zChallengesClientControllerGetAvailableChallengesData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        search: z.optional(z.union([z.string(), z.null()])),
-        game_type: z.optional(z.union([z.string(), z.null()])),
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
         page: z.number(),
         limit: z.number(),
-        season_id: z.optional(z.union([z.string(), z.null()])),
-        difficulty: z.optional(z.union([z.string(), z.null()])),
-        excluded_ids: z.optional(z.union([z.array(z.string()), z.null()])),
-    }),
+        season_id: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        difficulty: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        excluded_ids: z.optional(z.union([
+            z.array(z.string()),
+            z.null()
+        ]))
+    })
 });
 
-export const zChallengesClientControllerGetAvailableChallengesResponse = z.array(
-    zGetAllChallengesResponseItemDto
-);
+export const zChallengesClientControllerGetAvailableChallengesResponse = z.array(zGetAllChallengesResponseItemDto);
 
 export const zSeasonControllerGetCurrentSeasonData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ])
+    })
 });
 
 export const zSeasonControllerGetCurrentSeasonResponse = zCurrentSeasonDto;
@@ -1851,12 +2571,16 @@ export const zSeasonControllerGetCurrentSeasonResponse = zCurrentSeasonDto;
 export const zChallengesShopAdminControllerGetListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            season_id: z.optional(z.union([z.string(), z.null()])),
-            search: z.optional(z.union([z.string(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        season_id: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zChallengesShopAdminControllerGetListResponse = z.array(zChallengeShopItemEntity);
@@ -1864,7 +2588,7 @@ export const zChallengesShopAdminControllerGetListResponse = z.array(zChallengeS
 export const zChallengesShopAdminControllerCreateData = z.object({
     body: zCreateChallengeShopItemDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesShopAdminControllerCreateResponse = z.string();
@@ -1872,7 +2596,7 @@ export const zChallengesShopAdminControllerCreateResponse = z.string();
 export const zChallengesShopAdminControllerUpdateData = z.object({
     body: zUpdateChallengeShopItemDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesShopAdminControllerUpdateResponse = z.boolean();
@@ -1880,7 +2604,7 @@ export const zChallengesShopAdminControllerUpdateResponse = z.boolean();
 export const zChallengesShopAdminControllerRemoveData = z.object({
     body: zRemoveChallengeShopItemDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesShopAdminControllerRemoveResponse = z.boolean();
@@ -1888,7 +2612,7 @@ export const zChallengesShopAdminControllerRemoveResponse = z.boolean();
 export const zChallengesShopAdminControllerReversePurchaseData = z.object({
     body: zReversePurchaseDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesShopAdminControllerReversePurchaseResponse = z.boolean();
@@ -1896,12 +2620,16 @@ export const zChallengesShopAdminControllerReversePurchaseResponse = z.boolean()
 export const zChallengeSeasonAdminControllerGetListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            search: z.optional(z.union([z.string(), z.null()])),
-            active: z.optional(z.union([z.boolean(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        active: z.optional(z.union([
+            z.boolean(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zChallengeSeasonAdminControllerGetListResponse = z.array(zChallengeSeason);
@@ -1909,7 +2637,7 @@ export const zChallengeSeasonAdminControllerGetListResponse = z.array(zChallenge
 export const zChallengeSeasonAdminControllerCreateData = z.object({
     body: zCreateChallengeSeasonDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengeSeasonAdminControllerCreateResponse = zChallengeSeason;
@@ -1917,7 +2645,7 @@ export const zChallengeSeasonAdminControllerCreateResponse = zChallengeSeason;
 export const zChallengeSeasonAdminControllerUpdateData = z.object({
     body: zUpdateChallengeSeasonDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengeSeasonAdminControllerUpdateResponse = zChallengeSeason;
@@ -1925,7 +2653,7 @@ export const zChallengeSeasonAdminControllerUpdateResponse = zChallengeSeason;
 export const zChallengeSeasonAdminControllerRemoveData = z.object({
     body: zRemoveChallengeSeasonDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengeSeasonAdminControllerRemoveResponse = z.boolean();
@@ -1933,7 +2661,7 @@ export const zChallengeSeasonAdminControllerRemoveResponse = z.boolean();
 export const zOfferControllerCreateOfferData = z.object({
     body: zCreateChallengeOfferDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zShopControllerGetListData = z.object({
@@ -1942,8 +2670,8 @@ export const zShopControllerGetListData = z.object({
     query: z.object({
         game_type: z.string(),
         page: z.number().gte(1),
-        limit: z.number(),
-    }),
+        limit: z.number()
+    })
 });
 
 export const zShopControllerGetListResponse = z.array(zChallengeShopItemEntity);
@@ -1951,7 +2679,7 @@ export const zShopControllerGetListResponse = z.array(zChallengeShopItemEntity);
 export const zShopControllerPurchaseData = z.object({
     body: zPurchaseShopItemDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zShopControllerPurchaseResponse = z.boolean();
@@ -1959,7 +2687,7 @@ export const zShopControllerPurchaseResponse = z.boolean();
 export const zGearAdminControllerCreateGearData = z.object({
     body: zCreateGearDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerCreateGearResponse = z.string();
@@ -1967,7 +2695,7 @@ export const zGearAdminControllerCreateGearResponse = z.string();
 export const zGearAdminControllerUpdateGearData = z.object({
     body: zUpdateGearDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerUpdateGearResponse = z.boolean();
@@ -1976,8 +2704,8 @@ export const zGearAdminControllerGetGearData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        id: z.string(),
-    }),
+        id: z.string()
+    })
 });
 
 export const zGearAdminControllerGetGearResponse = zGearEntity;
@@ -1988,9 +2716,14 @@ export const zGearAdminControllerGetGearListData = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        game_type: z.enum(['escape_from_tarkov', 'arena_breakout', 'arc_raiders', 'active_matter']),
-        name: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'escape_from_tarkov',
+            'arena_breakout',
+            'arc_raiders',
+            'active_matter'
+        ]),
+        name: z.optional(z.string())
+    })
 });
 
 export const zGearAdminControllerGetGearListResponse = zGetGearListResponseDto;
@@ -1998,7 +2731,7 @@ export const zGearAdminControllerGetGearListResponse = zGetGearListResponseDto;
 export const zGearAdminControllerRemoveGearData = z.object({
     body: zRemoveGearDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerRemoveGearResponse = z.boolean();
@@ -2006,7 +2739,7 @@ export const zGearAdminControllerRemoveGearResponse = z.boolean();
 export const zGearAdminControllerCreateGearRarityData = z.object({
     body: zCreateGearRarityDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerCreateGearRarityResponse = z.string();
@@ -2014,7 +2747,7 @@ export const zGearAdminControllerCreateGearRarityResponse = z.string();
 export const zGearAdminControllerUpdateGearRarityData = z.object({
     body: zUpdateGearRarityDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerUpdateGearRarityResponse = z.boolean();
@@ -2023,8 +2756,8 @@ export const zGearAdminControllerGetGearRarityData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        id: z.string(),
-    }),
+        id: z.string()
+    })
 });
 
 export const zGearAdminControllerGetGearRarityResponse = zGearRarityEntity;
@@ -2035,9 +2768,14 @@ export const zGearAdminControllerGetGearRarityListData = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        game_type: z.enum(['escape_from_tarkov', 'arena_breakout', 'arc_raiders', 'active_matter']),
-        name: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'escape_from_tarkov',
+            'arena_breakout',
+            'arc_raiders',
+            'active_matter'
+        ]),
+        name: z.optional(z.string())
+    })
 });
 
 export const zGearAdminControllerGetGearRarityListResponse = zGetGearRarityListResponseDto;
@@ -2045,7 +2783,7 @@ export const zGearAdminControllerGetGearRarityListResponse = zGetGearRarityListR
 export const zGearAdminControllerRemoveGearRarityData = z.object({
     body: zRemoveGearRarityDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerRemoveGearRarityResponse = z.boolean();
@@ -2053,7 +2791,7 @@ export const zGearAdminControllerRemoveGearRarityResponse = z.boolean();
 export const zGearAdminControllerCreateGearTypeData = z.object({
     body: zCreateGearTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerCreateGearTypeResponse = z.string();
@@ -2061,7 +2799,7 @@ export const zGearAdminControllerCreateGearTypeResponse = z.string();
 export const zGearAdminControllerUpdateGearTypeData = z.object({
     body: zUpdateGearTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerUpdateGearTypeResponse = z.boolean();
@@ -2070,8 +2808,8 @@ export const zGearAdminControllerGetGearTypeData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        id: z.string(),
-    }),
+        id: z.string()
+    })
 });
 
 export const zGearAdminControllerGetGearTypeResponse = zGearTypeEntity;
@@ -2082,9 +2820,14 @@ export const zGearAdminControllerGetGearTypeListData = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        game_type: z.enum(['escape_from_tarkov', 'arena_breakout', 'arc_raiders', 'active_matter']),
-        name: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'escape_from_tarkov',
+            'arena_breakout',
+            'arc_raiders',
+            'active_matter'
+        ]),
+        name: z.optional(z.string())
+    })
 });
 
 export const zGearAdminControllerGetGearTypeListResponse = zGetGearTypeListResponseDto;
@@ -2092,7 +2835,7 @@ export const zGearAdminControllerGetGearTypeListResponse = zGetGearTypeListRespo
 export const zGearAdminControllerRemoveGearTypeData = z.object({
     body: zRemoveGearTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerRemoveGearTypeResponse = z.boolean();
@@ -2100,7 +2843,7 @@ export const zGearAdminControllerRemoveGearTypeResponse = z.boolean();
 export const zGearAdminControllerCreateGearCategoryData = z.object({
     body: zCreateGearCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerCreateGearCategoryResponse = z.string();
@@ -2108,7 +2851,7 @@ export const zGearAdminControllerCreateGearCategoryResponse = z.string();
 export const zGearAdminControllerUpdateGearCategoryData = z.object({
     body: zUpdateGearCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerUpdateGearCategoryResponse = z.boolean();
@@ -2117,8 +2860,8 @@ export const zGearAdminControllerGetGearCategoryData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        id: z.string(),
-    }),
+        id: z.string()
+    })
 });
 
 export const zGearAdminControllerGetGearCategoryResponse = zGearCategoryEntity;
@@ -2129,9 +2872,14 @@ export const zGearAdminControllerGetGearCategoryListData = z.object({
     query: z.object({
         page: z.number(),
         limit: z.number(),
-        game_type: z.enum(['escape_from_tarkov', 'arena_breakout', 'arc_raiders', 'active_matter']),
-        name: z.optional(z.string()),
-    }),
+        game_type: z.enum([
+            'escape_from_tarkov',
+            'arena_breakout',
+            'arc_raiders',
+            'active_matter'
+        ]),
+        name: z.optional(z.string())
+    })
 });
 
 export const zGearAdminControllerGetGearCategoryListResponse = zGetGearCategoryListResponseDto;
@@ -2139,7 +2887,7 @@ export const zGearAdminControllerGetGearCategoryListResponse = zGetGearCategoryL
 export const zGearAdminControllerRemoveGearCategoryData = z.object({
     body: zRemoveGearCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zGearAdminControllerRemoveGearCategoryResponse = z.boolean();
@@ -2148,8 +2896,8 @@ export const zGearControllerGetPublicGearByIdsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        ids: z.array(z.string()),
-    }),
+        ids: z.array(z.string())
+    })
 });
 
 export const zGearControllerGetPublicGearByIdsResponse = z.array(zPublicGearDto);
@@ -2157,7 +2905,7 @@ export const zGearControllerGetPublicGearByIdsResponse = z.array(zPublicGearDto)
 export const zUploadsControllerUploadFileData = z.object({
     body: zUploadFileDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 /**
@@ -2168,7 +2916,7 @@ export const zUploadsControllerUploadFileResponse = z.string();
 export const zMapsAdminControllerCreateMapData = z.object({
     body: zCreateMapDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerCreateMapResponse = z.string();
@@ -2176,7 +2924,7 @@ export const zMapsAdminControllerCreateMapResponse = z.string();
 export const zMapsAdminControllerUpdateMapData = z.object({
     body: zUpdateMapDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerUpdateMapResponse = z.boolean();
@@ -2184,7 +2932,7 @@ export const zMapsAdminControllerUpdateMapResponse = z.boolean();
 export const zMapsAdminControllerRemoveMapData = z.object({
     body: zRemoveMapDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerRemoveMapResponse = z.boolean();
@@ -2192,7 +2940,7 @@ export const zMapsAdminControllerRemoveMapResponse = z.boolean();
 export const zMapsAdminControllerCreateMapFloorData = z.object({
     body: zCreateMapFloorDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerCreateMapFloorResponse = z.string();
@@ -2200,7 +2948,7 @@ export const zMapsAdminControllerCreateMapFloorResponse = z.string();
 export const zMapsAdminControllerUpdateMapFloorData = z.object({
     body: zUpdateMapFloorDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerUpdateMapFloorResponse = z.boolean();
@@ -2208,7 +2956,7 @@ export const zMapsAdminControllerUpdateMapFloorResponse = z.boolean();
 export const zMapsAdminControllerRemoveMapFloorData = z.object({
     body: zRemoveMapFloorDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsAdminControllerRemoveMapFloorResponse = z.boolean();
@@ -2216,17 +2964,20 @@ export const zMapsAdminControllerRemoveMapFloorResponse = z.boolean();
 export const zMapsAdminControllerGenerateMapTilesData = z.object({
     body: zGenerateMapTilesDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
-export const zMapsAdminControllerGenerateMapTilesResponse = z.union([z.boolean(), z.unknown()]);
+export const zMapsAdminControllerGenerateMapTilesResponse = z.union([
+    z.boolean(),
+    z.unknown()
+]);
 
 export const zMapsControllerGetMapData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsControllerGetMapResponse = zMapDataResponseDto;
@@ -2235,8 +2986,13 @@ export const zMapsControllerGetMapListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ])
+    })
 });
 
 export const zMapsControllerGetMapListResponse = z.array(zMapListResponseDto);
@@ -2245,20 +3001,19 @@ export const zMapsCategoriesAdminControllerGetMapCategoriesData = z.object({
     body: z.optional(z.never()),
     path: z.object({
         map_id: z.string(),
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
-export const zMapsCategoriesAdminControllerGetMapCategoriesResponse =
-    z.array(zMapMarkerCategoryEntity);
+export const zMapsCategoriesAdminControllerGetMapCategoriesResponse = z.array(zMapMarkerCategoryEntity);
 
 export const zMapsCategoriesAdminControllerGetMapCategoryData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsCategoriesAdminControllerGetMapCategoryResponse = zMapMarkerCategoryEntity;
@@ -2266,7 +3021,7 @@ export const zMapsCategoriesAdminControllerGetMapCategoryResponse = zMapMarkerCa
 export const zMapsCategoriesAdminControllerCreateMapCategoryData = z.object({
     body: zCreateMapsCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsCategoriesAdminControllerCreateMapCategoryResponse = z.string();
@@ -2274,7 +3029,7 @@ export const zMapsCategoriesAdminControllerCreateMapCategoryResponse = z.string(
 export const zMapsCategoriesAdminControllerUpdateMapCategoryData = z.object({
     body: zUpdateMapsCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsCategoriesAdminControllerUpdateMapCategoryResponse = z.boolean();
@@ -2282,7 +3037,7 @@ export const zMapsCategoriesAdminControllerUpdateMapCategoryResponse = z.boolean
 export const zMapsCategoriesAdminControllerRemoveMapCategoryData = z.object({
     body: zRemoveMapsCategoryDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsCategoriesAdminControllerRemoveMapCategoryResponse = z.boolean();
@@ -2290,9 +3045,9 @@ export const zMapsCategoriesAdminControllerRemoveMapCategoryResponse = z.boolean
 export const zMapsTypesAdminControllerGetMapTypesData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        map_id: z.string(),
+        map_id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsTypesAdminControllerGetMapTypesResponse = z.array(zGetMapTypeResponseDto);
@@ -2300,9 +3055,9 @@ export const zMapsTypesAdminControllerGetMapTypesResponse = z.array(zGetMapTypeR
 export const zMapsTypesAdminControllerGetMapTypeData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        type_id: z.string(),
+        type_id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsTypesAdminControllerGetMapTypeResponse = zGetMapTypeResponseDto;
@@ -2310,7 +3065,7 @@ export const zMapsTypesAdminControllerGetMapTypeResponse = zGetMapTypeResponseDt
 export const zMapsTypesAdminControllerCreateMapTypeData = z.object({
     body: zCreateMapTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsTypesAdminControllerCreateMapTypeResponse = z.string();
@@ -2318,7 +3073,7 @@ export const zMapsTypesAdminControllerCreateMapTypeResponse = z.string();
 export const zMapsTypesAdminControllerUpdateMapTypeData = z.object({
     body: zUpdateMapTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsTypesAdminControllerUpdateMapTypeResponse = z.boolean();
@@ -2326,7 +3081,7 @@ export const zMapsTypesAdminControllerUpdateMapTypeResponse = z.boolean();
 export const zMapsTypesAdminControllerRemoveMapTypeData = z.object({
     body: zRemoveMapTypeDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsTypesAdminControllerRemoveMapTypeResponse = z.boolean();
@@ -2334,7 +3089,7 @@ export const zMapsTypesAdminControllerRemoveMapTypeResponse = z.boolean();
 export const zMapsMarkerAdminControllerCreateMapMarkerData = z.object({
     body: zCreateMapMarkerDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsMarkerAdminControllerCreateMapMarkerResponse = z.string();
@@ -2342,7 +3097,7 @@ export const zMapsMarkerAdminControllerCreateMapMarkerResponse = z.string();
 export const zMapsMarkerAdminControllerUpdateMapMarkerData = z.object({
     body: zUpdateMapMarkerDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsMarkerAdminControllerUpdateMapMarkerResponse = z.boolean();
@@ -2350,7 +3105,7 @@ export const zMapsMarkerAdminControllerUpdateMapMarkerResponse = z.boolean();
 export const zMapsMarkerAdminControllerRemoveMapMarkerData = z.object({
     body: zRemoveMapMarkerDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zMapsMarkerAdminControllerRemoveMapMarkerResponse = z.boolean();
@@ -2358,12 +3113,16 @@ export const zMapsMarkerAdminControllerRemoveMapMarkerResponse = z.boolean();
 export const zDashboardControllerGetAllStatsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            start_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-            end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zDashboardControllerGetAllStatsResponse = zDashboardAllStatsResponseDto;
@@ -2371,12 +3130,16 @@ export const zDashboardControllerGetAllStatsResponse = zDashboardAllStatsRespons
 export const zDashboardControllerGetUsersStatsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            start_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-            end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zDashboardControllerGetUsersStatsResponse = zDashboardResponseDto;
@@ -2384,12 +3147,16 @@ export const zDashboardControllerGetUsersStatsResponse = zDashboardResponseDto;
 export const zDashboardControllerGetChallengesStatsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            start_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-            end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zDashboardControllerGetChallengesStatsResponse = zDashboardResponseDto;
@@ -2397,12 +3164,16 @@ export const zDashboardControllerGetChallengesStatsResponse = zDashboardResponse
 export const zDashboardControllerGetSalesStatsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            start_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-            end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zDashboardControllerGetSalesStatsResponse = zDashboardResponseDto;
@@ -2410,12 +3181,16 @@ export const zDashboardControllerGetSalesStatsResponse = zDashboardResponseDto;
 export const zDashboardControllerGetNewsViewsStatsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(
-        z.object({
-            start_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-            end_date: z.optional(z.union([z.iso.datetime(), z.null()])),
-        })
-    ),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.iso.datetime(),
+            z.null()
+        ]))
+    }))
 });
 
 export const zDashboardControllerGetNewsViewsStatsResponse = zDashboardResponseDto;
@@ -2423,9 +3198,9 @@ export const zDashboardControllerGetNewsViewsStatsResponse = zDashboardResponseD
 export const zTiersControllerGetTierListByCategoryData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        categoryId: z.string(),
+        categoryId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerGetTierListByCategoryResponse = zTierListResponseDto;
@@ -2433,9 +3208,9 @@ export const zTiersControllerGetTierListByCategoryResponse = zTierListResponseDt
 export const zTiersControllerGetTierListData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        tierListId: z.string(),
+        tierListId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerGetTierListResponse = zTierListResponseDto;
@@ -2443,9 +3218,9 @@ export const zTiersControllerGetTierListResponse = zTierListResponseDto;
 export const zTiersControllerUpdateTierListData = z.object({
     body: zUpdateTierListDto,
     path: z.object({
-        tierListId: z.string(),
+        tierListId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerUpdateTierListResponse = zTierListResponseDto;
@@ -2453,9 +3228,9 @@ export const zTiersControllerUpdateTierListResponse = zTierListResponseDto;
 export const zTiersControllerUpdateTierListPrivacyData = z.object({
     body: zUpdateTierListPrivacyDto,
     path: z.object({
-        tierListId: z.string(),
+        tierListId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerUpdateTierListPrivacyResponse = zTierListResponseDto;
@@ -2463,9 +3238,9 @@ export const zTiersControllerUpdateTierListPrivacyResponse = zTierListResponseDt
 export const zTiersControllerGetPublicTierListData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        tierListId: z.string(),
+        tierListId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerGetPublicTierListResponse = zTierListResponseDto;
@@ -2473,15 +3248,16 @@ export const zTiersControllerGetPublicTierListResponse = zTierListResponseDto;
 export const zTiersControllerGetPublicTierListsByUserData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        userId: z.string(),
+        userId: z.string()
     }),
-    query: z.optional(
-        z.object({
-            gameType: z.optional(
-                z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov'])
-            ),
-        })
-    ),
+    query: z.optional(z.object({
+        gameType: z.optional(z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ]))
+    }))
 });
 
 export const zTiersControllerGetPublicTierListsByUserResponse = z.array(zPublicTierListListItemDto);
@@ -2489,22 +3265,20 @@ export const zTiersControllerGetPublicTierListsByUserResponse = z.array(zPublicT
 export const zTiersControllerGetTierListCategoriesByGameData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        gameType: z.string(),
+        gameType: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
-export const zTiersControllerGetTierListCategoriesByGameResponse = z.array(
-    zTierListCategoryListItemDto
-);
+export const zTiersControllerGetTierListCategoriesByGameResponse = z.array(zTierListCategoryListItemDto);
 
 export const zTiersControllerGetTierListCategoryByGameData = z.object({
     body: z.optional(z.never()),
     path: z.object({
         gameType: z.string(),
-        categoryId: z.string(),
+        categoryId: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersControllerGetTierListCategoryByGameResponse = zTierListCategoryListItemDto;
@@ -2512,7 +3286,7 @@ export const zTiersControllerGetTierListCategoryByGameResponse = zTierListCatego
 export const zTiersAdminControllerListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersAdminControllerListResponse = z.array(zTierListCategoryResponseAdminDto);
@@ -2520,7 +3294,7 @@ export const zTiersAdminControllerListResponse = z.array(zTierListCategoryRespon
 export const zTiersAdminControllerCreateData = z.object({
     body: zCreateTierListCategoryAdminDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersAdminControllerCreateResponse = zTierListCategoryResponseAdminDto;
@@ -2528,9 +3302,9 @@ export const zTiersAdminControllerCreateResponse = zTierListCategoryResponseAdmi
 export const zTiersAdminControllerRemoveData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersAdminControllerRemoveResponse = z.boolean();
@@ -2538,9 +3312,9 @@ export const zTiersAdminControllerRemoveResponse = z.boolean();
 export const zTiersAdminControllerGetByIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersAdminControllerGetByIdResponse = zTierListCategoryResponseAdminDto;
@@ -2548,9 +3322,9 @@ export const zTiersAdminControllerGetByIdResponse = zTierListCategoryResponseAdm
 export const zTiersAdminControllerUpdateData = z.object({
     body: zUpdateTierListCategoryAdminDto,
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zTiersAdminControllerUpdateResponse = zTierListCategoryResponseAdminDto;
@@ -2558,7 +3332,7 @@ export const zTiersAdminControllerUpdateResponse = zTierListCategoryResponseAdmi
 export const zFriendsControllerGetFriendsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerGetFriendsResponse = zFriendsListResponseDto;
@@ -2566,7 +3340,7 @@ export const zFriendsControllerGetFriendsResponse = zFriendsListResponseDto;
 export const zFriendsControllerRemoveFriendData = z.object({
     body: zRemoveFriendDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerRemoveFriendResponse = z.boolean();
@@ -2574,7 +3348,7 @@ export const zFriendsControllerRemoveFriendResponse = z.boolean();
 export const zFriendsControllerIncomingData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerIncomingResponse = zFriendRequestsResponseDto;
@@ -2582,7 +3356,7 @@ export const zFriendsControllerIncomingResponse = zFriendRequestsResponseDto;
 export const zFriendsControllerOutgoingData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerOutgoingResponse = zFriendRequestsResponseDto;
@@ -2590,7 +3364,7 @@ export const zFriendsControllerOutgoingResponse = zFriendRequestsResponseDto;
 export const zFriendsControllerSendData = z.object({
     body: zFriendRequestDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerSendResponse = z.boolean();
@@ -2598,7 +3372,7 @@ export const zFriendsControllerSendResponse = z.boolean();
 export const zFriendsControllerAcceptData = z.object({
     body: zFriendRequestActionDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerAcceptResponse = z.boolean();
@@ -2606,7 +3380,7 @@ export const zFriendsControllerAcceptResponse = z.boolean();
 export const zFriendsControllerRejectData = z.object({
     body: zFriendRequestActionDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerRejectResponse = z.boolean();
@@ -2614,7 +3388,7 @@ export const zFriendsControllerRejectResponse = z.boolean();
 export const zFriendsControllerCancelData = z.object({
     body: zFriendRequestActionDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zFriendsControllerCancelResponse = z.boolean();
@@ -2623,8 +3397,11 @@ export const zBannersControllerGetBannersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        page: z.enum(['news_article', 'challenges_rewards']),
-    }),
+        page: z.enum([
+            'news_article',
+            'challenges_rewards'
+        ])
+    })
 });
 
 export const zBannersControllerGetBannersResponse = z.array(zBannerPublicSlotDto);
@@ -2632,7 +3409,7 @@ export const zBannersControllerGetBannersResponse = z.array(zBannerPublicSlotDto
 export const zBannersAdminControllerListBannersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannersAdminControllerListBannersResponse = z.array(zBannerAdminResponseDto);
@@ -2640,7 +3417,7 @@ export const zBannersAdminControllerListBannersResponse = z.array(zBannerAdminRe
 export const zBannersAdminControllerCreateBannerData = z.object({
     body: zCreateBannerAdminDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannersAdminControllerCreateBannerResponse = zBannerAdminResponseDto;
@@ -2648,9 +3425,9 @@ export const zBannersAdminControllerCreateBannerResponse = zBannerAdminResponseD
 export const zBannersAdminControllerDeleteBannerData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannersAdminControllerDeleteBannerResponse = z.boolean();
@@ -2658,9 +3435,9 @@ export const zBannersAdminControllerDeleteBannerResponse = z.boolean();
 export const zBannersAdminControllerGetBannerData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannersAdminControllerGetBannerResponse = zBannerAdminResponseDto;
@@ -2668,9 +3445,9 @@ export const zBannersAdminControllerGetBannerResponse = zBannerAdminResponseDto;
 export const zBannersAdminControllerUpdateBannerData = z.object({
     body: zUpdateBannerAdminDto,
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannersAdminControllerUpdateBannerResponse = zBannerAdminResponseDto;
@@ -2678,7 +3455,7 @@ export const zBannersAdminControllerUpdateBannerResponse = zBannerAdminResponseD
 export const zBannerSlotsAdminControllerListSlotsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannerSlotsAdminControllerListSlotsResponse = z.array(zBannerSlotAdminResponseDto);
@@ -2687,18 +3464,19 @@ export const zBannerPlacementsAdminControllerListPlacementsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        page: z.enum(['news_article', 'challenges_rewards']),
-    }),
+        page: z.enum([
+            'news_article',
+            'challenges_rewards'
+        ])
+    })
 });
 
-export const zBannerPlacementsAdminControllerListPlacementsResponse = z.array(
-    zBannerPlacementsSlotAdminDto
-);
+export const zBannerPlacementsAdminControllerListPlacementsResponse = z.array(zBannerPlacementsSlotAdminDto);
 
 export const zBannerPlacementsAdminControllerCreatePlacementData = z.object({
     body: zCreateBannerPlacementAdminDto,
     path: z.optional(z.never()),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannerPlacementsAdminControllerCreatePlacementResponse = z.string();
@@ -2706,9 +3484,9 @@ export const zBannerPlacementsAdminControllerCreatePlacementResponse = z.string(
 export const zBannerPlacementsAdminControllerDeletePlacementData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannerPlacementsAdminControllerDeletePlacementResponse = z.boolean();
@@ -2716,9 +3494,9 @@ export const zBannerPlacementsAdminControllerDeletePlacementResponse = z.boolean
 export const zBannerPlacementsAdminControllerUpdatePlacementData = z.object({
     body: zUpdateBannerPlacementAdminDto,
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zBannerPlacementsAdminControllerUpdatePlacementResponse = z.boolean();
@@ -2727,8 +3505,8 @@ export const zTwitchControllerGetStreamStatusData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        channel: z.string(),
-    }),
+        channel: z.string()
+    })
 });
 
 export const zTwitchControllerGetStreamStatusResponse = zTwitchStreamStatusDto;
@@ -2737,8 +3515,8 @@ export const zTwitchControllerGetWidgetStatusData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        channel: z.string(),
-    }),
+        channel: z.string()
+    })
 });
 
 export const zTwitchControllerGetWidgetStatusResponse = zTwitchStreamWidgetDto;
@@ -2749,9 +3527,16 @@ export const zNewsControllerGetAllNewsData = z.object({
     query: z.object({
         page: z.number().gte(1),
         limit: z.number().gte(1),
-        game_type: z.optional(z.union([z.string(), z.null()])),
-        exclude_ids: z.optional(z.union([z.array(z.string()), z.null()])),
-    }),
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        exclude_ids: z.optional(z.union([
+            z.array(z.string()),
+            z.null()
+        ])),
+        sort: z.optional(z.string())
+    })
 });
 
 export const zNewsControllerGetAllNewsResponse = zGetNewsListResponseDto;
@@ -2762,9 +3547,16 @@ export const zNewsControllerGetAllNewsClientData = z.object({
     query: z.object({
         page: z.number().gte(1),
         limit: z.number().gte(1),
-        game_type: z.optional(z.union([z.string(), z.null()])),
-        exclude_ids: z.optional(z.union([z.array(z.string()), z.null()])),
-    }),
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        exclude_ids: z.optional(z.union([
+            z.array(z.string()),
+            z.null()
+        ])),
+        sort: z.optional(z.string())
+    })
 });
 
 export const zNewsControllerGetAllNewsClientResponse = zGetNewsListResponseDto;
@@ -2772,9 +3564,9 @@ export const zNewsControllerGetAllNewsClientResponse = zGetNewsListResponseDto;
 export const zNewsControllerGetNewsByIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zNewsControllerGetNewsByIdResponse = zNewsEntity;
@@ -2785,8 +3577,8 @@ export const zCommentsControllerGetNewsCommentsData = z.object({
     query: z.object({
         page: z.number().gte(1),
         limit: z.number().gte(1),
-        news_id: z.string(),
-    }),
+        news_id: z.string()
+    })
 });
 
 export const zCommentsControllerGetNewsCommentsResponse = z.array(zGetNewsCommentsResponseItemDto);
@@ -2794,9 +3586,9 @@ export const zCommentsControllerGetNewsCommentsResponse = z.array(zGetNewsCommen
 export const zChallengesAdminControllerGetChallengeProgressByIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zChallengesAdminControllerGetChallengeProgressByIdResponse = zChallengeProgressEntity;
@@ -2805,54 +3597,82 @@ export const zChallengesAdminControllerGetChallengesProgressListData = z.object(
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        search: z.optional(z.union([z.string(), z.null()])),
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
         status: z.string(),
         page: z.number(),
         limit: z.number(),
-        game_type: z.optional(z.union([z.string(), z.null()])),
-        difficulty: z.optional(z.union([z.string(), z.null()])),
-    }),
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        difficulty: z.optional(z.union([
+            z.string(),
+            z.null()
+        ]))
+    })
 });
 
-export const zChallengesAdminControllerGetChallengesProgressListResponse =
-    z.array(zChallengeProgressEntity);
+export const zChallengesAdminControllerGetChallengesProgressListResponse = z.array(zChallengeProgressEntity);
 
 export const zChallengesClientControllerGetProgressingChallengesData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        search: z.optional(z.union([z.string(), z.null()])),
-        game_type: z.optional(z.union([z.string(), z.null()])),
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        game_type: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
         page: z.number(),
         limit: z.number(),
-        season_id: z.optional(z.union([z.string(), z.null()])),
-        difficulty: z.optional(z.union([z.string(), z.null()])),
-        excluded_ids: z.optional(z.union([z.array(z.string()), z.null()])),
-        status: z.optional(z.union([z.string(), z.null()])),
-    }),
+        season_id: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        difficulty: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        excluded_ids: z.optional(z.union([
+            z.array(z.string()),
+            z.null()
+        ])),
+        status: z.optional(z.union([
+            z.string(),
+            z.null()
+        ]))
+    })
 });
 
-export const zChallengesClientControllerGetProgressingChallengesResponse = z.array(
-    zGetAllChallengesWithProgressItemDto
-);
+export const zChallengesClientControllerGetProgressingChallengesResponse = z.array(zGetAllChallengesWithProgressItemDto);
 
 export const zChallengesClientControllerGetChallengeByIdWithProgressData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
-export const zChallengesClientControllerGetChallengeByIdWithProgressResponse =
-    zGetChallengeByIdWithProgressResponseDto;
+export const zChallengesClientControllerGetChallengeByIdWithProgressResponse = zGetChallengeByIdWithProgressResponseDto;
 
 export const zSeasonControllerGetCurrentSeasonBalanceData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        game_type: z.enum(['arena_breakout', 'active_matter', 'arc_raiders', 'escape_from_tarkov']),
-    }),
+        game_type: z.enum([
+            'arena_breakout',
+            'active_matter',
+            'arc_raiders',
+            'escape_from_tarkov'
+        ])
+    })
 });
 
 export const zSeasonControllerGetCurrentSeasonBalanceResponse = zChallengeSeasonUserBalanceEntity;
@@ -2861,23 +3681,24 @@ export const zChallengesShopAdminControllerGetPurchasesListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
-        search: z.optional(z.union([z.string(), z.null()])),
+        search: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
         limit: z.number(),
-        page: z.number().gte(1),
-    }),
+        page: z.number().gte(1)
+    })
 });
 
-export const zChallengesShopAdminControllerGetPurchasesListResponse = z.array(
-    zChallengeShopPurchaseEntity
-);
+export const zChallengesShopAdminControllerGetPurchasesListResponse = z.array(zChallengeShopPurchaseEntity);
 
 export const zOfferControllerGetListData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
     query: z.object({
         page: z.number(),
-        limit: z.number(),
-    }),
+        limit: z.number()
+    })
 });
 
 export const zOfferControllerGetListResponse = z.array(zChallengeOfferEntity);
@@ -2885,9 +3706,9 @@ export const zOfferControllerGetListResponse = z.array(zChallengeOfferEntity);
 export const zOfferControllerGetByIdData = z.object({
     body: z.optional(z.never()),
     path: z.object({
-        id: z.string(),
+        id: z.string()
     }),
-    query: z.optional(z.never()),
+    query: z.optional(z.never())
 });
 
 export const zOfferControllerGetByIdResponse = zChallengeOfferEntity;

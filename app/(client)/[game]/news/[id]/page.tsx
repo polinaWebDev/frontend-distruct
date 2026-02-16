@@ -64,6 +64,7 @@ export default async function Page({
             limit: 2,
             page: 1,
             exclude_ids: [id],
+            sort: 'latest',
         },
         client: await getServerClient(),
     });

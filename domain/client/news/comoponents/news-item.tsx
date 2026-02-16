@@ -15,6 +15,7 @@ export const formatNewsDate = (date: Date) => {
 export const NewsItem = ({ news }: { news: NewsEntity }) => {
     return (
         <Link href={`/${news.game_type}/news/${news.id}`} className={style.container}>
+            {news.is_new ? <span className={style.new_badge}>NEW</span> : null}
             <Image
                 src={getFileUrl(news.image_url ?? '')}
                 alt={news.title}

@@ -19,6 +19,12 @@
     }
 }
 
+.back_link {
+    display: inline-flex;
+    margin-bottom: 16px;
+    text-decoration: none;
+}
+
 .title {
     font-family: var(--font-thicker);
     font-weight: 500;
@@ -87,4 +93,23 @@
     align-items: flex-start;
     justify-content: flex-start;
     gap: 31px;
+}
+
+.recommended_title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    font-family: var(--font-thicker);
+}
+
+.recommended_empty {
+    width: 100%;
+    padding: 24px 16px;
+    border-radius: 12px;
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.02);
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
 }

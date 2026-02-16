@@ -154,17 +154,13 @@ export const PublicProfilePage = ({ userId, game }: { userId: string; game: Game
     return (
         <div className={`${styles.container} page_width_wrapper header_margin_top`}>
             <div className={styles.header}>
-                {userData?.avatar_url ? (
+                {userData?.avatar_url && (
                     <img
                         src={getFileUrl(userData.avatar_url)}
-                        alt={userData.username}
+                        alt={userData?.username ?? 'Пользователь'}
                         className={styles.avatar}
                         crossOrigin="anonymous"
                     />
-                ) : (
-                    <div className={styles.placeholder}>
-                        {userData?.username?.slice(0, 2).toUpperCase() ?? '--'}
-                    </div>
                 )}
                 <div>
                     <p className={styles.title}>

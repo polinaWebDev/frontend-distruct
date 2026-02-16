@@ -11,6 +11,11 @@ import { formatNewsDate, NewsItem } from '../news/comoponents/news-item';
 import { CommentsList } from './components/CommentsList/CommentsList';
 import { BannerProvider } from '@/components/banners/BannerProvider';
 import { BannerSlot } from '@/components/banners/BannerSlot';
+import { useEffect, useRef } from 'react';
+import { useMarkNewsSeen } from '../news/hooks/useNewsReadState';
+import Link from 'next/link';
+import { GoBackSmallBtn } from '@/ui/GoBackBig/GoBackBig';
+import { GameType } from '@/lib/enums/game_type.enum';
 
 export const NewsIdPage = ({
     data,
@@ -21,6 +26,17 @@ export const NewsIdPage = ({
     recommendedNews?: NewsEntity[];
     authed?: boolean;
 }) => {
+    const markNewsSeen = useMarkNewsSeen();
+    const lastMarkedIdRef = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (!authed) return;
+        if (!data?.id || !data?.game_type) return;
+        if (lastMarkedIdRef.current === data.id) return;
+        lastMarkedIdRef.current = data.id;
+        markNewsSeen.mutate({ body: { news_id: data.id } });
+    }, [authed, data?.id, data?.game_type]);
+
     const mainImageFileName = data.gallery_images?.[0]?.image_url ?? data.image_url;
     const mainImageUrl = getFileUrl(mainImageFileName);
 
@@ -28,6 +44,9 @@ export const NewsIdPage = ({
         <BannerProvider page="news_article">
             <div className={clsx('header_margin_top', 'page_width_wrapper', styles.container)}>
                 <div className={styles.news_content}>
+                    <Link href={`/${data.game_type}/news`} className={styles.back_link}>
+                        <GoBackSmallBtn text="К новостям" />
+                    </Link>
                     <NewsImageGallery data={data} />
 
                     <h1 className={styles.title}>{data.title}</h1>
@@ -37,7 +56,11 @@ export const NewsIdPage = ({
                     </div>
                     <div className={styles.date}>{formatNewsDate(data.createdAt)}</div>
 
-                    <CommentsList newsId={data.id} authed={authed} />
+                    <CommentsList
+                        newsId={data.id}
+                        authed={authed}
+                        gameType={data.game_type ?? GameType.ArenaBreakout}
+                    />
                 </div>
 
                 <div className={styles.sticky}>
@@ -47,9 +70,14 @@ export const NewsIdPage = ({
                         <div className="mb-6">
                             <BannerSlot slotKey="sidebar_top" />
                         </div>
-                        {recommendedNews.map((news) => (
-                            <NewsItem key={news.id} news={news} />
-                        ))}
+                        <h2 className={styles.recommended_title}>Другие новости</h2>
+                        {recommendedNews.length > 0 ? (
+                            recommendedNews.map((news) => <NewsItem key={news.id} news={news} />)
+                        ) : (
+                            <div className={styles.recommended_empty}>
+                                Других новостей пока нет
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>

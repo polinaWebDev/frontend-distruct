@@ -15,6 +15,7 @@ import { NewsIcon } from '@/lib/icons/NewsIcon';
 import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { HeaderProfileBtn } from '../HeaderProfileBtn/HeaderProfileBtn';
 import { TierIcon } from '@/lib/icons/TierIcon';
+import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
 
 const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }) => {
     const { linkPath, onLinkClick } = useGameLink(game);
@@ -36,6 +37,7 @@ const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }
 export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: GameType }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [gameMenuOpen, setGameMenuOpen] = useState(false);
+    const { hasUnread } = useNewsUnreadIndicator({ gameType: game });
     return (
         <div suppressHydrationWarning className={styles.container}>
             <Link href={`/?game=${game}`} className={clsx(styles.logo, styles.box_style)}>
@@ -108,6 +110,7 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                         title="Новости"
                         href={`/${game}/news`}
                         onClick={() => setMenuOpen(false)}
+                        showIndicator={hasUnread}
                     />
 
                     <HeaderProfileBtn

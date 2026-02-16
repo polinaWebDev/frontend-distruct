@@ -9,7 +9,33 @@ export const getFileUrl = (url: string) => {
     if (url.startsWith('http')) {
         return url;
     }
-    return `${process.env.NEXT_PUBLIC_FILE_URL}/${url}`;
+    let normalizedUrl = url.replace(/^\/+/, '');
+    if (normalizedUrl.startsWith('api/public/')) {
+        const apiBase =
+            process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ??
+            process.env.SERVER_API_URL?.replace(/\/$/, '');
+        if (apiBase) {
+            return `${apiBase}/${normalizedUrl}`;
+        }
+        const isLocalEnv =
+            process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
+        if (isLocalEnv) {
+            return `http://localhost:3281/${normalizedUrl}`;
+        }
+        return `/${normalizedUrl}`;
+    }
+    if (normalizedUrl.startsWith('api/public/uploads/')) {
+        normalizedUrl = normalizedUrl.replace(/^api\/public\/uploads\//, '');
+    }
+    if (normalizedUrl.startsWith('public/uploads/')) {
+        normalizedUrl = normalizedUrl.replace(/^public\/uploads\//, '');
+    }
+    const isLocalEnv =
+        process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
+    if (isLocalEnv) {
+        return `http://localhost:3281/api/public/uploads/${normalizedUrl}`;
+    }
+    return `${process.env.NEXT_PUBLIC_FILE_URL}/${normalizedUrl}`;
 };
 
 export const hexToRgba = (hex: string, opacity: number) => {

@@ -133,11 +133,26 @@
 }
 
 .preview {
+    display: block;
     width: 100%;
     aspect-ratio: 16 / 9;
     border-radius: 8px;
     overflow: hidden;
     background: rgba(255, 255, 255, 0.05);
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+}
+
+.preview:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+.preview:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.6);
+    outline-offset: 2px;
 }
 
 .preview img {

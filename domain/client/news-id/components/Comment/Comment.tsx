@@ -11,6 +11,8 @@ import { commentsControllerVoteNewsCommentMutation } from '@/lib/api_client/gen/
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { ru } from 'date-fns/locale';
 import { formatDistanceToNow, format } from 'date-fns';
+import Link from 'next/link';
+import { GameType } from '@/lib/enums/game_type.enum';
 
 const formatCommentDate = (input: string | Date) => {
     const date = new Date(input);
@@ -28,7 +30,13 @@ const formatCommentDate = (input: string | Date) => {
     return format(date, 'dd.MM.yyyy HH:mm', { locale: ru });
 };
 
-export const Comment = ({ comment }: { comment: GetNewsCommentsResponseItemDto }) => {
+export const Comment = ({
+    comment,
+    gameType,
+}: {
+    comment: GetNewsCommentsResponseItemDto;
+    gameType: GameType;
+}) => {
     const [vote, setVote] = useState<'like' | 'dislike' | undefined>(comment.vote);
     const [likesCount, setLikesCount] = useState(comment.likes_count);
     const [dislikesCount, setDislikesCount] = useState(comment.dislikes_count);
@@ -114,7 +122,12 @@ export const Comment = ({ comment }: { comment: GetNewsCommentsResponseItemDto }
 
             <div className={styles.content}>
                 <div className={styles.user}>
-                    <p className={styles.username}>{comment.user.username}</p>
+                    <Link
+                        href={`/${gameType}/people/${comment.user.id}`}
+                        className={styles.username}
+                    >
+                        {comment.user.username}
+                    </Link>
                     <p className={styles.date}>{formatCommentDate(comment.createdAt)}</p>
                 </div>
 

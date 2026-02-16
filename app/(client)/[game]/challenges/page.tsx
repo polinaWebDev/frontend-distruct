@@ -8,7 +8,9 @@ import { getServerClient } from '@/lib/api_client/server_client';
 import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import type { Metadata } from 'next';
 import { buildSocialMetadata } from '@/lib/seo';
-import { notFound } from 'next/navigation';
+import styles from '@/domain/client/challenges-main/components/challenges-list/challenges-list.module.css';
+import clsx from 'clsx';
+import { CalendarX } from 'lucide-react';
 
 export async function generateMetadata({
     params,
@@ -47,7 +49,14 @@ export default async function Page({ params }: { params: Promise<{ game: GameTyp
     });
 
     if (!currentSeason.data) {
-        return notFound();
+        return (
+            <div className={clsx('header_margin_top', 'page_width_wrapper', styles.container)}>
+                <div className={styles.empty_state}>
+                    <CalendarX className={styles.empty_state_icon} />
+                    <span className={styles.empty_state_text}>Сезона еще не начат</span>
+                </div>
+            </div>
+        );
     }
 
     return (

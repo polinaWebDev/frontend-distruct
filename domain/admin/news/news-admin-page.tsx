@@ -47,8 +47,7 @@ export const NewsAdminPage = () => {
         GameType.ArenaBreakout,
         'all'
     );
-    const [sortField, setSortField] = useState<'createdAt' | 'publish_at' | 'status'>('createdAt');
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+    const [sortField, setSortField] = useState<'latest' | 'popular'>('latest');
     const limit = 20;
 
     // Fetch news list with infinite query
@@ -59,6 +58,7 @@ export const NewsAdminPage = () => {
                 page: 1,
                 limit,
                 game_type: gameType === 'all' ? undefined : (gameType as any),
+                sort: sortField,
             },
         }),
         staleTime: 1000,
@@ -77,24 +77,8 @@ export const NewsAdminPage = () => {
 
     // Flatten all pages into a single array
     const newsItems = useMemo(() => {
-        const items = (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as NewsEntity[];
-        return items.sort((a, b) => {
-            const direction = sortOrder === 'asc' ? 1 : -1;
-            if (sortField === 'status') {
-                const aStatus = a.is_published ? 1 : 0;
-                const bStatus = b.is_published ? 1 : 0;
-                return direction * (aStatus - bStatus);
-            }
-            if (sortField === 'publish_at') {
-                const aDate = a.publish_at ? new Date(a.publish_at).getTime() : 0;
-                const bDate = b.publish_at ? new Date(b.publish_at).getTime() : 0;
-                return direction * (aDate - bDate);
-            }
-            const aCreated = new Date(a.createdAt).getTime();
-            const bCreated = new Date(b.createdAt).getTime();
-            return direction * (aCreated - bCreated);
-        });
-    }, [data, sortField, sortOrder]);
+        return (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as NewsEntity[];
+    }, [data]);
 
     // Delete mutation
     const newsQueryPredicate = (query: { queryKey?: unknown[] }) =>
@@ -229,32 +213,14 @@ export const NewsAdminPage = () => {
                     <Label htmlFor="sort-field">Сортировка</Label>
                     <Select
                         value={sortField}
-                        onValueChange={(value) =>
-                            setSortField(value as 'createdAt' | 'publish_at' | 'status')
-                        }
+                        onValueChange={(value) => setSortField(value as 'latest' | 'popular')}
                     >
                         <SelectTrigger id="sort-field" className="w-full">
                             <SelectValue placeholder="Поле сортировки" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="createdAt">Дата создания</SelectItem>
-                            <SelectItem value="publish_at">Дата публикации</SelectItem>
-                            <SelectItem value="status">Статус</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <div className="w-48 space-y-2">
-                    <Label htmlFor="sort-order">Порядок</Label>
-                    <Select
-                        value={sortOrder}
-                        onValueChange={(value) => setSortOrder(value as 'asc' | 'desc')}
-                    >
-                        <SelectTrigger id="sort-order" className="w-full">
-                            <SelectValue placeholder="Порядок" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="desc">По убыванию</SelectItem>
-                            <SelectItem value="asc">По возрастанию</SelectItem>
+                            <SelectItem value="latest">Сначала новые</SelectItem>
+                            <SelectItem value="popular">Сначала популярные</SelectItem>
                         </SelectContent>
                     </Select>
                 </div>

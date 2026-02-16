@@ -87,6 +87,11 @@ export const TwitchWidget = ({
         return data.thumbnailUrl.replace('{width}', '320').replace('{height}', '180');
     }, [data?.thumbnailUrl]);
 
+    const channelUrl = useMemo(() => {
+        if (!channel) return '#';
+        return `https://www.twitch.tv/${channel}`;
+    }, [channel]);
+
     const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
         if (event.button !== 0) return;
         const widget = widgetRef.current;
@@ -165,13 +170,19 @@ export const TwitchWidget = ({
             </div>
 
             <div className={styles.body}>
-                <div className={styles.preview}>
+                <a
+                    className={styles.preview}
+                    href={channelUrl}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                    aria-label={`Открыть Twitch-канал ${channel}`}
+                >
                     {thumbnailUrl ? (
                         <img src={thumbnailUrl} alt="Stream preview" loading="lazy" />
                     ) : (
                         <div className={styles.previewPlaceholder} />
                     )}
-                </div>
+                </a>
                 <div className={styles.channel}>@{channel}</div>
                 {loading && <div className={styles.statusMuted}>Загрузка…</div>}
                 {!loading && error && (

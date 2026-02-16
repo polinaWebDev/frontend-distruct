@@ -25,6 +25,7 @@ const fetchNewsByGame = async (game: GameType) => {
         url.searchParams.set('page', String(page));
         url.searchParams.set('limit', String(limit));
         url.searchParams.set('game_type', game);
+        url.searchParams.set('sort', 'latest');
         const res = await fetch(url.toString(), { next: { revalidate: 3600 } });
         if (!res.ok) break;
         const data = await res.json();

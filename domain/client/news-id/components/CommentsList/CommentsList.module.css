@@ -12,6 +12,28 @@
     }
 }
 
+.header_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.sort_selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.sort_selector_top {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+}
+
+
 .list {
     display: flex;
     flex-direction: column;

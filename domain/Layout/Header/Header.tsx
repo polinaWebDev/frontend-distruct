@@ -17,6 +17,7 @@ import { MobileHeader } from './MobileHeader/MobileHeader';
 import { NewsIcon } from '@/lib/icons/NewsIcon';
 import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { TierIcon } from '@/lib/icons/TierIcon';
+import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
 
 export const Header = ({
     user,
@@ -39,6 +40,8 @@ export const Header = ({
     const isGameParamCorrect = useMemo(() => {
         return GAME_TYPE_VALUES.some((g) => g.value === game);
     }, [game]);
+
+    const { hasUnread } = useNewsUnreadIndicator({ gameType: game });
 
     useEffect(() => {
         if (!game) {
@@ -103,6 +106,7 @@ export const Header = ({
                             icon={(className) => <NewsIcon className={className} />}
                             title="Новости"
                             href={`/${game}/news`}
+                            showIndicator={hasUnread}
                         />
                     </div>
                 )}
