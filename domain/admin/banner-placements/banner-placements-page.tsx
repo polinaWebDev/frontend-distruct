@@ -10,7 +10,7 @@ import {
     arrayMove,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { PlusIcon, Trash2Icon, GripVerticalIcon } from 'lucide-react';
+import { PlusIcon, Trash2Icon, GripVerticalIcon, PencilIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import {
     bannerPlacementsAdminControllerCreatePlacementMutation,
@@ -18,6 +18,7 @@ import {
     bannerPlacementsAdminControllerListPlacementsOptions,
     bannerPlacementsAdminControllerListPlacementsQueryKey,
     bannerPlacementsAdminControllerUpdatePlacementMutation,
+    bannersControllerGetBannersQueryKey,
     bannersAdminControllerListBannersOptions,
 } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
@@ -77,6 +78,25 @@ type AddBannerDialogProps = {
         endAt?: string;
     }) => void;
 };
+
+type UpdatePlacementPayload = {
+    id: string;
+    priority?: number;
+    startAt?: string | null;
+    endAt?: string | null;
+};
+
+function toDateTimeLocal(value?: string | null) {
+    if (!value) return '';
+    const date = new Date(value);
+    const offset = date.getTimezoneOffset();
+    const local = new Date(date.getTime() - offset * 60_000);
+    return local.toISOString().slice(0, 16);
+}
+
+function toIsoOrNull(value: string) {
+    return value ? new Date(value).toISOString() : null;
+}
 
 function AddBannerDialog({
     open,
@@ -139,6 +159,9 @@ function AddBannerDialog({
                             value={priority}
                             onChange={(e) => setPriority(parseInt(e.target.value, 10) || 0)}
                         />
+                        <p className="text-xs text-muted-foreground">
+                            0 — самый высокий приоритет
+                        </p>
                     </div>
 
                     <div className="grid grid-cols-2 gap-4">
@@ -189,15 +212,107 @@ function AddBannerDialog({
     );
 }
 
+function EditPlacementDialog({
+    open,
+    onOpenChange,
+    placement,
+    onSubmit,
+}: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    placement: BannerPlacementAdminItemDto;
+    onSubmit: (payload: UpdatePlacementPayload) => void;
+}) {
+    const [priority, setPriority] = useState<number>(placement.priority);
+    const [startAt, setStartAt] = useState<string>(toDateTimeLocal(placement.startAt));
+    const [endAt, setEndAt] = useState<string>(toDateTimeLocal(placement.endAt));
+
+    useEffect(() => {
+        if (!open) return;
+        setPriority(placement.priority);
+        setStartAt(toDateTimeLocal(placement.startAt));
+        setEndAt(toDateTimeLocal(placement.endAt));
+    }, [open, placement.priority, placement.startAt, placement.endAt]);
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="max-w-lg">
+                <DialogHeader>
+                    <DialogTitle>Редактировать размещение</DialogTitle>
+                    <DialogDescription>
+                        Измените параметры показа баннера в этом слоте.
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium">Priority</label>
+                        <Input
+                            type="number"
+                            min={0}
+                            value={priority}
+                            onChange={(e) => setPriority(parseInt(e.target.value, 10) || 0)}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                            0 — самый высокий приоритет
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">Start at</label>
+                            <Input
+                                type="datetime-local"
+                                value={startAt}
+                                onChange={(e) => setStartAt(e.target.value)}
+                            />
+                        </div>
+                        <div className="space-y-2">
+                            <label className="text-sm font-medium">End at</label>
+                            <Input
+                                type="datetime-local"
+                                value={endAt}
+                                onChange={(e) => setEndAt(e.target.value)}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                <DialogFooter>
+                    <Button variant="secondary" type="button" onClick={() => onOpenChange(false)}>
+                        Отмена
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={() => {
+                            onSubmit({
+                                id: placement.id,
+                                priority,
+                                startAt: toIsoOrNull(startAt),
+                                endAt: toIsoOrNull(endAt),
+                            });
+                            onOpenChange(false);
+                        }}
+                    >
+                        Сохранить
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
+}
+
 type SortablePlacementProps = {
     placement: BannerPlacementAdminItemDto;
     onRemove: (id: string) => void;
+    onEdit: (payload: UpdatePlacementPayload) => void;
 };
 
-function SortablePlacementItem({ placement, onRemove }: SortablePlacementProps) {
+function SortablePlacementItem({ placement, onRemove, onEdit }: SortablePlacementProps) {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: placement.id,
     });
+    const [editOpen, setEditOpen] = useState(false);
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -248,9 +363,21 @@ function SortablePlacementItem({ placement, onRemove }: SortablePlacementProps) 
                     {placement.banner.type} · priority {placement.priority}
                 </p>
             </div>
+
+            <Button variant="ghost" size="icon" onClick={() => setEditOpen(true)}>
+                <PencilIcon className="w-4 h-4" />
+            </Button>
+
             <Button variant="ghost" size="icon" onClick={() => onRemove(placement.id)}>
                 <Trash2Icon className="w-4 h-4" />
             </Button>
+
+            <EditPlacementDialog
+                open={editOpen}
+                onOpenChange={setEditOpen}
+                placement={placement}
+                onSubmit={onEdit}
+            />
         </div>
     );
 }
@@ -266,10 +393,18 @@ type SlotCardProps = {
         endAt?: string;
     }) => void;
     onUpdatePriority: (updates: Array<{ id: string; priority: number }>) => void;
+    onUpdatePlacement: (payload: UpdatePlacementPayload) => void;
     onRemove: (id: string) => void;
 };
 
-function SlotCard({ slot, banners, onCreate, onUpdatePriority, onRemove }: SlotCardProps) {
+function SlotCard({
+    slot,
+    banners,
+    onCreate,
+    onUpdatePriority,
+    onUpdatePlacement,
+    onRemove,
+}: SlotCardProps) {
     const sensors = useSensors(useSensor(PointerSensor));
     const [items, setItems] = useState<BannerPlacementAdminItemDto[]>(slot.placements || []);
     const [addOpen, setAddOpen] = useState(false);
@@ -336,6 +471,7 @@ function SlotCard({ slot, banners, onCreate, onUpdatePriority, onRemove }: SlotC
                                 <SortablePlacementItem
                                     key={placement.id}
                                     placement={placement}
+                                    onEdit={onUpdatePlacement}
                                     onRemove={onRemove}
                                 />
                             ))}
@@ -389,11 +525,6 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
                                 </div>
                             ))}
                         </div>
-                        {contentInlineKey && (
-                            <div className="my-6 flex justify-center">
-                                <BannerSlot slotKey={contentInlineKey} />
-                            </div>
-                        )}
                         <div className="space-y-3">
                             {Array.from({ length: 5 }).map((_, idx) => (
                                 <div key={idx} className="h-6">
@@ -492,6 +623,23 @@ export function BannerPlacementsPage() {
     const queryClient = useQueryClient();
     const [page, setPage] = useState<BannerSlotPage>('news_article');
 
+    const refreshPlacementAndPreview = async () => {
+        await Promise.all([
+            queryClient.invalidateQueries({
+                queryKey: bannerPlacementsAdminControllerListPlacementsQueryKey({
+                    client: getPublicClient(),
+                    query: { page },
+                }),
+            }),
+            queryClient.invalidateQueries({
+                queryKey: bannersControllerGetBannersQueryKey({
+                    client: getPublicClient(),
+                    query: { page },
+                }),
+            }),
+        ]);
+    };
+
     const { data: placementsData, isLoading } = useQuery({
         ...bannerPlacementsAdminControllerListPlacementsOptions({
             client: getPublicClient(),
@@ -513,12 +661,7 @@ export function BannerPlacementsPage() {
             client: getPublicClient(),
         }),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: bannerPlacementsAdminControllerListPlacementsQueryKey({
-                    client: getPublicClient(),
-                    query: { page },
-                }),
-            });
+            await refreshPlacementAndPreview();
             toast.success('Баннер добавлен');
         },
         onError: () => toast.error('Ошибка при добавлении баннера'),
@@ -529,12 +672,7 @@ export function BannerPlacementsPage() {
             client: getPublicClient(),
         }),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: bannerPlacementsAdminControllerListPlacementsQueryKey({
-                    client: getPublicClient(),
-                    query: { page },
-                }),
-            });
+            await refreshPlacementAndPreview();
         },
         onError: () => toast.error('Ошибка при обновлении приоритета'),
     });
@@ -544,12 +682,7 @@ export function BannerPlacementsPage() {
             client: getPublicClient(),
         }),
         onSuccess: async () => {
-            await queryClient.invalidateQueries({
-                queryKey: bannerPlacementsAdminControllerListPlacementsQueryKey({
-                    client: getPublicClient(),
-                    query: { page },
-                }),
-            });
+            await refreshPlacementAndPreview();
             toast.success('Размещение удалено');
         },
         onError: () => toast.error('Ошибка при удалении'),
@@ -573,6 +706,17 @@ export function BannerPlacementsPage() {
                 path: { id: update.id },
                 body: { priority: update.priority },
             });
+        });
+    };
+
+    const handleUpdatePlacement = (payload: UpdatePlacementPayload) => {
+        updateMutation.mutate({
+            path: { id: payload.id },
+            body: {
+                priority: payload.priority,
+                startAt: payload.startAt,
+                endAt: payload.endAt,
+            },
         });
     };
 
@@ -628,6 +772,7 @@ export function BannerPlacementsPage() {
                                 banners={banners}
                                 onCreate={handleCreate}
                                 onUpdatePriority={handleUpdatePriority}
+                                onUpdatePlacement={handleUpdatePlacement}
                                 onRemove={handleRemove}
                             />
                         ))}

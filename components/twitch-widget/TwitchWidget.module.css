@@ -10,7 +10,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
     backdrop-filter: blur(10px);
     z-index: 1000;
-    font-family: var(--font-thicker, 'Thicker Variable Trial', sans-serif);
+    font-family: 'Montserrat', sans-serif;
 }
 
 .header {
@@ -18,8 +18,8 @@
     align-items: center;
     gap: 8px;
     padding: 8px 10px;
-    background: rgba(255, 255, 255, 0.04);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(135deg, #9146ff 0%, #772ce8 100%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.22);
     border-radius: 12px 12px 0 0;
     cursor: grab;
     user-select: none;
@@ -32,33 +32,58 @@
 
 .title {
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 900;
     letter-spacing: 0.06em;
     text-transform: uppercase;
 }
 
-.dragHint {
-    font-size: 10px;
-    opacity: 0.6;
-    margin-left: auto;
-}
-
 .close {
+    margin-left: auto;
     border: none;
-    background: transparent;
-    color: #fff;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.96);
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
     display: grid;
     place-items: center;
     cursor: pointer;
-    font-size: 18px;
-    line-height: 1;
+    transition:
+        background-color 120ms ease,
+        color 120ms ease,
+        transform 120ms ease;
 }
 
 .close:hover {
-    background: rgba(255, 255, 255, 0.12);
+    background: rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+    transform: translateY(-1px);
+}
+
+.closeIcon {
+    position: relative;
+    width: 11px;
+    height: 11px;
+}
+
+.closeIcon::before,
+.closeIcon::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 11px;
+    height: 1.5px;
+    background: currentColor;
+    border-radius: 999px;
+}
+
+.closeIcon::before {
+    transform: rotate(45deg);
+}
+
+.closeIcon::after {
+    transform: rotate(-45deg);
 }
 
 .body {
@@ -103,23 +128,11 @@
 }
 
 .viewerCount {
-    font-family:
-        system-ui,
-        -apple-system,
-        'Segoe UI',
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
+    font-family: inherit;
     font-variant-numeric: tabular-nums;
     font-feature-settings:
         'tnum' 1,
         'liga' 0;
-}
-
-.updated {
-    font-size: 10px;
-    opacity: 0.5;
 }
 
 .statusMuted {
@@ -171,9 +184,5 @@
 @media (max-width: 640px) {
     .widget {
         width: 220px;
-    }
-
-    .dragHint {
-        display: none;
     }
 }

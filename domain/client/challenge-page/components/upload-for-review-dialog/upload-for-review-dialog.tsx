@@ -1,4 +1,4 @@
-import { ApDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
+import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
 import styles from './upload-for-review-dialog.module.css';
 import z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -65,7 +65,7 @@ export const UploadForReviewDialog = ({
 
     return (
         <AppDialog onClose={onClose} title="Загрузить для проверки">
-            <ApDialogContent onClose={onClose}>
+            <AppDialogContent onClose={onClose}>
                 <div className={styles.content}>
                     <div className={styles.text}>
                         <h1 className={styles.title}>Загрузить файл для проверки</h1>
@@ -106,7 +106,7 @@ export const UploadForReviewDialog = ({
                         />
                     </div>
                 </div>
-            </ApDialogContent>
+            </AppDialogContent>
         </AppDialog>
     );
 };

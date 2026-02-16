@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import type { z } from 'zod';
+import { z } from 'zod';
 import { toast } from 'sonner';
 import {
     Dialog,
@@ -30,6 +30,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
 import { zCreateBannerAdminDto, zUpdateBannerAdminDto } from '@/lib/api_client/gen/zod.gen';
 import type { BannerAdminResponseDto } from '@/lib/api_client/gen/types.gen';
 import { getFileUrl } from '@/lib/utils';
@@ -44,9 +45,17 @@ const TYPE_OPTIONS = [
     { label: 'video', value: 'video' },
 ] as const;
 
-type CreateBannerFormData = z.infer<typeof zCreateBannerAdminDto>;
+const createBannerFormSchema = zCreateBannerAdminDto.extend({
+    isActive: z.boolean(),
+});
 
-type UpdateBannerFormData = z.infer<typeof zUpdateBannerAdminDto> & {
+const updateBannerFormSchema = zUpdateBannerAdminDto.extend({
+    isActive: z.boolean(),
+});
+
+type CreateBannerFormData = z.infer<typeof createBannerFormSchema>;
+
+type UpdateBannerFormData = z.infer<typeof updateBannerFormSchema> & {
     type?: 'image' | 'video';
 };
 
@@ -71,18 +80,20 @@ export function BannerFormDialog({
     const isEdit = mode === 'edit';
 
     const form = useForm<CreateBannerFormData | UpdateBannerFormData>({
-        resolver: zodResolver(isEdit ? zUpdateBannerAdminDto : zCreateBannerAdminDto),
+        resolver: zodResolver(isEdit ? updateBannerFormSchema : createBannerFormSchema),
         defaultValues: isEdit
             ? {
                   title: banner?.title ?? '',
                   type: (banner?.type as 'image' | 'video') ?? 'image',
                   link_url: banner?.linkUrl ?? undefined,
+                  isActive: banner?.isActive ?? true,
               }
             : {
                   title: '',
                   type: 'image',
                   link_url: undefined,
                   file: '',
+                  isActive: true,
               },
     });
 
@@ -95,6 +106,7 @@ export function BannerFormDialog({
                 title: banner?.title ?? '',
                 type: (banner?.type as 'image' | 'video') ?? 'image',
                 link_url: banner?.linkUrl ?? undefined,
+                isActive: banner?.isActive ?? true,
             });
             setFile(null);
             setPreviewUrl(null);
@@ -104,6 +116,7 @@ export function BannerFormDialog({
                 type: 'image',
                 link_url: undefined,
                 file: '',
+                isActive: true,
             });
             setFile(null);
             setPreviewUrl(null);
@@ -152,6 +165,7 @@ export function BannerFormDialog({
                         title: data.title,
                         type,
                         link_url: linkUrl,
+                        isActive: data.isActive,
                         ...(file ? { file } : {}),
                     } as any,
                 });
@@ -162,6 +176,7 @@ export function BannerFormDialog({
                         title: data.title,
                         type,
                         link_url: linkUrl,
+                        isActive: data.isActive,
                         ...(file ? { file } : {}),
                     } as any,
                 });
@@ -264,6 +279,27 @@ export function BannerFormDialog({
                                         />
                                     </FormControl>
                                     <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="isActive"
+                            render={({ field }) => (
+                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                                    <div className="space-y-0.5">
+                                        <FormLabel className="text-base">Статус</FormLabel>
+                                        <div className="text-[0.8rem] text-muted-foreground">
+                                            {field.value ? 'Активен' : 'Выключен'}
+                                        </div>
+                                    </div>
+                                    <FormControl>
+                                        <Switch
+                                            checked={Boolean(field.value)}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
                                 </FormItem>
                             )}
                         />

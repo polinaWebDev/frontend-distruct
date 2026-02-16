@@ -4,6 +4,55 @@
     align-items: center;
 }
 
+.triggerBtn {
+    position: relative;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    color: #c8ced8 !important;
+    border-color: #3b3f48 !important;
+    background: transparent !important;
+}
+
+.triggerBtn:hover {
+    color: #fff !important;
+    border-color: #575e6c !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.triggerLabel {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .triggerBtn {
+        width: auto !important;
+        min-width: 0 !important;
+        padding: 0 12px !important;
+        gap: 8px !important;
+    }
+
+    .triggerLabel {
+        display: inline;
+        font-size: 13px;
+        line-height: 1;
+    }
+}
+
+.hasIncoming::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #ef4444;
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
+    animation: pulse 1.4s infinite;
+}
+
 .badge {
     background: #ef4444;
     color: #fff;
@@ -27,15 +76,6 @@
     justify-content: center;
 }
 
-.pulse {
-    width: 10px;
-    height: 10px;
-    border-radius: 999px;
-    background: #ef4444;
-    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.8);
-    animation: pulse 1.4s infinite;
-}
-
 @keyframes pulse {
     0% {
         transform: scale(0.9);
@@ -50,10 +90,62 @@
         box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
     }
 }
+
+.dialogContent {
+    max-width: min(30rem, calc(100vw - 32px));
+    min-height: min(62svh, 620px);
+    display: flex;
+    gap: 15px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
 .content {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 16px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.tabsRoot {
+    width: 100%;
+}
+
+.tabsList {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    height: auto;
+    background: transparent;
+    padding: 0;
+}
+
+.tabTrigger {
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+    line-height: 1.2;
+    border-radius: 10px;
+}
+
+.tabLabel {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .sectionTitle {
@@ -66,7 +158,8 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 420px;
+    width: 100%;
+    max-height: min(40svh, 420px);
     overflow-y: auto;
 }
 
@@ -75,6 +168,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
+    width: 100%;
     padding: 10px 12px;
     border: 1px solid var(--color-stroke);
     border-radius: 12px;

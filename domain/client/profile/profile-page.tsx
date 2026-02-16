@@ -14,7 +14,6 @@ import { useQuery } from '@tanstack/react-query';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { friendsControllerIncomingOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { SubscriptionsDialog } from './components/subscriptions-dialog/subscriptions-dialog';
-import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
@@ -62,16 +61,6 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
                         onEditingChange={setIsEditingProfile}
                     />
                     <p className={styles.email}>{profile.email}</p>
-
-                    <div className={styles.actionsRow}>
-                        <Button
-                            size="sm"
-                            className={styles.editProfileBtn}
-                            onClick={() => setIsEditingProfile(true)}
-                        >
-                            Редактировать профиль
-                        </Button>
-                    </div>
 
                     <div className="flex flex-wrap gap-3">
                         <SubscriptionsDialog currentUserId={profile.id} game={game} />

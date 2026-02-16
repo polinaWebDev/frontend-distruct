@@ -9,6 +9,7 @@ import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import type { Metadata } from 'next';
 import { buildSocialMetadata } from '@/lib/seo';
 import styles from '@/domain/client/challenges-main/components/challenges-list/challenges-list.module.css';
+import pageStyles from './challenges-page.module.css';
 import clsx from 'clsx';
 import { CalendarX } from 'lucide-react';
 
@@ -50,8 +51,8 @@ export default async function Page({ params }: { params: Promise<{ game: GameTyp
 
     if (!currentSeason.data) {
         return (
-            <div className={clsx('header_margin_top', 'page_width_wrapper', styles.container)}>
-                <div className={styles.empty_state}>
+            <div className={clsx('page_width_wrapper', pageStyles.empty_container, styles.container)}>
+                <div className={clsx(styles.empty_state, pageStyles.empty_state_reset)}>
                     <CalendarX className={styles.empty_state_icon} />
                     <span className={styles.empty_state_text}>Сезона еще не начат</span>
                 </div>

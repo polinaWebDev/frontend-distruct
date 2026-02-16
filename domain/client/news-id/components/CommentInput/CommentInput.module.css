@@ -10,6 +10,13 @@
     }
 }
 
+.input_wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .send_btn {
     max-width: 150px;
     @media (max-width: 550px) {
@@ -50,4 +57,10 @@
     &.errored {
         border-color: #e74c3c;
     }
+}
+
+.error_text {
+    color: #e74c3c;
+    font-size: 12px;
+    line-height: 1.2;
 }

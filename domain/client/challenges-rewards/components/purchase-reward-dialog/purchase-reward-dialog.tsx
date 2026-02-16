@@ -1,4 +1,4 @@
-import { ApDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
+import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
 import styles from './purchase-reward-dialog.module.css';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import { ChallengeShopItemEntity } from '@/lib/api_client/gen';
@@ -57,7 +57,7 @@ export const PurchaseRewardDialog = ({
 
     return (
         <AppDialog title="Принять челлендж" onClose={onClose}>
-            <ApDialogContent onClose={onClose}>
+            <AppDialogContent onClose={onClose}>
                 {!showSuccessDialog && (
                     <>
                         <h1 className={styles.title}>
@@ -104,7 +104,7 @@ export const PurchaseRewardDialog = ({
                         </div>
                     </>
                 )}
-            </ApDialogContent>
+            </AppDialogContent>
         </AppDialog>
     );
 };

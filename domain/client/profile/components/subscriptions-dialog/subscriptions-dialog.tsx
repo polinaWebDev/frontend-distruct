@@ -2,13 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getPublicClient } from '@/lib/api_client/public_client';
@@ -27,6 +21,8 @@ import { getFileUrl } from '@/lib/utils';
 import { toast } from 'sonner';
 import styles from './subscriptions-dialog.module.css';
 import Link from 'next/link';
+import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
+import { Users } from 'lucide-react';
 
 const PAGE_LIMIT = 20;
 
@@ -54,6 +50,7 @@ export const SubscriptionsDialog = ({
 }) => {
     const client = getPublicClient();
     const queryClient = useQueryClient();
+    const [open, setOpen] = useState(false);
     const [search, setSearch] = useState('');
     const debouncedSearch = useDebouncedValue(search.trim(), 300);
 
@@ -182,169 +179,178 @@ export const SubscriptionsDialog = ({
     const isSearching = debouncedSearch.length > 0;
 
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="secondary">Подписки</Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-                <DialogHeader>
-                    <DialogTitle>Подписки</DialogTitle>
-                </DialogHeader>
-                <div className={styles.content}>
-                    <Input
-                        placeholder="Поиск по имени..."
-                        value={search}
-                        onChange={(event) => setSearch(event.target.value)}
-                    />
-                    <div className={styles.list}>
-                        {!isSearching ? (
-                            friends.length === 0 ? (
-                                <div className={styles.empty}>Пока нет друзей</div>
-                            ) : (
-                                friends.map((friend) => (
-                                    <div className={styles.item} key={friend.id}>
-                                        <div className={styles.user}>
-                                            {friend.avatar_url ? (
-                                                <img
-                                                    src={getFileUrl(friend.avatar_url)}
-                                                    alt={friend.username}
-                                                    className={styles.avatar}
-                                                    crossOrigin="anonymous"
-                                                />
-                                            ) : (
-                                                <div className={styles.placeholder}>
-                                                    {friend.username.slice(0, 2).toUpperCase()}
-                                                </div>
-                                            )}
-                                            <Link
-                                                className={styles.username}
-                                                href={`/${game}/people/${friend.id}`}
-                                            >
-                                                {friend.username}
-                                            </Link>
-                                        </div>
-                                        <Button
-                                            size="sm"
-                                            variant="outline"
-                                            onClick={() =>
-                                                removeFriendMutation.mutate({
-                                                    body: { userId: friend.id },
-                                                })
-                                            }
-                                            disabled={removeFriendMutation.isPending}
-                                        >
-                                            Удалить
-                                        </Button>
-                                    </div>
-                                ))
-                            )
-                        ) : isUsersLoading && users.length === 0 ? (
-                            <div className={styles.empty}>Загрузка...</div>
-                        ) : users.length === 0 ? (
-                            <div className={styles.empty}>Пользователи не найдены</div>
-                        ) : (
-                            users.map((user) => {
-                                const isFriend = friendIds.has(user.id);
-                                const incoming = incomingByUserId.get(user.id);
-                                const outgoing = outgoingByUserId.get(user.id);
-                                return (
-                                    <div className={styles.item} key={user.id}>
-                                        <div className={styles.user}>
-                                            {user.avatar_url ? (
-                                                <img
-                                                    src={getFileUrl(user.avatar_url)}
-                                                    alt={user.username}
-                                                    className={styles.avatar}
-                                                    crossOrigin="anonymous"
-                                                />
-                                            ) : (
-                                                <div className={styles.placeholder}>
-                                                    {user.username.slice(0, 2).toUpperCase()}
-                                                </div>
-                                            )}
-                                            <Link
-                                                className={styles.username}
-                                                href={`/${game}/people/${user.id}`}
-                                            >
-                                                {user.username}
-                                            </Link>
-                                        </div>
-
-                                        {incoming ? (
-                                            <div className="flex gap-2">
-                                                <Button
-                                                    size="sm"
-                                                    onClick={() =>
-                                                        acceptRequestMutation.mutate({
-                                                            body: { requestId: incoming.id },
-                                                        })
-                                                    }
-                                                    disabled={acceptRequestMutation.isPending}
+        <Dialog open={open} onOpenChange={setOpen}>
+            <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                className={styles.triggerBtn}
+                onClick={() => setOpen(true)}
+                aria-label="Подписки"
+                title="Подписки"
+            >
+                <Users size={18} />
+                <span className={styles.triggerLabel}>Подписки</span>
+            </Button>
+            <AppDialog title="Подписки" onClose={() => setOpen(false)}>
+                <AppDialogContent onClose={() => setOpen(false)} className={styles.dialogContent}>
+                    <h2 className={styles.title}>Подписки</h2>
+                    <div className={styles.content}>
+                        <Input
+                            placeholder="Поиск по имени..."
+                            value={search}
+                            onChange={(event) => setSearch(event.target.value)}
+                        />
+                        <div className={styles.list}>
+                            {!isSearching ? (
+                                friends.length === 0 ? (
+                                    <div className={styles.empty}>Пока нет друзей</div>
+                                ) : (
+                                    friends.map((friend) => (
+                                        <div className={styles.item} key={friend.id}>
+                                            <div className={styles.user}>
+                                                {friend.avatar_url ? (
+                                                    <img
+                                                        src={getFileUrl(friend.avatar_url)}
+                                                        alt={friend.username}
+                                                        className={styles.avatar}
+                                                        crossOrigin="anonymous"
+                                                    />
+                                                ) : (
+                                                    <div className={styles.placeholder}>
+                                                        {friend.username.slice(0, 2).toUpperCase()}
+                                                    </div>
+                                                )}
+                                                <Link
+                                                    className={styles.username}
+                                                    href={`/${game}/people/${friend.id}`}
                                                 >
-                                                    Принять
-                                                </Button>
-                                                <Button
-                                                    size="sm"
-                                                    variant="outline"
-                                                    onClick={() =>
-                                                        rejectRequestMutation.mutate({
-                                                            body: { requestId: incoming.id },
-                                                        })
-                                                    }
-                                                    disabled={rejectRequestMutation.isPending}
-                                                >
-                                                    Отклонить
-                                                </Button>
+                                                    {friend.username}
+                                                </Link>
                                             </div>
-                                        ) : isFriend ? (
                                             <Button
                                                 size="sm"
                                                 variant="outline"
                                                 onClick={() =>
                                                     removeFriendMutation.mutate({
-                                                        body: { userId: user.id },
+                                                        body: { userId: friend.id },
                                                     })
                                                 }
                                                 disabled={removeFriendMutation.isPending}
                                             >
                                                 Удалить
                                             </Button>
-                                        ) : outgoing ? (
-                                            <Button size="sm" variant="outline" disabled>
-                                                Запрос отправлен
-                                            </Button>
-                                        ) : (
-                                            <Button
-                                                size="sm"
-                                                onClick={() =>
-                                                    sendRequestMutation.mutate({
-                                                        body: { userId: user.id },
-                                                    })
-                                                }
-                                                disabled={sendRequestMutation.isPending}
-                                            >
-                                                Добавить
-                                            </Button>
-                                        )}
-                                    </div>
-                                );
-                            })
+                                        </div>
+                                    ))
+                                )
+                            ) : isUsersLoading && users.length === 0 ? (
+                                <div className={styles.empty}>Загрузка...</div>
+                            ) : users.length === 0 ? (
+                                <div className={styles.empty}>Пользователи не найдены</div>
+                            ) : (
+                                users.map((user) => {
+                                    const isFriend = friendIds.has(user.id);
+                                    const incoming = incomingByUserId.get(user.id);
+                                    const outgoing = outgoingByUserId.get(user.id);
+                                    return (
+                                        <div className={styles.item} key={user.id}>
+                                            <div className={styles.user}>
+                                                {user.avatar_url ? (
+                                                    <img
+                                                        src={getFileUrl(user.avatar_url)}
+                                                        alt={user.username}
+                                                        className={styles.avatar}
+                                                        crossOrigin="anonymous"
+                                                    />
+                                                ) : (
+                                                    <div className={styles.placeholder}>
+                                                        {user.username.slice(0, 2).toUpperCase()}
+                                                    </div>
+                                                )}
+                                                <Link
+                                                    className={styles.username}
+                                                    href={`/${game}/people/${user.id}`}
+                                                >
+                                                    {user.username}
+                                                </Link>
+                                            </div>
+
+                                            {incoming ? (
+                                                <div className="flex gap-2">
+                                                    <Button
+                                                        size="sm"
+                                                        onClick={() =>
+                                                            acceptRequestMutation.mutate({
+                                                                body: { requestId: incoming.id },
+                                                            })
+                                                        }
+                                                        disabled={acceptRequestMutation.isPending}
+                                                    >
+                                                        Принять
+                                                    </Button>
+                                                    <Button
+                                                        size="sm"
+                                                        variant="outline"
+                                                        onClick={() =>
+                                                            rejectRequestMutation.mutate({
+                                                                body: { requestId: incoming.id },
+                                                            })
+                                                        }
+                                                        disabled={rejectRequestMutation.isPending}
+                                                    >
+                                                        Отклонить
+                                                    </Button>
+                                                </div>
+                                            ) : isFriend ? (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    onClick={() =>
+                                                        removeFriendMutation.mutate({
+                                                            body: { userId: user.id },
+                                                        })
+                                                    }
+                                                    disabled={removeFriendMutation.isPending}
+                                                >
+                                                    Удалить
+                                                </Button>
+                                            ) : outgoing ? (
+                                                <Button size="sm" variant="outline" disabled>
+                                                    Запрос отправлен
+                                                </Button>
+                                            ) : (
+                                                <Button
+                                                    size="sm"
+                                                    onClick={() =>
+                                                        sendRequestMutation.mutate({
+                                                            body: { userId: user.id },
+                                                        })
+                                                    }
+                                                    disabled={sendRequestMutation.isPending}
+                                                >
+                                                    Добавить
+                                                </Button>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+
+                        {isSearching && hasNextPage && (
+                            <div className="flex justify-center">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => fetchNextPage()}
+                                    disabled={isFetchingNextPage}
+                                >
+                                    {isFetchingNextPage ? 'Загрузка...' : 'Показать еще'}
+                                </Button>
+                            </div>
                         )}
                     </div>
-
-                    {isSearching && hasNextPage && (
-                        <div className="flex justify-center">
-                            <Button
-                                variant="outline"
-                                onClick={() => fetchNextPage()}
-                                disabled={isFetchingNextPage}
-                            >
-                                {isFetchingNextPage ? 'Загрузка...' : 'Показать еще'}
-                            </Button>
-                        </div>
-                    )}
-                </div>
-            </DialogContent>
+                </AppDialogContent>
+            </AppDialog>
         </Dialog>
     );
 };

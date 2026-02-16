@@ -1,7 +1,62 @@
+.triggerBtn {
+    position: relative;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    padding: 0 !important;
+    color: #c8ced8 !important;
+    border-color: #3b3f48 !important;
+    background: transparent !important;
+}
+
+.triggerBtn:hover {
+    color: #fff !important;
+    border-color: #575e6c !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+}
+
+.triggerLabel {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .triggerBtn {
+        width: auto !important;
+        min-width: 0 !important;
+        padding: 0 12px !important;
+        gap: 8px !important;
+    }
+
+    .triggerLabel {
+        display: inline;
+        font-size: 13px;
+        line-height: 1;
+    }
+}
+
+.dialogContent {
+    max-width: min(30rem, calc(100vw - 32px));
+    min-height: min(62svh, 620px);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
 .content {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    width: 100%;
+    margin: 0 auto;
 }
 
 .sectionTitle {
@@ -14,7 +69,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    max-height: 360px;
+    max-height: min(40svh, 420px);
     overflow-y: auto;
 }
 

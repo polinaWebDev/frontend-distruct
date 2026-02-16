@@ -35,7 +35,6 @@ import { zCreateMapDto } from '@/lib/api_client/gen/zod.gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import { useAdminGameTypeContext } from '@/domain/admin/context/admin-game-type-context';
-import { AppControlledInput } from '@/ui/AppInput/AppInput';
 import { getFileUrl } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -142,11 +141,18 @@ export const CreateMapDialog = ({
                 <div className="flex flex-col gap-4 overflow-y-auto max-h-[80svh]">
                     <Form {...form}>
                         <div className="shrink-0 flex flex-col gap-4">
-                            <AppControlledInput
+                            <FormField
                                 control={form.control}
                                 name="name"
-                                label="Название *"
-                                desc="Название карты"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel className="text-white">Название *</FormLabel>
+                                        <FormControl>
+                                            <Input {...field} placeholder="Название" />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
                             />
 
                             <FormField
@@ -214,7 +220,7 @@ export const CreateMapDialog = ({
                             />
 
                             <div className="space-y-2">
-                                <FormLabel>Изображение</FormLabel>
+                                <FormLabel>Превью карты</FormLabel>
                                 <Input
                                     id="image"
                                     type="file"

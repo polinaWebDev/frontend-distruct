@@ -4,7 +4,7 @@ import { Content, Overlay, Portal, Title } from '@radix-ui/react-dialog';
 import { cn } from '@/lib/utils';
 import { XIcon } from 'lucide-react';
 
-export const ApDialogContent = ({
+export const AppDialogContent = ({
     children,
     className,
     onClose,
@@ -20,9 +20,14 @@ export const ApDialogContent = ({
                 e.stopPropagation();
             }}
         >
-            <div className={styles.dialog_close} onClick={onClose}>
-                <XIcon color="white" size={24} />
-            </div>
+            <button
+                type="button"
+                className={styles.dialog_close}
+                onClick={onClose}
+                aria-label="Закрыть"
+            >
+                <XIcon size={16} strokeWidth={1.8} />
+            </button>
             {children}
         </div>
     );

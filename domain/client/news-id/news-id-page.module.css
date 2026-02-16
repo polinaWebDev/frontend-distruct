@@ -55,12 +55,6 @@
 }
 
 .sticky {
-    position: sticky;
-
-    top: calc(var(--header-height) + 91px);
-
-    height: 100%;
-
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
@@ -87,6 +81,9 @@
 .recommended_news {
     max-width: 387px;
     min-width: 300px;
+
+    position: sticky;
+    top: calc(var(--header-height) + 91px);
 
     display: flex;
     flex-direction: column;

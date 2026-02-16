@@ -63,9 +63,13 @@ export const NewsPage = ({ gameType }: { gameType: GameType }) => {
             <div className={styles.header_row}>
                 <h1>Новости</h1>
                 <Tabs value={sortType} onValueChange={(value) => setSortType(value as SortType)}>
-                    <TabsList className="flex gap-2">
-                        <AppTabsTrigger value="new">Сначала новые</AppTabsTrigger>
-                        <AppTabsTrigger value="popular">Сначала популярные</AppTabsTrigger>
+                    <TabsList className={styles.tabsList}>
+                        <AppTabsTrigger value="popular" className={styles.tabTrigger}>
+                            Сначала популярные
+                        </AppTabsTrigger>
+                        <AppTabsTrigger value="new" className={styles.tabTrigger}>
+                            Сначала новые
+                        </AppTabsTrigger>
                     </TabsList>
                 </Tabs>
             </div>

@@ -114,6 +114,7 @@ export type CreateNewsRequestDto = {
     game_type?: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
     is_published: boolean;
     publish_at?: string | null;
+    gallery_image_urls?: Array<string>;
 };
 
 export type UpdateNewsRequestDto = {
@@ -124,6 +125,7 @@ export type UpdateNewsRequestDto = {
     game_type?: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
     is_published: boolean;
     publish_at?: string | null;
+    gallery_image_urls?: Array<string>;
     id: string;
 };
 

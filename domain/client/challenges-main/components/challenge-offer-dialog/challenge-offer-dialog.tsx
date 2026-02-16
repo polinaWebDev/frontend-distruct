@@ -1,4 +1,4 @@
-import { ApDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
+import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
 import styles from './challenge-offer-dialog.module.css';
 import z from 'zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -62,7 +62,7 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
 
     return (
         <AppDialog onClose={onClose} title="Загрузить для проверки">
-            <ApDialogContent onClose={onClose}>
+            <AppDialogContent onClose={onClose}>
                 <div className={styles.content}>
                     <div className={styles.text}>
                         <h1 className={styles.title}>Предложите свой челлендж</h1>
@@ -106,7 +106,7 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
                         />
                     </div>
                 </div>
-            </ApDialogContent>
+            </AppDialogContent>
         </AppDialog>
     );
 };

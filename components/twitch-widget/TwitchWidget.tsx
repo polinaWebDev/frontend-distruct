@@ -5,7 +5,6 @@ import { useQuery } from '@tanstack/react-query';
 import styles from './TwitchWidget.module.css';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { twitchControllerGetWidgetStatusOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
-import { X } from 'lucide-react';
 
 type Position = { x: number; y: number };
 
@@ -155,7 +154,6 @@ export const TwitchWidget = ({
                 onPointerCancel={onPointerUp}
             >
                 <div className={styles.title}>Twitch</div>
-                <div className={styles.dragHint}>перетащить</div>
                 <button
                     className={styles.close}
                     onPointerDown={(event) => event.stopPropagation()}
@@ -165,7 +163,7 @@ export const TwitchWidget = ({
                     }}
                     aria-label="Закрыть виджет"
                 >
-                    <X />
+                    <span className={styles.closeIcon} aria-hidden="true" />
                 </button>
             </div>
 
@@ -203,12 +201,6 @@ export const TwitchWidget = ({
                                     • {data.viewerCount.toLocaleString('ru-RU')} зрителей
                                 </span>
                             )}
-                        </div>
-                        <div className={styles.updated}>
-                            Обновлено:{' '}
-                            {data?.checkedAt
-                                ? new Date(data.checkedAt).toLocaleTimeString('ru-RU')
-                                : '-'}
                         </div>
                     </>
                 )}

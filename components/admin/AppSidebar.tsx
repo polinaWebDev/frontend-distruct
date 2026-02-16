@@ -237,13 +237,14 @@ export function AppSidebar() {
                             <Collapsible
                                 key={group.title}
                                 defaultOpen={group.items?.some((item) => pathname === item.href)}
+                                className="group/collapsible"
                             >
                                 <SidebarMenuItem>
                                     <CollapsibleTrigger asChild>
                                         <SidebarMenuButton className="font-medium">
                                             <group.icon className="size-4" />
                                             <span className="flex-1 text-left">{group.title}</span>
-                                            <ChevronDown className="size-4 transition-transform data-[state=open]:rotate-180" />
+                                            <ChevronDown className="size-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
                                         </SidebarMenuButton>
                                     </CollapsibleTrigger>
                                     {group.items?.length ? (

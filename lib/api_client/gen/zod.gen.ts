@@ -94,7 +94,8 @@ export const zCreateNewsRequestDto = z.object({
     publish_at: z.optional(z.union([
         z.string(),
         z.null()
-    ]))
+    ])),
+    gallery_image_urls: z.optional(z.array(z.string()))
 });
 
 export const zUpdateNewsRequestDto = z.object({
@@ -113,6 +114,7 @@ export const zUpdateNewsRequestDto = z.object({
         z.string(),
         z.null()
     ])),
+    gallery_image_urls: z.optional(z.array(z.string())),
     id: z.string()
 });
 

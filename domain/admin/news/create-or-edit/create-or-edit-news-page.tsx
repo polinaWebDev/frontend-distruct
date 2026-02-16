@@ -75,6 +75,7 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
     const [galleryImages, setGalleryImages] = useState<NewsGalleryImageEntity[]>(
         news?.gallery_images || []
     );
+    const [newGalleryImageUrls, setNewGalleryImageUrls] = useState<string[]>([]);
 
     const formatToDateTimeLocal = (value?: string | Date | null) => {
         if (!value) {
@@ -105,7 +106,10 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
     useEffect(() => {
         if (news?.gallery_images) {
             setGalleryImages(news.gallery_images);
+            return;
         }
+        setGalleryImages([]);
+        setNewGalleryImageUrls([]);
     }, [news]);
 
     const createMutation = useMutation({
@@ -225,6 +229,7 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                         },
                     });
                 } else {
+                    setNewGalleryImageUrls((prev) => [...prev, url]);
                     toast.success('Изображение успешно загружено', { id: toastId });
                 }
             }
@@ -260,6 +265,8 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                     game_type: values.game_type ?? undefined,
                     image_url: values.image_url ?? undefined,
                     publish_at: publishAt,
+                    gallery_image_urls:
+                        newGalleryImageUrls.length > 0 ? newGalleryImageUrls : undefined,
                 },
             });
         }
@@ -291,6 +298,22 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
             // Revert on error (could be handled better)
             setGalleryImages(news.gallery_images || []);
         }
+    };
+
+    const handleNewGalleryImageReorder = (index: number, direction: 'up' | 'down') => {
+        const newImages = [...newGalleryImageUrls];
+        if (direction === 'up' && index > 0) {
+            [newImages[index - 1], newImages[index]] = [newImages[index], newImages[index - 1]];
+        } else if (direction === 'down' && index < newImages.length - 1) {
+            [newImages[index + 1], newImages[index]] = [newImages[index], newImages[index + 1]];
+        } else {
+            return;
+        }
+        setNewGalleryImageUrls(newImages);
+    };
+
+    const removeNewGalleryImage = (index: number) => {
+        setNewGalleryImageUrls((prev) => prev.filter((_, idx) => idx !== index));
     };
 
     return (
@@ -494,6 +517,163 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                         </CardContent>
                     </Card>
 
+                    <Card>
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle>Галерея</CardTitle>
+                            <div className="relative">
+                                <input
+                                    type="file"
+                                    id="gallery-upload"
+                                    className="hidden"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0];
+                                        if (file) handleImageUpload(file, false);
+                                    }}
+                                    disabled={
+                                        isUploading ||
+                                        (news ? addGalleryImageMutation.isPending : false)
+                                    }
+                                />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() =>
+                                        document.getElementById('gallery-upload')?.click()
+                                    }
+                                    disabled={
+                                        isUploading ||
+                                        (news ? addGalleryImageMutation.isPending : false)
+                                    }
+                                >
+                                    <PlusIcon className="w-4 h-4 mr-2" />
+                                    Добавить изображение
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {(news ? galleryImages.length : newGalleryImageUrls.length) === 0 ? (
+                                <div className="text-center py-8 text-muted-foreground">
+                                    В галерее нет изображений
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                    {news
+                                        ? galleryImages.map((image, index) => (
+                                              <div
+                                                  key={image.id}
+                                                  className="group relative aspect-video bg-muted rounded-md overflow-hidden border"
+                                              >
+                                                  <Image
+                                                      src={getFileUrl(image.image_url)}
+                                                      alt={`Gallery ${index}`}
+                                                      fill
+                                                      className="object-cover"
+                                                  />
+                                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                      <Button
+                                                          variant="secondary"
+                                                          size="icon"
+                                                          onClick={() => handleReorder(index, 'up')}
+                                                          disabled={
+                                                              index === 0 ||
+                                                              reorderGalleryImagesMutation.isPending
+                                                          }
+                                                          title="Переместить вверх"
+                                                      >
+                                                          <ArrowUpIcon className="w-4 h-4" />
+                                                      </Button>
+                                                      <Button
+                                                          variant="secondary"
+                                                          size="icon"
+                                                          onClick={() =>
+                                                              handleReorder(index, 'down')
+                                                          }
+                                                          disabled={
+                                                              index ===
+                                                                  galleryImages.length - 1 ||
+                                                              reorderGalleryImagesMutation.isPending
+                                                          }
+                                                          title="Переместить вниз"
+                                                      >
+                                                          <ArrowDownIcon className="w-4 h-4" />
+                                                      </Button>
+                                                      <Button
+                                                          variant="destructive"
+                                                          size="icon"
+                                                          onClick={() =>
+                                                              removeGalleryImageMutation.mutate({
+                                                                  body: { id: image.id },
+                                                              })
+                                                          }
+                                                          title="Удалить"
+                                                      >
+                                                          <Trash2Icon className="w-4 h-4" />
+                                                      </Button>
+                                                  </div>
+                                              </div>
+                                          ))
+                                        : newGalleryImageUrls.map((imageUrl, index) => (
+                                              <div
+                                                  key={`${imageUrl}-${index}`}
+                                                  className="group relative aspect-video bg-muted rounded-md overflow-hidden border"
+                                              >
+                                                  <Image
+                                                      src={getFileUrl(imageUrl)}
+                                                      alt={`Gallery ${index}`}
+                                                      fill
+                                                      className="object-cover"
+                                                  />
+                                                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                                      <Button
+                                                          variant="secondary"
+                                                          size="icon"
+                                                          onClick={() =>
+                                                              handleNewGalleryImageReorder(
+                                                                  index,
+                                                                  'up'
+                                                              )
+                                                          }
+                                                          disabled={index === 0}
+                                                          title="Переместить вверх"
+                                                      >
+                                                          <ArrowUpIcon className="w-4 h-4" />
+                                                      </Button>
+                                                      <Button
+                                                          variant="secondary"
+                                                          size="icon"
+                                                          onClick={() =>
+                                                              handleNewGalleryImageReorder(
+                                                                  index,
+                                                                  'down'
+                                                              )
+                                                          }
+                                                          disabled={
+                                                              index ===
+                                                              newGalleryImageUrls.length - 1
+                                                          }
+                                                          title="Переместить вниз"
+                                                      >
+                                                          <ArrowDownIcon className="w-4 h-4" />
+                                                      </Button>
+                                                      <Button
+                                                          variant="destructive"
+                                                          size="icon"
+                                                          onClick={() =>
+                                                              removeNewGalleryImage(index)
+                                                          }
+                                                          title="Удалить"
+                                                      >
+                                                          <Trash2Icon className="w-4 h-4" />
+                                                      </Button>
+                                                  </div>
+                                              </div>
+                                          ))}
+                                </div>
+                            )}
+                        </CardContent>
+                    </Card>
+
                     <div className="flex justify-end gap-4">
                         <Button type="button" variant="outline" onClick={() => router.back()}>
                             Отмена
@@ -515,98 +695,6 @@ export const CreateOrEditNewsPage = ({ news }: CreateOrEditNewsPageProps) => {
                     </div>
                 </form>
             </Form>
-
-            {/* Gallery Section - Only visible when editing */}
-            {news && (
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle>Галерея</CardTitle>
-                        <div className="relative">
-                            <input
-                                type="file"
-                                id="gallery-upload"
-                                className="hidden"
-                                accept="image/*"
-                                onChange={(e) => {
-                                    const file = e.target.files?.[0];
-                                    if (file) handleImageUpload(file, false);
-                                }}
-                                disabled={addGalleryImageMutation.isPending || isUploading}
-                            />
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => document.getElementById('gallery-upload')?.click()}
-                                disabled={addGalleryImageMutation.isPending || isUploading}
-                            >
-                                <PlusIcon className="w-4 h-4 mr-2" />
-                                Добавить изображение
-                            </Button>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        {galleryImages.length === 0 ? (
-                            <div className="text-center py-8 text-muted-foreground">
-                                В галерее нет изображений
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                {galleryImages.map((image, index) => (
-                                    <div
-                                        key={image.id}
-                                        className="group relative aspect-video bg-muted rounded-md overflow-hidden border"
-                                    >
-                                        <Image
-                                            src={getFileUrl(image.image_url)}
-                                            alt={`Gallery ${index}`}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                            <Button
-                                                variant="secondary"
-                                                size="icon"
-                                                onClick={() => handleReorder(index, 'up')}
-                                                disabled={
-                                                    index === 0 ||
-                                                    reorderGalleryImagesMutation.isPending
-                                                }
-                                                title="Переместить вверх"
-                                            >
-                                                <ArrowUpIcon className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="secondary"
-                                                size="icon"
-                                                onClick={() => handleReorder(index, 'down')}
-                                                disabled={
-                                                    index === galleryImages.length - 1 ||
-                                                    reorderGalleryImagesMutation.isPending
-                                                }
-                                                title="Переместить вниз"
-                                            >
-                                                <ArrowDownIcon className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="destructive"
-                                                size="icon"
-                                                onClick={() =>
-                                                    removeGalleryImageMutation.mutate({
-                                                        body: { id: image.id },
-                                                    })
-                                                }
-                                                title="Удалить"
-                                            >
-                                                <Trash2Icon className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-            )}
         </div>
     );
 };

@@ -54,23 +54,28 @@ export const CommentInput = ({ refetch, news_id }: { refetch: () => void; news_i
                 control={form.control}
                 name="content"
                 render={({ field, fieldState }) => (
-                    <TextareaAutosize
-                        placeholder="Напишите комментарий..."
-                        className={clsx(styles.input_container, fieldState.error && styles.errored)}
-                        value={field.value}
-                        onChange={field.onChange}
-                        onBlur={field.onBlur}
-                        minRows={1}
-                        maxRows={5}
-                        rows={1}
-                        // onKeyDown={(e) => {
-                        //     if (e.key === 'Enter') {
-                        //         e.preventDefault();
-                        //         e.stopPropagation();
-                        //         form.handleSubmit(handleSubmit)();
-                        //     }
-                        // }}
-                    />
+                    <div className={styles.input_wrapper}>
+                        <TextareaAutosize
+                            placeholder="Напишите комментарий..."
+                            className={clsx(styles.input_container, fieldState.error && styles.errored)}
+                            value={field.value}
+                            onChange={field.onChange}
+                            onBlur={field.onBlur}
+                            minRows={1}
+                            maxRows={5}
+                            rows={1}
+                            // onKeyDown={(e) => {
+                            //     if (e.key === 'Enter') {
+                            //         e.preventDefault();
+                            //         e.stopPropagation();
+                            //         form.handleSubmit(handleSubmit)();
+                            //     }
+                            // }}
+                        />
+                        {fieldState.error?.message && (
+                            <div className={styles.error_text}>{fieldState.error.message}</div>
+                        )}
+                    </div>
                 )}
             />
 

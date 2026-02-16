@@ -1,4 +1,4 @@
-import { ApDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
+import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import styles from './accept-challenge-dialog.module.css';
 export const AcceptChallengeDialog = ({
@@ -20,7 +20,7 @@ export const AcceptChallengeDialog = ({
 }) => {
     return (
         <AppDialog title="Принять челлендж" onClose={onClose}>
-            <ApDialogContent onClose={onClose}>
+            <AppDialogContent onClose={onClose}>
                 <h1 className={styles.title}>{title}</h1>
                 <p className={styles.description}>{description}</p>
 
@@ -28,7 +28,7 @@ export const AcceptChallengeDialog = ({
                     <AppBtn text={acceptText} onClick={onAccept} />
                     <AppBtn text={cancelText} onClick={onCancel ?? onClose} style="outline_red" />
                 </div>
-            </ApDialogContent>
+            </AppDialogContent>
         </AppDialog>
     );
 };
