@@ -46,7 +46,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog';
-import { BannerProvider } from '@/components/banners/BannerProvider';
+import { BannerProvider, useBannerContext } from '@/components/banners/BannerProvider';
 import { BannerSlot } from '@/components/banners/BannerSlot';
 import { getFileUrl } from '@/lib/utils';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
@@ -59,6 +59,7 @@ type BannerSlotPage = BannerSlotAdminResponseDto['page'];
 type BannerMediaType = BannerAdminResponseDto['type'];
 
 const PAGE_OPTIONS: Array<{ label: string; value: BannerSlotPage }> = [
+    { label: 'Main', value: 'main' },
     { label: 'News article', value: 'news_article' },
     { label: 'Rewards', value: 'challenges_rewards' },
 ];
@@ -443,7 +444,7 @@ function SlotCard({
         <div className="rounded-xl border p-4 space-y-4">
             <div className="flex items-center justify-between">
                 <div>
-                    <p className="font-semibold">{slot.slotKey}</p>
+                    <p className="font-semibold">{slot.slot_key}</p>
                     <p className="text-sm text-muted-foreground">
                         {slot.width} × {slot.height}
                     </p>
@@ -500,10 +501,75 @@ function resolveSlotKey(slotKeys: string[], preferred: string[]) {
     return preferred.find((key) => slotKeys.includes(key)) ?? slotKeys[0] ?? null;
 }
 
+function SlotPreviewFrame({ slotKey }: { slotKey: string }) {
+    const { slotsByKey, isLoading } = useBannerContext();
+    const slot = slotsByKey[slotKey];
+    const hasBanners = (slot?.banners?.filter((banner) => !!banner.fileUrl).length ?? 0) > 0;
+
+    const frameStyle = slot
+        ? {
+              width: '100%',
+              maxWidth: slot.width,
+              aspectRatio: `${slot.width} / ${slot.height}`,
+          }
+        : {
+              width: '100%',
+              maxWidth: 1124,
+              minHeight: 120,
+          };
+
+    return (
+        <div
+            className="relative overflow-hidden rounded-lg border border-dashed border-muted-foreground/30 bg-muted/10"
+            style={frameStyle}
+        >
+            {hasBanners ? (
+                <BannerSlot slotKey={slotKey} className="h-full w-full" />
+            ) : (
+                <div className="absolute inset-0 flex items-center justify-center px-3 text-center text-xs text-muted-foreground">
+                    {isLoading ? (
+                        <div className="h-full w-full">
+                            <AppSkeleton />
+                        </div>
+                    ) : slot ? (
+                        `Слот "${slotKey}" без активных баннеров`
+                    ) : (
+                        `Слот "${slotKey}" не найден`
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
 function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: string[] }) {
-    const contentInlineKey = resolveSlotKey(slotKeys, ['content_inline']);
-    const topInlineKey = resolveSlotKey(slotKeys, ['top_inline']);
-    const sidebarKey = resolveSlotKey(slotKeys, ['sidebar_top', 'sidebar']);
+    const contentInlineKey = resolveSlotKey(slotKeys, ['content_inline']) ?? 'content_inline';
+    const topInlineKey = resolveSlotKey(slotKeys, ['top_inline']) ?? 'top_inline';
+    const sidebarKey = resolveSlotKey(slotKeys, ['sidebar_top', 'sidebar']) ?? 'sidebar_top';
+
+    if (page === 'main') {
+        return (
+            <div className="rounded-xl border p-6 bg-muted/10">
+                <div className="max-w-[1200px] mx-auto space-y-8">
+                    <div className="space-y-4">
+                        <div className="h-12 max-w-[620px] mx-auto">
+                            <AppSkeleton />
+                        </div>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {Array.from({ length: 4 }).map((_, idx) => (
+                                <div key={idx} className="h-9">
+                                    <AppSkeleton />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="flex justify-center">
+                        <SlotPreviewFrame slotKey="inline" />
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     if (page === 'news_article') {
         return (
@@ -541,11 +607,9 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
                     <div className={newsStyles.sticky}>
                         <div className={newsStyles.separator}></div>
                         <div className={newsStyles.recommended_news}>
-                            {sidebarKey && (
-                                <div className="mb-6 flex justify-center">
-                                    <BannerSlot slotKey={sidebarKey} />
-                                </div>
-                            )}
+                            <div className="mb-6 flex justify-center">
+                                <SlotPreviewFrame slotKey={sidebarKey} />
+                            </div>
                             {Array.from({ length: 3 }).map((_, idx) => (
                                 <div key={idx} className="h-28 w-full">
                                     <AppSkeleton />
@@ -572,11 +636,9 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
                                     <AppSkeleton />
                                 </div>
                             ))}
-                            {topInlineKey && (
-                                <div className="flex items-center justify-center h-40">
-                                    <BannerSlot slotKey={topInlineKey} />
-                                </div>
-                            )}
+                            <div className="flex items-center justify-center h-40">
+                                <SlotPreviewFrame slotKey={topInlineKey} />
+                            </div>
                         </div>
                         <div className={challengesRewardsStyles.rewards}>
                             {Array.from({ length: 6 }).map((_, idx) => (
@@ -602,11 +664,9 @@ function PagePreview({ page, slotKeys }: { page: BannerSlotPage; slotKeys: strin
                         <AppSkeleton />
                     </div>
                 </div>
-                {contentInlineKey && (
-                    <div className="my-6 flex justify-center">
-                        <BannerSlot slotKey={contentInlineKey} />
-                    </div>
-                )}
+                <div className="my-6 flex justify-center">
+                    <SlotPreviewFrame slotKey={contentInlineKey} />
+                </div>
                 <div className="space-y-3">
                     {Array.from({ length: 10 }).map((_, idx) => (
                         <div key={idx} className="h-6">
@@ -756,7 +816,7 @@ export function BannerPlacementsPage() {
 
                 <div className="space-y-2">
                     <h2 className="text-lg font-semibold">Preview страницы</h2>
-                    <PagePreview page={page} slotKeys={slots.map((slot) => slot.slotKey)} />
+                    <PagePreview page={page} slotKeys={slots.map((slot) => slot.slot_key)} />
                 </div>
 
                 {isLoading ? (

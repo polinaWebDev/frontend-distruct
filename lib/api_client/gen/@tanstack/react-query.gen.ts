@@ -2719,7 +2719,7 @@ export const bannersControllerGetBannersOptions = (options: Options<BannersContr
 export const bannersControllerGetBannersInfiniteQueryKey = (options: Options<BannersControllerGetBannersData>): QueryKey<Options<BannersControllerGetBannersData>> => createQueryKey('bannersControllerGetBanners', options, true);
 
 export const bannersControllerGetBannersInfiniteOptions = (options: Options<BannersControllerGetBannersData>) => {
-    return infiniteQueryOptions<BannersControllerGetBannersResponse, AxiosError<DefaultError>, InfiniteData<BannersControllerGetBannersResponse>, QueryKey<Options<BannersControllerGetBannersData>>, 'news_article' | 'challenges_rewards' | Pick<QueryKey<Options<BannersControllerGetBannersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+    return infiniteQueryOptions<BannersControllerGetBannersResponse, AxiosError<DefaultError>, InfiniteData<BannersControllerGetBannersResponse>, QueryKey<Options<BannersControllerGetBannersData>>, 'main' | 'news_article' | 'challenges_rewards' | Pick<QueryKey<Options<BannersControllerGetBannersData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
         queryFn: async ({ pageParam, queryKey, signal }) => {
@@ -2855,7 +2855,7 @@ export const bannerPlacementsAdminControllerListPlacementsOptions = (options: Op
 export const bannerPlacementsAdminControllerListPlacementsInfiniteQueryKey = (options: Options<BannerPlacementsAdminControllerListPlacementsData>): QueryKey<Options<BannerPlacementsAdminControllerListPlacementsData>> => createQueryKey('bannerPlacementsAdminControllerListPlacements', options, true);
 
 export const bannerPlacementsAdminControllerListPlacementsInfiniteOptions = (options: Options<BannerPlacementsAdminControllerListPlacementsData>) => {
-    return infiniteQueryOptions<BannerPlacementsAdminControllerListPlacementsResponse, AxiosError<DefaultError>, InfiniteData<BannerPlacementsAdminControllerListPlacementsResponse>, QueryKey<Options<BannerPlacementsAdminControllerListPlacementsData>>, 'news_article' | 'challenges_rewards' | Pick<QueryKey<Options<BannerPlacementsAdminControllerListPlacementsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
+    return infiniteQueryOptions<BannerPlacementsAdminControllerListPlacementsResponse, AxiosError<DefaultError>, InfiniteData<BannerPlacementsAdminControllerListPlacementsResponse>, QueryKey<Options<BannerPlacementsAdminControllerListPlacementsData>>, 'main' | 'news_article' | 'challenges_rewards' | Pick<QueryKey<Options<BannerPlacementsAdminControllerListPlacementsData>>[0], 'body' | 'headers' | 'path' | 'query'>>(
     // @ts-ignore
     {
         queryFn: async ({ pageParam, queryKey, signal }) => {

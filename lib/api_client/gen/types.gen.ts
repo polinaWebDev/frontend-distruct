@@ -917,6 +917,7 @@ export type PublicGearDto = {
     name: string;
     description: string;
     image_url?: string | null;
+    color: string;
     rarity?: PublicGearRarityDto | null;
     tier: number;
 };
@@ -1301,7 +1302,7 @@ export type BannerPublicItemDto = {
 };
 
 export type BannerPublicSlotDto = {
-    slotKey: string;
+    slot_key: string;
     width: number;
     height: number;
     banners: Array<BannerPublicItemDto>;
@@ -1337,8 +1338,8 @@ export type UpdateBannerAdminDto = {
 
 export type BannerSlotAdminResponseDto = {
     id: string;
-    page: 'news_article' | 'challenges_rewards';
-    slotKey: string;
+    page: 'main' | 'news_article' | 'challenges_rewards';
+    slot_key: string;
     width: number;
     height: number;
     allowedTypes: Array<'image' | 'video'>;
@@ -1374,7 +1375,7 @@ export type BannerPlacementAdminItemDto = {
 
 export type BannerPlacementsSlotAdminDto = {
     slotId: string;
-    slotKey: string;
+    slot_key: string;
     width: number;
     height: number;
     allowedTypes: Array<'image' | 'video'>;
@@ -3521,7 +3522,7 @@ export type BannersControllerGetBannersData = {
     body?: never;
     path?: never;
     query: {
-        page: 'news_article' | 'challenges_rewards';
+        page: 'main' | 'news_article' | 'challenges_rewards';
     };
     url: '/api/banners';
 };
@@ -3620,7 +3621,7 @@ export type BannerPlacementsAdminControllerListPlacementsData = {
     body?: never;
     path?: never;
     query: {
-        page: 'news_article' | 'challenges_rewards';
+        page: 'main' | 'news_article' | 'challenges_rewards';
     };
     url: '/api/admin/banner-placements';
 };

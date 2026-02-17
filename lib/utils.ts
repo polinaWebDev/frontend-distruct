@@ -13,10 +13,16 @@ export const getFileUrl = (url: string) => {
     const apiBase =
         process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') ??
         process.env.SERVER_API_URL?.replace(/\/$/, '');
+    const mapsCdnBase =
+        process.env.NEXT_PUBLIC_CDN_MAPS_BASE_URL?.replace(/\/$/, '') ??
+        process.env.CDN_MAPS_BASE_URL?.replace(/\/$/, '');
     const isLocalEnv =
         process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
 
     if (normalizedUrl.startsWith('api/public/')) {
+        if (normalizedUrl.startsWith('api/public/maps/') && mapsCdnBase) {
+            return `${mapsCdnBase}/${normalizedUrl.replace(/^api\/public\//, '')}`;
+        }
         if (apiBase) {
             return `${apiBase}/${normalizedUrl}`;
         }
@@ -26,6 +32,9 @@ export const getFileUrl = (url: string) => {
         return `/${normalizedUrl}`;
     }
     if (normalizedUrl.startsWith('maps/')) {
+        if (mapsCdnBase) {
+            return `${mapsCdnBase}/${normalizedUrl}`;
+        }
         if (apiBase) {
             return `${apiBase}/api/public/${normalizedUrl}`;
         }

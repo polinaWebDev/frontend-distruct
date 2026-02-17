@@ -7,6 +7,8 @@ import styles from './MainPage.module.css';
 import { GAME_TYPE_VALUES } from '@/lib/enums/game_type.enum';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import clsx from 'clsx';
+import { BannerProvider } from '@/components/banners/BannerProvider';
+import { BannerSlot } from '@/components/banners/BannerSlot';
 
 export const MainPage = () => {
     return (
@@ -24,7 +26,9 @@ export const MainPage = () => {
                                 </div>
                             ))}
                         </div>
-                        <div className={styles.banner}></div>
+                        <BannerProvider page="main">
+                            <BannerSlot slotKey="inline" className={styles.banner} />
+                        </BannerProvider>
                     </div>
                 </section>
                 <section

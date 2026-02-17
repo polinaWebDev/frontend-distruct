@@ -435,6 +435,7 @@
     .challengesList {
         gap: 48px;
     }
+
 }
 
 @media (max-width: 834px) {
@@ -483,18 +484,16 @@
     .mapsSection :global(.page_width_wrapper) {
         padding-bottom: 0;
     }
+
 }
 
 .banner {
     width: 100%;
     max-width: 1124px;
-    height: 176px;
-
-    background: #34363d;
-
+    min-height: 120px;
     border-radius: 14px;
-
-    background: transparent;
+    border: 1px solid rgba(245, 160, 47, 0.35);
+    background: rgba(15, 18, 25, 0.6);
 }
 .challengesSection {
     padding-top: 70px;

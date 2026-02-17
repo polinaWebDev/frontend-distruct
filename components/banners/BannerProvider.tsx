@@ -34,7 +34,7 @@ export function BannerProvider({
     const slots = (data ?? []) as BannerPublicSlotDto[];
 
     const slotsByKey = useMemo(() => {
-        return Object.fromEntries(slots.map((slot) => [slot.slotKey, slot]));
+        return Object.fromEntries(slots.map((slot) => [slot.slot_key, slot]));
     }, [slots]);
 
     const value = useMemo<BannerContextValue>(

@@ -60,6 +60,14 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
     const queryClient = useQueryClient();
     const [imageFile, setImageFile] = useState<File | null>(null);
     const { gameType } = useAdminGameTypeContext();
+    const formatCategoryDescription = (description?: string) => {
+        if (!description) return null;
+        const maxLen = 20;
+        const trimmed = description.trim();
+        if (!trimmed) return null;
+        if (trimmed.length <= maxLen) return trimmed;
+        return `${trimmed.slice(0, maxLen)}...`;
+    };
 
     const form = useForm<CreateGearFormData>({
         resolver: zodResolver(zCreateGearDto),
@@ -322,6 +330,18 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                                                         value={category.id}
                                                     >
                                                         {category.name}
+                                                        {formatCategoryDescription(
+                                                            category.description
+                                                        ) && (
+                                                            <span className="text-xs text-muted-foreground">
+                                                                {' '}
+                                                                (
+                                                                {formatCategoryDescription(
+                                                                    category.description
+                                                                )}
+                                                                )
+                                                            </span>
+                                                        )}
                                                     </SelectItem>
                                                 ))
                                             ) : (

@@ -1054,6 +1054,7 @@ export const zPublicGearDto = z.object({
         z.string(),
         z.null()
     ])),
+    color: z.string(),
     rarity: z.optional(z.union([
         zPublicGearRarityDto,
         z.null()
@@ -1583,7 +1584,7 @@ export const zBannerPublicItemDto = z.object({
 });
 
 export const zBannerPublicSlotDto = z.object({
-    slotKey: z.string(),
+    slot_key: z.string(),
     width: z.number(),
     height: z.number(),
     banners: z.array(zBannerPublicItemDto)
@@ -1644,10 +1645,11 @@ export const zUpdateBannerAdminDto = z.object({
 export const zBannerSlotAdminResponseDto = z.object({
     id: z.string(),
     page: z.enum([
+        'main',
         'news_article',
         'challenges_rewards'
     ]),
-    slotKey: z.string(),
+    slot_key: z.string(),
     width: z.number(),
     height: z.number(),
     allowedTypes: z.array(z.enum([
@@ -1704,7 +1706,7 @@ export const zBannerPlacementAdminItemDto = z.object({
 
 export const zBannerPlacementsSlotAdminDto = z.object({
     slotId: z.string(),
-    slotKey: z.string(),
+    slot_key: z.string(),
     width: z.number(),
     height: z.number(),
     allowedTypes: z.array(z.enum([
@@ -3412,6 +3414,7 @@ export const zBannersControllerGetBannersData = z.object({
     path: z.optional(z.never()),
     query: z.object({
         page: z.enum([
+            'main',
             'news_article',
             'challenges_rewards'
         ])
@@ -3479,6 +3482,7 @@ export const zBannerPlacementsAdminControllerListPlacementsData = z.object({
     path: z.optional(z.never()),
     query: z.object({
         page: z.enum([
+            'main',
             'news_article',
             'challenges_rewards'
         ])
