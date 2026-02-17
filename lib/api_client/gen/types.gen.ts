@@ -212,8 +212,8 @@ export type GearEntity = {
     gear_category_entity_id: string;
     rarity?: GearRarityEntity | null;
     gear_rarity_entity_id?: string | null;
-    type: GearTypeEntity;
-    gear_type_entity_id: string;
+    type?: GearTypeEntity | null;
+    gear_type_entity_id?: string | null;
 };
 
 export type TierItemEntity = {
@@ -775,7 +775,10 @@ export type CreateGearDto = {
     game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
     category_id: string;
     rarity_id?: string | null;
-    type_id: string;
+    /**
+     * Optional gear type id. You may omit the field or pass null. Empty string is treated as not provided.
+     */
+    type_id?: string | null;
 };
 
 export type UpdateGearDto = {
@@ -789,7 +792,10 @@ export type UpdateGearDto = {
     game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
     category_id: string;
     rarity_id?: string | null;
-    type_id: string;
+    /**
+     * Optional gear type id. You may omit the field or pass null. Empty string is treated as not provided.
+     */
+    type_id?: string | null;
     id: string;
 };
 

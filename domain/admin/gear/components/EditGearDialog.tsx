@@ -76,7 +76,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
             weight: gear.weight,
             category_id: gear.gear_category_entity_id,
             rarity_id: gear.gear_rarity_entity_id ?? 'none',
-            type_id: gear.gear_type_entity_id,
+            type_id: gear.gear_type_entity_id ?? 'none',
         },
     });
 
@@ -141,7 +141,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                 weight: gear.weight,
                 category_id: gear.gear_category_entity_id,
                 rarity_id: gear.gear_rarity_entity_id ?? 'none',
-                type_id: gear.gear_type_entity_id,
+                type_id: gear.gear_type_entity_id ?? 'none',
             });
             setImageFile(null);
         }
@@ -173,6 +173,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
     });
 
     const handleSubmit = async (data: UpdateGearFormData) => {
+        const normalizedTypeId = data.type_id === 'none' || !data.type_id ? undefined : data.type_id;
         const bodyData: any = {
             id: data.id,
             name: data.name,
@@ -182,7 +183,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
             weight: data.weight,
             category_id: data.category_id,
             rarity_id: data.rarity_id === 'none' || !data.rarity_id ? null : data.rarity_id,
-            type_id: data.type_id,
+            ...(normalizedTypeId ? { type_id: normalizedTypeId } : {}),
         };
 
         // If there's an image file, call SDK directly to bypass Zod validation
@@ -381,7 +382,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                                                     </SelectItem>
                                                 ))
                                             ) : (
-                                                <SelectItem value="none" disabled>
+                                                <SelectItem value="no-rarities" disabled>
                                                     Нет доступных редкостей
                                                 </SelectItem>
                                             )}
@@ -397,7 +398,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                             name="type_id"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Тип *</FormLabel>
+                                    <FormLabel>Тип</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="w-full">
@@ -405,6 +406,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
+                                            <SelectItem value="none">Не указано</SelectItem>
                                             {types.length > 0 ? (
                                                 types.map((type) => (
                                                     <SelectItem key={type.id} value={type.id}>
@@ -412,7 +414,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                                                     </SelectItem>
                                                 ))
                                             ) : (
-                                                <SelectItem value="none" disabled>
+                                                <SelectItem value="no-types" disabled>
                                                     Нет доступных типов
                                                 </SelectItem>
                                             )}

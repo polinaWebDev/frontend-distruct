@@ -236,7 +236,7 @@ export function AppSidebar() {
                         {navItems.navMain.map((group) => (
                             <Collapsible
                                 key={group.title}
-                                defaultOpen={group.items?.some((item) => pathname === item.href)}
+                                defaultOpen={false}
                                 className="group/collapsible"
                             >
                                 <SidebarMenuItem>

@@ -71,7 +71,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
             weight: 0,
             category_id: '',
             rarity_id: 'none',
-            type_id: '',
+            type_id: 'none',
         },
     });
 
@@ -149,6 +149,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
     });
 
     const handleSubmit = async (data: CreateGearFormData) => {
+        const normalizedTypeId = data.type_id === 'none' || !data.type_id ? undefined : data.type_id;
         const bodyData: any = {
             name: data.name,
             description: data.description,
@@ -157,7 +158,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
             weight: data.weight,
             category_id: data.category_id,
             rarity_id: data.rarity_id === 'none' || !data.rarity_id ? null : data.rarity_id,
-            type_id: data.type_id,
+            ...(normalizedTypeId ? { type_id: normalizedTypeId } : {}),
         };
 
         // If there's an image file, call SDK directly to bypass Zod validation
@@ -356,7 +357,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                                                     </SelectItem>
                                                 ))
                                             ) : (
-                                                <SelectItem value="none" disabled>
+                                                <SelectItem value="no-rarities" disabled>
                                                     Нет доступных редкостей
                                                 </SelectItem>
                                             )}
@@ -372,7 +373,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                             name="type_id"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Тип *</FormLabel>
+                                    <FormLabel>Тип</FormLabel>
                                     <Select onValueChange={field.onChange} value={field.value}>
                                         <FormControl>
                                             <SelectTrigger className="w-full">
@@ -380,6 +381,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
+                                            <SelectItem value="none">Не указано</SelectItem>
                                             {types.length > 0 ? (
                                                 types.map((type) => (
                                                     <SelectItem key={type.id} value={type.id}>
@@ -387,7 +389,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                                                     </SelectItem>
                                                 ))
                                             ) : (
-                                                <SelectItem value="none" disabled>
+                                                <SelectItem value="no-types" disabled>
                                                     Нет доступных типов
                                                 </SelectItem>
                                             )}

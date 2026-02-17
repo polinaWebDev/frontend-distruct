@@ -244,8 +244,14 @@ export const zGearEntity = z.object({
         z.string(),
         z.null()
     ])),
-    type: zGearTypeEntity,
-    gear_type_entity_id: z.string()
+    type: z.optional(z.union([
+        zGearTypeEntity,
+        z.null()
+    ])),
+    gear_type_entity_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zTierListCategoryEntity = z.object({
@@ -848,7 +854,10 @@ export const zCreateGearDto = z.object({
         z.string(),
         z.null()
     ])),
-    type_id: z.string()
+    type_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zUpdateGearDto = z.object({
@@ -871,7 +880,10 @@ export const zUpdateGearDto = z.object({
         z.string(),
         z.null()
     ])),
-    type_id: z.string(),
+    type_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     id: z.string()
 });
 

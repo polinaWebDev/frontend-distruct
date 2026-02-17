@@ -110,7 +110,9 @@ const gearEntitySchemaResponseTransformer = (data: any) => {
     if (data.rarity) {
         data.rarity = gearRarityEntitySchemaResponseTransformer(data.rarity);
     }
-    data.type = gearTypeEntitySchemaResponseTransformer(data.type);
+    if (data.type) {
+        data.type = gearTypeEntitySchemaResponseTransformer(data.type);
+    }
     return data;
 };
 
