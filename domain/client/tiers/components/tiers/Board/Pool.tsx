@@ -2,6 +2,7 @@ import { Item } from '@/domain/client/tiers/components/tiers/Board/Item';
 import { useBoard } from '@/domain/client/tiers/components/tiers/Board/BoardContext';
 import { RowResponseDto } from '@/lib/api_client/gen';
 import { useDroppable } from '@dnd-kit/core';
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import styles from './Pool.module.css';
 
 export function Pool({ row }: { row: RowResponseDto }) {
@@ -13,11 +14,16 @@ export function Pool({ row }: { row: RowResponseDto }) {
     });
     return (
         <div className={styles.pool} ref={setNodeRef} data-over={isOver}>
-            <div className={styles.pool_items}>
-                {row.items.map((item) => (
-                    <Item key={item.id} item={item} rowId={row.id} />
-                ))}
-            </div>
+            <SortableContext
+                items={row.items.map((item) => item.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <div className={styles.pool_items}>
+                    {row.items.map((item) => (
+                        <Item key={item.id} item={item} rowId={row.id} />
+                    ))}
+                </div>
+            </SortableContext>
         </div>
     );
 }

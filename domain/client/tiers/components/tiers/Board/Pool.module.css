@@ -4,6 +4,16 @@
     border: 1px solid #34363d;
     border-radius: 16px;
     margin-top: 22px;
+    transition:
+        border-color 0.15s ease,
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.pool[data-over='true'] {
+    border-color: #f5a02f;
+    background: rgba(245, 160, 47, 0.06);
+    box-shadow: inset 0 0 0 1px rgba(245, 160, 47, 0.28);
 }
 
 .pool_items {

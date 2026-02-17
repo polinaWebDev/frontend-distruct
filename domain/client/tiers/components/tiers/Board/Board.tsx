@@ -52,13 +52,14 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
         if (!over) return null;
 
         const activeRow = findRowByItemId(active.id as string);
+        const overId = over.id as string;
         const overType = over.data.current?.type as string | undefined;
-        const overRowId =
-            overType === 'item'
-                ? (over.data.current?.rowId as string | undefined)
-                : overType === 'row'
-                  ? (over.data.current?.rowId as string | undefined)
-                  : undefined;
+        const overDataRowId = over.data.current?.rowId as string | undefined;
+
+        const overRowFromRowId = board.rows.find((row) => row.id === overDataRowId);
+        const overRowFromOverId = board.rows.find((row) => row.id === overId);
+        const overRowFromItemId = findRowByItemId(overId);
+        const overRowId = overRowFromRowId?.id ?? overRowFromOverId?.id ?? overRowFromItemId?.id;
 
         if (!activeRow || !overRowId) return null;
 
@@ -68,7 +69,8 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
         const activeIndex = activeRow.items.findIndex((item) => item.id === active.id);
         if (activeIndex === -1) return null;
 
-        const overItemId = overType === 'item' ? (over.id as string) : null;
+        const overItemId =
+            overType === 'item' || (overRowFromItemId && !overRowFromOverId) ? overId : null;
         const targetIndex = overItemId
             ? overRow.items.findIndex((item) => item.id === overItemId)
             : overRow.items.length;
