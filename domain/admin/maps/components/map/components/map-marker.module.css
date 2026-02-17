@@ -5,13 +5,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition:
+        transform 0.5s ease,
+        filter 0.5s ease;
+    will-change: transform, filter;
 
     svg {
         width: 24px;
         height: 24px;
         object-fit: contain;
         filter: drop-shadow(0 0 8px var(--marker-shadow-color, rgba(0, 0, 0, 0.55)));
+        transition: filter 0.5s ease;
     }
+}
+
+.icon:hover {
+    transform: scale(1.08);
+}
+
+.icon:hover svg {
+    filter: drop-shadow(0 0 10px var(--marker-shadow-color, rgba(0, 0, 0, 0.55)));
 }
 
 .draggable {
@@ -20,4 +33,5 @@
 
 .draggable:active {
     cursor: grabbing;
+    transform: scale(0.96);
 }

@@ -31,3 +31,56 @@
     transform: translateZ(0) scale(1.01);
     transform-origin: 0 0;
 }
+
+.custom-marker-cluster {
+    background: transparent !important;
+    border: none !important;
+}
+
+.custom-marker-cluster__inner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, #ffbe64 0%, #f5a02f 60%, #cf8118 100%);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 10px 24px rgba(0, 0, 0, 0.45),
+        0 0 0 6px rgba(245, 160, 47, 0.28);
+    color: #fff;
+    font-family: var(--font-sans), 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 12px;
+    line-height: 1;
+    user-select: none;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease,
+        filter 0.12s ease;
+    will-change: transform, box-shadow, filter;
+}
+
+.custom-marker-cluster__inner > span {
+    display: block;
+    line-height: 1;
+    transform: translateY(-0.5px);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.custom-marker-cluster:hover .custom-marker-cluster__inner {
+    transform: scale(1.08);
+    filter: brightness(1.08);
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.5),
+        0 0 0 7px rgba(245, 160, 47, 0.34);
+}
+
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow,
+.leaflet-cluster-anim .leaflet-cluster {
+    transition:
+        transform 0.12s ease-out,
+        opacity 0.12s ease-in !important;
+}

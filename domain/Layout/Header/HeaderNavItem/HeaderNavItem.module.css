@@ -12,6 +12,7 @@
 
     background: rgba(17, 17, 18, 70%);
     position: relative;
+    backdrop-filter: blur(5px);
 
     .icon {
         width: 28px;

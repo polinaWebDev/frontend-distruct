@@ -14,10 +14,12 @@ export const GameIcon = ({
     game,
     selected,
     black,
+    disabled,
 }: {
     game: GameType;
     selected: boolean;
     black?: boolean;
+    disabled?: boolean;
 }) => {
     if (game === GameType.ArcRaiders) {
         return (
@@ -26,7 +28,8 @@ export const GameIcon = ({
                     styles.arc_raiders_logo,
                     styles.logo,
                     selected && styles.selected,
-                    black && styles.black
+                    black && styles.black,
+                    disabled && styles.disabled
                 )}
             />
         );
@@ -39,7 +42,8 @@ export const GameIcon = ({
                     styles.active_matter_logo,
                     styles.logo,
                     selected && styles.selected,
-                    black && styles.black
+                    black && styles.black,
+                    disabled && styles.disabled
                 )}
             />
         );
@@ -52,7 +56,8 @@ export const GameIcon = ({
                     styles.arc_raiders_logo,
                     styles.logo,
                     selected && styles.selected,
-                    black && styles.black
+                    black && styles.black,
+                    disabled && styles.disabled
                 )}
             />
         );
@@ -65,7 +70,8 @@ export const GameIcon = ({
                     styles.tarkov_logo,
                     styles.logo,
                     selected && styles.selected,
-                    black && styles.black
+                    black && styles.black,
+                    disabled && styles.disabled
                 )}
             />
         );
@@ -74,8 +80,26 @@ export const GameIcon = ({
     return null;
 };
 
-export const HeaderGameItem = ({ game, selected }: { game: GameType; selected: boolean }) => {
+export const HeaderGameItem = ({
+    game,
+    selected,
+    disabled = false,
+}: {
+    game: GameType;
+    selected: boolean;
+    disabled?: boolean;
+}) => {
     const { linkPath, onLinkClick } = useGameLink(game);
+
+    if (disabled) {
+        return (
+            <div className={clsx(styles.logo_container, styles.disabled)} aria-disabled="true">
+                <span className={styles.soon_badge}>скоро</span>
+                <GameIcon game={game} selected={selected} disabled />
+                <div className={clsx(styles.selected_line, selected && styles.selected)} />
+            </div>
+        );
+    }
 
     return (
         <Link href={linkPath} className={styles.logo_container} onClick={onLinkClick}>

@@ -1,10 +1,39 @@
 .customMarkerCluster {
-    background-color: #6f6f74;
+    width: 40px;
+    height: 40px;
+    background: radial-gradient(
+        circle at 30% 30%,
+        color-mix(in srgb, var(--color-brand) 80%, white 20%) 0%,
+        var(--color-brand) 60%,
+        color-mix(in srgb, var(--color-brand) 88%, black 12%) 100%
+    );
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 1;
+    border: 2px solid color-mix(in srgb, var(--color-map-overlay-bg) 82%, white 18%);
+    backdrop-filter: blur(2px);
     box-shadow:
-        0 0 0 5px #6f6f74,
-        0 0 0 10px rgba(146, 156, 173, 0.8);
+        0 10px 24px rgba(0, 0, 0, 0.45),
+        0 0 0 6px color-mix(in srgb, var(--color-brand) 28%, transparent 72%);
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        filter 0.2s ease;
+}
+
+.customMarkerCluster:hover {
+    transform: scale(1.06);
+    filter: brightness(1.05);
+    box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.5),
+        0 0 0 7px color-mix(in srgb, var(--color-brand) 36%, transparent 64%);
+}
+
+.customMarkerCluster > span {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
 }

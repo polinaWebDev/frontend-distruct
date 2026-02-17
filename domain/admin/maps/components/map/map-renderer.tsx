@@ -3,7 +3,11 @@ import 'leaflet/dist/leaflet.css';
 import './map-renderer.css';
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MapContainer, Popup, TileLayer } from 'react-leaflet';
-import { LatLng, Map, Marker as LeafletMarker } from 'leaflet';
+import {
+    LatLng,
+    Map,
+    Marker as LeafletMarker,
+} from 'leaflet';
 import { MapDataMarkerDto, MapDataMarkerTypeDto, MapDataResponseDto } from '@/lib/api_client/gen';
 import { Info, MapPinPlusInside, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -103,8 +107,8 @@ export const MapRenderer = memo(
             typeof maxZoomOverride === 'string' ? Number(maxZoomOverride) : maxZoomOverride;
         const maxNativeZoom = Number.isFinite(maxZoomValue) && maxZoomValue >= 0 ? maxZoomValue : 0;
         const maxZoom = maxNativeZoom;
-        const minZoom = 0;
-        const initialZoom = Math.min(3, maxZoom);
+        const minZoom = admin ? 0 : 2;
+        const initialZoom = admin ? Math.min(3, maxZoom) : Math.min(3, maxZoom);
         const safeInitialZoom = initialZoom < minZoom ? minZoom : initialZoom;
 
         useEffect(() => {
@@ -118,6 +122,11 @@ export const MapRenderer = memo(
                 map.current.setZoom(minZoom);
             }
         }, [minZoom, maxZoom]);
+
+        useEffect(() => {
+            if (!map.current || admin) return;
+            map.current.setZoom(safeInitialZoom);
+        }, [admin, activeFloorId, safeInitialZoom]);
 
         const markers = useMemo(() => {
             const types =
@@ -150,6 +159,11 @@ export const MapRenderer = memo(
 
             return markers;
         }, [map_data, selectedTypeId, selectedCategories, activeFloorId]);
+
+        const clusterGroupKey = useMemo(() => {
+            const categoriesKey = [...selectedCategories].sort().join(',');
+            return `${activeFloorId ?? 'all-floors'}:${selectedTypeId ?? 'all-types'}:${categoriesKey}`;
+        }, [activeFloorId, selectedCategories, selectedTypeId]);
 
         const available_types = useMemo(() => {
             return map_data.categories?.flatMap((category) => category.marker_types ?? []) ?? [];
@@ -371,7 +385,10 @@ export const MapRenderer = memo(
                     </>
                 ) : (
                     <MarkerClusterGroup
+                        key={clusterGroupKey}
                         iconCreateFunction={iconCreateFunction}
+                        animate
+                        animateAddingMarkers
                         disableClusteringAtZoom={4}
                         spiderfyOnMaxZoom={false}
                         showCoverageOnHover={false}

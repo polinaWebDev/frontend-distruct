@@ -64,16 +64,25 @@ export const Header = ({
                     </Link>
 
                     <div className={styles.games}>
-                        {/* <HeaderGameItem game={GameType.ArcRaiders} selected={game === GameType.ArcRaiders} /> */}
-                        {/* <HeaderGameItem game={GameType.ActiveMatter} selected={game === GameType.ActiveMatter} /> */}
                         <HeaderGameItem
                             game={GameType.ArenaBreakout}
                             selected={game === GameType.ArenaBreakout}
                         />
-                        {/* <HeaderGameItem
-            game={GameType.EscapeFromTarkov}
-            selected={game === GameType.EscapeFromTarkov}
-          /> */}
+                        <HeaderGameItem
+                            game={GameType.ArcRaiders}
+                            selected={game === GameType.ArcRaiders}
+                            disabled
+                        />
+                        <HeaderGameItem
+                            game={GameType.ActiveMatter}
+                            selected={game === GameType.ActiveMatter}
+                            disabled
+                        />
+                        <HeaderGameItem
+                            game={GameType.EscapeFromTarkov}
+                            selected={game === GameType.EscapeFromTarkov}
+                            disabled
+                        />
                     </div>
 
                     <HeaderProfileBtn user={user} game={game ?? GameType.ArenaBreakout} />

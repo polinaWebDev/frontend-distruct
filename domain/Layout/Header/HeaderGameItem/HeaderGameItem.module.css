@@ -6,7 +6,7 @@
         fill: #79808e;
     }
 
-    &:hover {
+    &:not(.disabled):hover {
         path {
             fill: white;
         }
@@ -57,6 +57,29 @@
     flex-direction: column;
 
     position: relative;
+
+    &.disabled {
+        cursor: default;
+        pointer-events: none;
+    }
+}
+
+.soon_badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    z-index: 2;
+
+    padding: 1px 4px;
+    border-radius: 999px;
+
+    background: #f5a02f;
+    color: #111112;
+
+    font-size: 8px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
 }
 
 .selected_line {
