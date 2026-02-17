@@ -1127,6 +1127,66 @@ export const zRemoveMapFloorDto = z.object({
     map_id: z.string()
 });
 
+export const zMapEntity = z.object({
+    id: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    game_type: z.enum([
+        'arena_breakout',
+        'active_matter',
+        'arc_raiders',
+        'escape_from_tarkov'
+    ]),
+    name: z.string(),
+    description: z.string(),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    visibility: z.enum([
+        'public',
+        'private'
+    ]),
+    max_latitude: z.number(),
+    max_longitude: z.number()
+});
+
+export const zMapLevelEntity = z.object({
+    id: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    map_id: z.string(),
+    name: z.string(),
+    sort_order: z.number(),
+    map: zMapEntity
+});
+
+export const zCreateMapLevelDto = z.object({
+    map_id: z.string(),
+    name: z.string(),
+    sort_order: z.optional(z.number().gte(0))
+});
+
+export const zUpdateMapLevelDto = z.object({
+    id: z.string(),
+    map_id: z.string(),
+    name: z.string(),
+    sort_order: z.number().gte(0)
+});
+
+export const zRemoveMapLevelDto = z.object({
+    id: z.string(),
+    map_id: z.string()
+});
+
 export const zGenerateMapTilesDto = z.object({
     id: z.string(),
     floor_level: z.number().gte(1),
@@ -1144,6 +1204,12 @@ export const zMapFloorDto = z.object({
     max_zoom: z.number()
 });
 
+export const zMapLevelDto = z.object({
+    id: z.string(),
+    name: z.string(),
+    sort_order: z.number()
+});
+
 export const zMapDataMarkerDto = z.object({
     id: z.string(),
     name: z.string(),
@@ -1155,6 +1221,7 @@ export const zMapDataMarkerDto = z.object({
         z.string(),
         z.null()
     ])),
+    map_level_ids: z.optional(z.array(z.string())),
     image_url: z.optional(z.union([
         z.string(),
         z.null()
@@ -1211,6 +1278,10 @@ export const zMapDataResponseDto = z.object({
         z.array(zMapFloorDto),
         z.null()
     ])),
+    levels: z.optional(z.union([
+        z.array(zMapLevelDto),
+        z.null()
+    ])),
     categories: z.union([
         z.array(zMapDataCategoryDto),
         z.null()
@@ -1259,38 +1330,14 @@ export const zMapListResponseDto = z.object({
         z.array(zMapFloorDto),
         z.null()
     ])),
+    levels: z.optional(z.union([
+        z.array(zMapLevelDto),
+        z.null()
+    ])),
     categories: z.optional(z.union([
         z.array(zMapListCategoryDto),
         z.null()
     ]))
-});
-
-export const zMapEntity = z.object({
-    id: z.string(),
-    createdAt: z.iso.datetime(),
-    updatedAt: z.iso.datetime(),
-    deletedAt: z.union([
-        z.iso.datetime(),
-        z.null()
-    ]),
-    game_type: z.enum([
-        'arena_breakout',
-        'active_matter',
-        'arc_raiders',
-        'escape_from_tarkov'
-    ]),
-    name: z.string(),
-    description: z.string(),
-    image_url: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
-    visibility: z.enum([
-        'public',
-        'private'
-    ]),
-    max_latitude: z.number(),
-    max_longitude: z.number()
 });
 
 export const zMapMarkerCategoryEntity = z.object({
@@ -1380,6 +1427,7 @@ export const zCreateMapMarkerDto = z.object({
         z.string(),
         z.null()
     ])),
+    map_level_ids: z.array(z.string()).min(1),
     map_id: z.string(),
     file: z.optional(z.string()),
     info_link: z.optional(z.union([
@@ -1401,6 +1449,7 @@ export const zUpdateMapMarkerDto = z.object({
         z.string(),
         z.null()
     ])),
+    map_level_ids: z.array(z.string()).min(1),
     map_id: z.string(),
     file: z.optional(z.string()),
     info_link: z.optional(z.union([
@@ -1590,6 +1639,31 @@ export const zBannerPublicSlotDto = z.object({
     banners: z.array(zBannerPublicItemDto)
 });
 
+export const zTrackBannerEventDto = z.object({
+    banner_id: z.string(),
+    event_type: z.enum([
+        'view',
+        'click'
+    ]),
+    placement_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    slot_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    page: z.optional(z.enum([
+        'main',
+        'news_article',
+        'challenges_rewards'
+    ])),
+    visitor_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
 export const zCreateBannerAdminDto = z.object({
     title: z.string(),
     type: z.enum([
@@ -1623,6 +1697,32 @@ export const zBannerAdminResponseDto = z.object({
     createdAt: z.iso.datetime(),
     updatedAt: z.iso.datetime(),
     isActive: z.boolean()
+});
+
+export const zBannerStatsTotalsAdminDto = z.object({
+    views: z.number(),
+    clicks: z.number(),
+    ctr: z.number()
+});
+
+export const zBannerStatsDailyAdminDto = z.object({
+    date: z.string(),
+    views: z.number(),
+    clicks: z.number()
+});
+
+export const zBannerStatsItemAdminDto = z.object({
+    views: z.number(),
+    clicks: z.number(),
+    ctr: z.number(),
+    id: z.string(),
+    title: z.string()
+});
+
+export const zBannerStatsResponseAdminDto = z.object({
+    totals: zBannerStatsTotalsAdminDto,
+    daily_stats: z.array(zBannerStatsDailyAdminDto),
+    banners: z.array(zBannerStatsItemAdminDto)
 });
 
 export const zUpdateBannerAdminDto = z.object({
@@ -2977,6 +3077,40 @@ export const zMapsAdminControllerRemoveMapFloorData = z.object({
 
 export const zMapsAdminControllerRemoveMapFloorResponse = z.boolean();
 
+export const zMapsAdminControllerGetMapLevelsData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        map_id: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerGetMapLevelsResponse = z.array(zMapLevelEntity);
+
+export const zMapsAdminControllerCreateMapLevelData = z.object({
+    body: zCreateMapLevelDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerCreateMapLevelResponse = z.string();
+
+export const zMapsAdminControllerUpdateMapLevelData = z.object({
+    body: zUpdateMapLevelDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerUpdateMapLevelResponse = z.boolean();
+
+export const zMapsAdminControllerRemoveMapLevelData = z.object({
+    body: zRemoveMapLevelDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zMapsAdminControllerRemoveMapLevelResponse = z.boolean();
+
 export const zMapsAdminControllerGenerateMapTilesData = z.object({
     body: zGenerateMapTilesDto,
     path: z.optional(z.never()),
@@ -3423,6 +3557,14 @@ export const zBannersControllerGetBannersData = z.object({
 
 export const zBannersControllerGetBannersResponse = z.array(zBannerPublicSlotDto);
 
+export const zBannersControllerTrackEventData = z.object({
+    body: zTrackBannerEventDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zBannersControllerTrackEventResponse = z.boolean();
+
 export const zBannersAdminControllerListBannersData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
@@ -3438,6 +3580,32 @@ export const zBannersAdminControllerCreateBannerData = z.object({
 });
 
 export const zBannersAdminControllerCreateBannerResponse = zBannerAdminResponseDto;
+
+export const zBannersAdminControllerGetBannerStatsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        start_date: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        end_date: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        banner_id: z.optional(z.union([
+            z.string(),
+            z.null()
+        ])),
+        page: z.optional(z.enum([
+            'main',
+            'news_article',
+            'challenges_rewards'
+        ]))
+    }))
+});
+
+export const zBannersAdminControllerGetBannerStatsResponse = zBannerStatsResponseAdminDto;
 
 export const zBannersAdminControllerDeleteBannerData = z.object({
     body: z.optional(z.never()),

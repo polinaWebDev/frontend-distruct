@@ -67,6 +67,10 @@ const navItems = {
                     href: '/admin/banners',
                 },
                 {
+                    title: 'Статистика баннеров',
+                    href: '/admin/banners/stats',
+                },
+                {
                     title: 'Размещение баннеров',
                     href: '/admin/banner-placements',
                 },

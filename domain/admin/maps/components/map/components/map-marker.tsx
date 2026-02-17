@@ -1,12 +1,10 @@
-import { MapDataMarkerDto, MapDataMarkerTypeDto } from '@/lib/api_client/gen';
+import { MapDataMarkerTypeDto } from '@/lib/api_client/gen';
 import styles from './map-marker.module.css';
 export const MapMarker = ({
-    data,
     marker_type,
     color,
     draggable = false,
 }: {
-    data: MapDataMarkerDto;
     marker_type: MapDataMarkerTypeDto;
     color: string;
     draggable?: boolean;

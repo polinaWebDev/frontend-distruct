@@ -1,6 +1,7 @@
 .icon {
     width: 24px;
     height: 24px;
+    position: relative;
 
     display: flex;
     align-items: center;

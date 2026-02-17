@@ -967,6 +967,49 @@ export type RemoveMapFloorDto = {
     map_id: string;
 };
 
+export type MapEntity = {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
+    name: string;
+    description: string;
+    image_url?: string | null;
+    visibility: 'public' | 'private';
+    max_latitude: number;
+    max_longitude: number;
+};
+
+export type MapLevelEntity = {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    map_id: string;
+    name: string;
+    sort_order: number;
+    map: MapEntity;
+};
+
+export type CreateMapLevelDto = {
+    map_id: string;
+    name: string;
+    sort_order?: number;
+};
+
+export type UpdateMapLevelDto = {
+    id: string;
+    map_id: string;
+    name: string;
+    sort_order: number;
+};
+
+export type RemoveMapLevelDto = {
+    id: string;
+    map_id: string;
+};
+
 export type GenerateMapTilesDto = {
     id: string;
     floor_level: number;
@@ -983,6 +1026,12 @@ export type MapFloorDto = {
     max_zoom: number;
 };
 
+export type MapLevelDto = {
+    id: string;
+    name: string;
+    sort_order: number;
+};
+
 export type MapDataMarkerDto = {
     id: string;
     name: string;
@@ -991,6 +1040,7 @@ export type MapDataMarkerDto = {
     longitude: number;
     type_id: string;
     floor_id?: string | null;
+    map_level_ids?: Array<string>;
     image_url?: string | null;
     info_link?: string | null;
 };
@@ -1023,6 +1073,7 @@ export type MapDataResponseDto = {
     name: string;
     updatedAt: Date;
     floors?: Array<MapFloorDto> | null;
+    levels?: Array<MapLevelDto> | null;
     categories: Array<MapDataCategoryDto> | null;
 };
 
@@ -1053,21 +1104,8 @@ export type MapListResponseDto = {
     name: string;
     updatedAt: Date;
     floors?: Array<MapFloorDto> | null;
+    levels?: Array<MapLevelDto> | null;
     categories?: Array<MapListCategoryDto> | null;
-};
-
-export type MapEntity = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
-    game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
-    name: string;
-    description: string;
-    image_url?: string | null;
-    visibility: 'public' | 'private';
-    max_latitude: number;
-    max_longitude: number;
 };
 
 export type MapMarkerCategoryEntity = {
@@ -1142,6 +1180,7 @@ export type CreateMapMarkerDto = {
     longitude: number;
     type_id: string;
     floor_id?: string | null;
+    map_level_ids: Array<string>;
     map_id: string;
     file?: Blob | File;
     info_link?: string | null;
@@ -1154,6 +1193,7 @@ export type UpdateMapMarkerDto = {
     longitude: number;
     type_id: string;
     floor_id?: string | null;
+    map_level_ids: Array<string>;
     map_id: string;
     file?: Blob | File;
     info_link?: string | null;
@@ -1308,6 +1348,15 @@ export type BannerPublicSlotDto = {
     banners: Array<BannerPublicItemDto>;
 };
 
+export type TrackBannerEventDto = {
+    banner_id: string;
+    event_type: 'view' | 'click';
+    placement_id?: string | null;
+    slot_id?: string | null;
+    page?: 'main' | 'news_article' | 'challenges_rewards';
+    visitor_id?: string | null;
+};
+
 export type CreateBannerAdminDto = {
     title: string;
     type: 'image' | 'video';
@@ -1326,6 +1375,32 @@ export type BannerAdminResponseDto = {
     createdAt: Date;
     updatedAt: Date;
     isActive: boolean;
+};
+
+export type BannerStatsTotalsAdminDto = {
+    views: number;
+    clicks: number;
+    ctr: number;
+};
+
+export type BannerStatsDailyAdminDto = {
+    date: string;
+    views: number;
+    clicks: number;
+};
+
+export type BannerStatsItemAdminDto = {
+    views: number;
+    clicks: number;
+    ctr: number;
+    id: string;
+    title: string;
+};
+
+export type BannerStatsResponseAdminDto = {
+    totals: BannerStatsTotalsAdminDto;
+    daily_stats: Array<BannerStatsDailyAdminDto>;
+    banners: Array<BannerStatsItemAdminDto>;
 };
 
 export type UpdateBannerAdminDto = {
@@ -2903,6 +2978,63 @@ export type MapsAdminControllerRemoveMapFloorResponses = {
 
 export type MapsAdminControllerRemoveMapFloorResponse = MapsAdminControllerRemoveMapFloorResponses[keyof MapsAdminControllerRemoveMapFloorResponses];
 
+export type MapsAdminControllerGetMapLevelsData = {
+    body?: never;
+    path: {
+        map_id: string;
+    };
+    query?: never;
+    url: '/api/map/admin/levels/{map_id}';
+};
+
+export type MapsAdminControllerGetMapLevelsResponses = {
+    200: Array<MapLevelEntity>;
+};
+
+export type MapsAdminControllerGetMapLevelsResponse = MapsAdminControllerGetMapLevelsResponses[keyof MapsAdminControllerGetMapLevelsResponses];
+
+export type MapsAdminControllerCreateMapLevelData = {
+    body: CreateMapLevelDto;
+    path?: never;
+    query?: never;
+    url: '/api/map/admin/create-level';
+};
+
+export type MapsAdminControllerCreateMapLevelResponses = {
+    200: string;
+    201: string;
+};
+
+export type MapsAdminControllerCreateMapLevelResponse = MapsAdminControllerCreateMapLevelResponses[keyof MapsAdminControllerCreateMapLevelResponses];
+
+export type MapsAdminControllerUpdateMapLevelData = {
+    body: UpdateMapLevelDto;
+    path?: never;
+    query?: never;
+    url: '/api/map/admin/update-level';
+};
+
+export type MapsAdminControllerUpdateMapLevelResponses = {
+    200: boolean;
+    201: boolean;
+};
+
+export type MapsAdminControllerUpdateMapLevelResponse = MapsAdminControllerUpdateMapLevelResponses[keyof MapsAdminControllerUpdateMapLevelResponses];
+
+export type MapsAdminControllerRemoveMapLevelData = {
+    body: RemoveMapLevelDto;
+    path?: never;
+    query?: never;
+    url: '/api/map/admin/delete-level';
+};
+
+export type MapsAdminControllerRemoveMapLevelResponses = {
+    200: boolean;
+    201: boolean;
+};
+
+export type MapsAdminControllerRemoveMapLevelResponse = MapsAdminControllerRemoveMapLevelResponses[keyof MapsAdminControllerRemoveMapLevelResponses];
+
 export type MapsAdminControllerGenerateMapTilesData = {
     body: GenerateMapTilesDto;
     path?: never;
@@ -3533,6 +3665,19 @@ export type BannersControllerGetBannersResponses = {
 
 export type BannersControllerGetBannersResponse = BannersControllerGetBannersResponses[keyof BannersControllerGetBannersResponses];
 
+export type BannersControllerTrackEventData = {
+    body: TrackBannerEventDto;
+    path?: never;
+    query?: never;
+    url: '/api/banners/events';
+};
+
+export type BannersControllerTrackEventResponses = {
+    201: boolean;
+};
+
+export type BannersControllerTrackEventResponse = BannersControllerTrackEventResponses[keyof BannersControllerTrackEventResponses];
+
 export type BannersAdminControllerListBannersData = {
     body?: never;
     path?: never;
@@ -3558,6 +3703,24 @@ export type BannersAdminControllerCreateBannerResponses = {
 };
 
 export type BannersAdminControllerCreateBannerResponse = BannersAdminControllerCreateBannerResponses[keyof BannersAdminControllerCreateBannerResponses];
+
+export type BannersAdminControllerGetBannerStatsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        start_date?: string | null;
+        end_date?: string | null;
+        banner_id?: string | null;
+        page?: 'main' | 'news_article' | 'challenges_rewards';
+    };
+    url: '/api/admin/banners/stats';
+};
+
+export type BannersAdminControllerGetBannerStatsResponses = {
+    200: BannerStatsResponseAdminDto;
+};
+
+export type BannersAdminControllerGetBannerStatsResponse = BannersAdminControllerGetBannerStatsResponses[keyof BannersAdminControllerGetBannerStatsResponses];
 
 export type BannersAdminControllerDeleteBannerData = {
     body?: never;

@@ -77,6 +77,8 @@ const removeMarkerFromMapData = (data: MapDataResponseDto, markerId: string) => 
     return updated ? { ...data, categories } : data;
 };
 
+const getMarkerLevelIds = (marker: MapDataMarkerDto) => marker.map_level_ids ?? [];
+
 export const MapRenderer = memo(
     ({
         map_id,
@@ -85,6 +87,7 @@ export const MapRenderer = memo(
         selectedTypeId,
         selectedCategories,
         selectedFloorId,
+        selectedLevelId,
         onMarkerClick,
     }: {
         map_id: string;
@@ -93,6 +96,7 @@ export const MapRenderer = memo(
         selectedTypeId?: string;
         selectedCategories: string[];
         selectedFloorId?: string;
+        selectedLevelId?: string;
         onMarkerClick?: (marker: MapDataMarkerDto) => void;
     }) => {
         const map = useRef<Map | null>(null);
@@ -149,6 +153,14 @@ export const MapRenderer = memo(
                     if (activeFloorId && markerFloorId && markerFloorId !== activeFloorId) {
                         return;
                     }
+                    const markerLevelIds = getMarkerLevelIds(marker);
+                    if (
+                        selectedLevelId &&
+                        markerLevelIds.length > 0 &&
+                        !markerLevelIds.includes(selectedLevelId)
+                    ) {
+                        return;
+                    }
                     markers.push({
                         marker_type: type,
                         marker: marker,
@@ -158,12 +170,12 @@ export const MapRenderer = memo(
             }
 
             return markers;
-        }, [map_data, selectedTypeId, selectedCategories, activeFloorId]);
+        }, [map_data, selectedTypeId, selectedCategories, activeFloorId, selectedLevelId]);
 
         const clusterGroupKey = useMemo(() => {
             const categoriesKey = [...selectedCategories].sort().join(',');
-            return `${activeFloorId ?? 'all-floors'}:${selectedTypeId ?? 'all-types'}:${categoriesKey}`;
-        }, [activeFloorId, selectedCategories, selectedTypeId]);
+            return `${activeFloorId ?? 'all-floors'}:${selectedTypeId ?? 'all-types'}:${selectedLevelId ?? 'all-levels'}:${categoriesKey}`;
+        }, [activeFloorId, selectedCategories, selectedTypeId, selectedLevelId]);
 
         const available_types = useMemo(() => {
             return map_data.categories?.flatMap((category) => category.marker_types ?? []) ?? [];
@@ -256,6 +268,7 @@ export const MapRenderer = memo(
                         floor_id: marker.floor_id ?? activeFloorId,
                         map_id: map_id,
                         info_link: marker.info_link ?? undefined,
+                        map_level_ids: marker.map_level_ids ?? [],
                     },
                 });
             },
@@ -335,7 +348,6 @@ export const MapRenderer = memo(
                                 }}
                                 icon={
                                     <MapMarker
-                                        data={marker.marker}
                                         marker_type={marker.marker_type}
                                         color={marker.color}
                                         draggable
@@ -359,6 +371,7 @@ export const MapRenderer = memo(
                                             map_id={map_id}
                                             available_types={available_types}
                                             floors={floors}
+                                            levels={map_data.levels ?? []}
                                             selectedFloorId={activeFloorId}
                                             marker_data={marker.marker}
                                             marker_id={marker.marker.id}
@@ -405,7 +418,6 @@ export const MapRenderer = memo(
                                 }}
                                 icon={
                                     <MapMarker
-                                        data={marker.marker}
                                         marker_type={marker.marker_type}
                                         color={marker.color}
                                     />
@@ -438,6 +450,7 @@ export const MapRenderer = memo(
                             map_id={map_id}
                             available_types={available_types}
                             floors={floors}
+                            levels={map_data.levels ?? []}
                             selectedFloorId={activeFloorId}
                             open={createDialogOpen}
                             onOpenChange={setCreateDialogOpen}

@@ -11,6 +11,7 @@ import {
 import { FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import {
     Select,
     SelectContent,
@@ -19,7 +20,12 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { MapDataMarkerDto, MapDataMarkerTypeDto, MapFloorDto } from '@/lib/api_client/gen';
+import {
+    MapDataMarkerDto,
+    MapDataMarkerTypeDto,
+    MapFloorDto,
+    MapLevelDto,
+} from '@/lib/api_client/gen';
 import {
     mapsControllerGetMapQueryKey,
     mapsMarkerAdminControllerCreateMapMarkerMutation,
@@ -38,16 +44,36 @@ import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
+import { CreateMapLevelDialog } from './create-map-level.dialog';
 
 const schema = zCreateMapMarkerDto.extend({
+    map_level_ids: z.array(z.string()).min(1, 'Выберите хотя бы одну сложность'),
     file: z.optional(z.instanceof(File)),
 });
+
+const mapMarkerBodySerializer = (body: z.infer<typeof schema>) => {
+    const data = new FormData();
+
+    data.append('name', body.name);
+    if (body.description) data.append('description', body.description);
+    data.append('latitude', String(body.latitude));
+    data.append('longitude', String(body.longitude));
+    data.append('type_id', body.type_id);
+    if (body.floor_id) data.append('floor_id', body.floor_id);
+    body.map_level_ids.forEach((id) => data.append('map_level_ids[]', id));
+    data.append('map_id', body.map_id);
+    if (body.info_link) data.append('info_link', body.info_link);
+    if (body.file) data.append('file', body.file);
+
+    return data;
+};
 
 export const CreateOrUpdateMarkerDialog = ({
     cords,
     map_id,
     available_types,
     floors,
+    levels,
     selectedFloorId,
     marker_data,
     marker_id,
@@ -60,6 +86,7 @@ export const CreateOrUpdateMarkerDialog = ({
     map_id: string;
     available_types: MapDataMarkerTypeDto[];
     floors: MapFloorDto[];
+    levels: MapLevelDto[];
     selectedFloorId?: string;
     marker_id?: string;
     marker_data?: MapDataMarkerDto;
@@ -87,6 +114,7 @@ export const CreateOrUpdateMarkerDialog = ({
             longitude: marker_data?.longitude ?? cords.lng,
             type_id: marker_data?.type_id ?? undefined,
             floor_id: marker_data?.floor_id ?? selectedFloorId ?? undefined,
+            map_level_ids: (marker_data?.map_level_ids ?? []).map(String),
             map_id: map_id,
             info_link: marker_data?.info_link ?? undefined,
         },
@@ -239,8 +267,7 @@ export const CreateOrUpdateMarkerDialog = ({
                                     render={({ field }) => (
                                         <Select
                                             onValueChange={field.onChange}
-                                            value={field.value}
-                                            defaultValue={marker_data?.floor_id ?? selectedFloorId}
+                                            value={field.value ?? undefined}
                                         >
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Выберите этаж" />
@@ -260,6 +287,71 @@ export const CreateOrUpdateMarkerDialog = ({
                                 />
                             </FormItem>
                         )}
+
+                        <FormItem>
+                            <div className="flex items-center justify-between">
+                                <Label>Сложность</Label>
+                                <CreateMapLevelDialog map_id={map_id} levels={levels} compact />
+                            </div>
+                            <Controller
+                                control={form.control}
+                                name="map_level_ids"
+                                render={({ field }) => (
+                                    <div className="space-y-2 rounded-md border p-3">
+                                        {[...levels]
+                                            .sort(
+                                                (a, b) =>
+                                                    Number(a.sort_order) - Number(b.sort_order)
+                                            )
+                                            .map((level) => {
+                                                const levelId = String(level.id);
+                                                const selected = field.value.includes(levelId);
+                                                return (
+                                                    <div
+                                                        key={level.id}
+                                                        className="flex items-center gap-2"
+                                                    >
+                                                        <Checkbox
+                                                            id={`marker-level-${level.id}`}
+                                                            checked={selected}
+                                                            onCheckedChange={(checked) => {
+                                                                if (checked) {
+                                                                    field.onChange([
+                                                                        ...field.value,
+                                                                        levelId,
+                                                                    ]);
+                                                                    return;
+                                                                }
+                                                                field.onChange(
+                                                                    field.value.filter(
+                                                                        (id) => id !== levelId
+                                                                    )
+                                                                );
+                                                            }}
+                                                        />
+                                                        <Label
+                                                            htmlFor={`marker-level-${level.id}`}
+                                                            className="cursor-pointer"
+                                                        >
+                                                            {level.name}
+                                                        </Label>
+                                                    </div>
+                                                );
+                                            })}
+                                        {levels.length === 0 && (
+                                            <p className="text-sm text-muted-foreground">
+                                                Нет созданных сложностей
+                                            </p>
+                                        )}
+                                        {form.formState.errors.map_level_ids?.message && (
+                                            <p className="text-sm text-red-500">
+                                                {form.formState.errors.map_level_ids.message}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            />
+                        </FormItem>
 
                         <div className="space-y-2">
                             <Label>Изображение</Label>
@@ -304,6 +396,7 @@ export const CreateOrUpdateMarkerDialog = ({
                                         file: imageFile ? imageFile : undefined,
                                         id: marker_id,
                                     },
+                                    bodySerializer: mapMarkerBodySerializer,
                                 });
                             } else {
                                 createMarker({
@@ -311,6 +404,7 @@ export const CreateOrUpdateMarkerDialog = ({
                                         ...res,
                                         file: imageFile ? imageFile : undefined,
                                     },
+                                    bodySerializer: mapMarkerBodySerializer,
                                 });
                             }
                         })}

@@ -8,6 +8,7 @@ import { MapFilters } from '../admin/maps/components/map-overlay/map-filters/map
 import { MapInfo } from '../admin/maps/components/map-overlay/map-info/map-info';
 import { MarkMarkerInfo } from '../admin/maps/components/map-overlay/map-info/components/mark-marker-info/mark-marker-info';
 import { MapFloorTabs } from '../admin/maps/components/map-overlay/map-floor-tabs/map-floor-tabs';
+import { MapLevelTabs } from './components/map-level-tabs/map-level-tabs';
 
 export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: GameType }) => {
     const [selectedTypeId, setSelectedTypeId] = useState<string | undefined>(undefined);
@@ -17,6 +18,9 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
     );
 
     const [selectedFloorId, setSelectedFloorId] = useState<string | undefined>(map.floors?.[0]?.id);
+    const [selectedLevelId, setSelectedLevelId] = useState<string | undefined>(
+        map.levels?.[0]?.id
+    );
 
     const [selectedMarker, setSelectedMarker] = useState<MapDataMarkerDto | undefined>(undefined);
     const handleMarkerClick = useCallback((marker: MapDataMarkerDto) => {
@@ -35,10 +39,20 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
                     selectedTypeId={selectedTypeId}
                     selectedCategories={selectedCategories}
                     selectedFloorId={selectedFloorId}
+                    selectedLevelId={selectedLevelId}
                     onMarkerClick={handleMarkerClick}
                 />
             </div>
             <div className="absolute right-10 bottom-10 z-[110] flex flex-col items-end gap-3 pointer-events-none">
+                {(map.levels?.length ?? 0) > 0 && (
+                    <MapLevelTabs
+                        levels={map.levels ?? []}
+                        selectedLevelId={selectedLevelId}
+                        onSelect={setSelectedLevelId}
+                        inline
+                        className="pointer-events-auto -translate-y-[30%]"
+                    />
+                )}
                 {(map.floors?.length ?? 0) > 1 && (
                     <MapFloorTabs
                         floors={map.floors ?? []}
@@ -64,6 +78,14 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
             {selectedMarker && (
                 <MarkMarkerInfo
                     marker={selectedMarker}
+                    levelName={
+                        selectedMarker.map_level_ids?.length
+                            ? selectedMarker.map_level_ids
+                                  .map((id) => map.levels?.find((level) => level.id === id)?.name)
+                                  .filter((x): x is string => Boolean(x))
+                                  .join(', ')
+                            : undefined
+                    }
                     onClose={() => setSelectedMarker(undefined)}
                 />
             )}
@@ -76,6 +98,7 @@ export const ClientMapPage = ({ map, game }: { map: MapDataResponseDto; game: Ga
                         setSelectedTypeId((prev) => (prev === x ? undefined : x));
                     }}
                     selectedTypeId={selectedTypeId}
+                    selectedLevelId={selectedLevelId}
                 />
             </Activity>
         </div>

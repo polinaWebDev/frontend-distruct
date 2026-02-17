@@ -1,6 +1,7 @@
 import {
     GetMapTypeResponseDto,
     MapDataCategoryDto,
+    MapDataMarkerDto,
     MapDataMarkerTypeDto,
 } from '@/lib/api_client/gen';
 import styles from './map-info-types.module.css';
@@ -20,6 +21,7 @@ export const MapInfoTypes = ({
     map_id,
     onSelectType,
     selectedTypeId,
+    selectedLevelId,
 }: {
     category: MapDataCategoryDto;
     types: MapDataMarkerTypeDto[];
@@ -28,10 +30,17 @@ export const MapInfoTypes = ({
     map_id: string;
     onSelectType: (type_id?: string) => void;
     selectedTypeId?: string;
+    selectedLevelId?: string;
 }) => {
     const [createIconTypeOpen, setCreateIconTypeOpen] = useState(false);
     const [iconTypeToEdit, setIconTypeToEdit] = useState<MapDataMarkerTypeDto | null>(null);
     const [iconTypeToDelete, setIconTypeToDelete] = useState<MapDataMarkerTypeDto | null>(null);
+    const markerMatchesSelectedLevel = (marker: MapDataMarkerDto) => {
+        if (!selectedLevelId) return true;
+        const markerLevelIds = marker.map_level_ids ?? [];
+        if (!markerLevelIds.length) return true;
+        return markerLevelIds.includes(selectedLevelId);
+    };
 
     return (
         <div className={styles.container}>
@@ -61,7 +70,9 @@ export const MapInfoTypes = ({
                             ></div>
 
                             <p>{type.name}</p>
-                            <p className={styles.count}>{type.markers?.length ?? 0}</p>
+                            <p className={styles.count}>
+                                {type.markers?.filter(markerMatchesSelectedLevel).length ?? 0}
+                            </p>
                             {admin && (
                                 <div className="flex gap-4 ml-5">
                                     <Button

@@ -90,6 +90,20 @@
         color: #ffffff;
     }
 
+    .level_badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 9px;
+        border-radius: 999px;
+        font-size: 11px;
+        line-height: 1;
+        font-weight: 700;
+        color: #ffffff;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
     .content {
         font-size: 13px;
         color: #79808e;

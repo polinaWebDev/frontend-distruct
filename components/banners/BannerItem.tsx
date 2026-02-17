@@ -10,9 +10,10 @@ export type BannerItemProps = {
     className?: string;
     onEnded?: () => void;
     onError?: () => void;
+    onClick?: () => void;
 };
 
-export function BannerItem({ banner, className, onEnded, onError }: BannerItemProps) {
+export function BannerItem({ banner, className, onEnded, onError, onClick }: BannerItemProps) {
     const fileUrl = useMemo(() => getFileUrl(banner.fileUrl), [banner.fileUrl]);
 
     const content =
@@ -44,6 +45,7 @@ export function BannerItem({ banner, className, onEnded, onError }: BannerItemPr
                 target="_blank"
                 rel="nofollow noopener"
                 className="block h-full w-full"
+                onClick={onClick}
             >
                 {content}
             </a>

@@ -8,9 +8,11 @@ import clsx from 'clsx';
 import 'react-photo-view/dist/react-photo-view.css';
 export const MarkMarkerInfo = ({
     marker,
+    levelName,
     onClose,
 }: {
     marker: MapDataMarkerDto;
+    levelName?: string;
     onClose: () => void;
 }) => {
     return (
@@ -36,6 +38,7 @@ export const MarkMarkerInfo = ({
 
             <div className={styles.content_wrapper}>
                 <p className={styles.title}>{marker.name}</p>
+                {levelName && <span className={styles.level_badge}>{levelName}</span>}
                 <div
                     className={styles.content}
                     dangerouslySetInnerHTML={{ __html: marker.description }}

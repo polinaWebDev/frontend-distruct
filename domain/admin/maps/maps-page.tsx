@@ -29,7 +29,9 @@ import { UploadMapTileDialog } from './dialogs/upload-map-tile.dialog';
 import { MapFilters } from './components/map-overlay/map-filters/map-filters';
 import { MarkMarkerInfo } from './components/map-overlay/map-info/components/mark-marker-info/mark-marker-info';
 import { MapFloorTabs } from '@/domain/admin/maps/components/map-overlay/map-floor-tabs/map-floor-tabs';
+import { MapLevelTabs } from '@/domain/admin/maps/components/map-overlay/map-level-tabs/map-level-tabs';
 import { CreateMapFloorDialog } from '@/domain/admin/maps/dialogs/create-map-floor.dialog';
+import { CreateMapLevelDialog } from '@/domain/admin/maps/dialogs/create-map-level.dialog';
 export const MapsPage = () => {
     const { gameType, setGameType } = useAdminGameTypeContext();
     const [isCreateMapOpen, setIsCreateMapOpen] = useState(false);
@@ -43,6 +45,7 @@ export const MapsPage = () => {
     const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
     const [selectedFloorId, setSelectedFloorId] = useState<string | undefined>(undefined);
+    const [selectedLevelId, setSelectedLevelId] = useState<string | undefined>(undefined);
 
     const [selectedMarker, setSelectedMarker] = useState<MapDataMarkerDto | undefined>(undefined);
     const handleMarkerClick = useCallback((marker: MapDataMarkerDto) => {
@@ -102,8 +105,18 @@ export const MapsPage = () => {
             } else {
                 setSelectedFloorId(undefined);
             }
+            if (fullMapDataRes.levels?.length) {
+                const hasSelectedLevel = fullMapDataRes.levels.some(
+                    (level) => level.id === selectedLevelId
+                );
+                if (!hasSelectedLevel) {
+                    setSelectedLevelId(fullMapDataRes.levels[0].id);
+                }
+            } else {
+                setSelectedLevelId(undefined);
+            }
         }
-    }, [fullMapDataRes, selectedFloorId]);
+    }, [fullMapDataRes, selectedFloorId, selectedLevelId]);
 
     return (
         <div className="w-full mx-auto py-8 space-y-6 h-full">
@@ -146,6 +159,12 @@ export const MapsPage = () => {
                             />
                         )}
                         {selectedMap && <CreateMapFloorDialog map_id={selectedMap.id} />}
+                        {selectedMap && (
+                            <CreateMapLevelDialog
+                                map_id={selectedMap.id}
+                                levels={fullMapDataRes?.levels ?? []}
+                            />
+                        )}
 
                         <Button
                             size={'icon'}
@@ -169,10 +188,22 @@ export const MapsPage = () => {
                             selectedTypeId={selectedTypeId}
                             selectedCategories={selectedCategories}
                             selectedFloorId={selectedFloorId}
+                            selectedLevelId={selectedLevelId}
                             onMarkerClick={handleMarkerClick}
                         />
                     </div>
                     <div className="absolute right-10 bottom-10 z-[110] flex flex-col items-end gap-3 pointer-events-none">
+                        {(fullMapDataRes.levels?.length ?? 0) > 0 && (
+                            <MapLevelTabs
+                                levels={fullMapDataRes.levels ?? []}
+                                selectedLevelId={selectedLevelId}
+                                onSelect={setSelectedLevelId}
+                                admin={showAdminControls}
+                                mapId={selectedMap.id}
+                                inline
+                                className="pointer-events-auto -translate-y-[30%]"
+                            />
+                        )}
                         <MapFloorTabs
                             floors={fullMapDataRes.floors ?? []}
                             selectedFloorId={selectedFloorId}
@@ -197,6 +228,19 @@ export const MapsPage = () => {
                     {selectedMarker && (
                         <MarkMarkerInfo
                             marker={selectedMarker}
+                            levelName={
+                                selectedMarker.map_level_ids?.length
+                                    ? selectedMarker.map_level_ids
+                                          .map(
+                                              (id) =>
+                                                  fullMapDataRes.levels?.find(
+                                                      (level) => level.id === id
+                                                  )?.name
+                                          )
+                                          .filter((x): x is string => Boolean(x))
+                                          .join(', ')
+                                    : undefined
+                            }
                             onClose={() => setSelectedMarker(undefined)}
                         />
                     )}
@@ -208,6 +252,7 @@ export const MapsPage = () => {
                                 setSelectedTypeId((prev) => (prev === x ? undefined : x));
                             }}
                             selectedTypeId={selectedTypeId}
+                            selectedLevelId={selectedLevelId}
                         />
                     </Activity>
                 </div>

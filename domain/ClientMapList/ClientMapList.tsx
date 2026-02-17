@@ -29,6 +29,20 @@ export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game
                         </div>
                         <div className={styles.bottom}>
                             <p className={styles.title}>{map.name}</p>
+                            {(map.levels?.length ?? 0) > 0 && (
+                                <div className={styles.levels}>
+                                    {[...(map.levels ?? [])]
+                                        .sort(
+                                            (a, b) =>
+                                                Number(a.sort_order) - Number(b.sort_order)
+                                        )
+                                        .map((level) => (
+                                            <span key={level.id} className={styles.level_badge}>
+                                                {level.name}
+                                            </span>
+                                        ))}
+                                </div>
+                            )}
                             <div className={styles.info}>
                                 {map.categories?.map((category) => (
                                     <p className={styles.p} key={category.id}>

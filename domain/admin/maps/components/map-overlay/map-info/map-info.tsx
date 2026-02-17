@@ -1,5 +1,6 @@
 import {
     MapDataCategoryDto,
+    MapDataMarkerDto,
     MapDataResponseDto,
     MapMarkerCategoryEntity,
 } from '@/lib/api_client/gen';
@@ -23,11 +24,13 @@ export const MapInfo = ({
     admin,
     onSelectType,
     selectedTypeId,
+    selectedLevelId,
 }: {
     map_data: MapDataResponseDto;
     admin: boolean;
     onSelectType: (type_id?: string) => void;
     selectedTypeId?: string;
+    selectedLevelId?: string;
 }) => {
     const isMobile = useMedia('(max-width: 1000px)');
     const [search, setSearch] = useState('');
@@ -36,6 +39,12 @@ export const MapInfo = ({
     const [categoryToEdit, setCategoryToEdit] = useState<MapDataCategoryDto | null>(null);
 
     const [selectedCategory, setSelectedCategory] = useState<MapDataCategoryDto | null>(null);
+    const markerMatchesSelectedLevel = (marker: MapDataMarkerDto) => {
+        if (!selectedLevelId) return true;
+        const markerLevelIds = marker.map_level_ids ?? [];
+        if (!markerLevelIds.length) return true;
+        return markerLevelIds.includes(selectedLevelId);
+    };
 
     return (
         <div
@@ -105,7 +114,14 @@ export const MapInfo = ({
                                             </div>
 
                                             <MapInfoBtn
-                                                text={`${category.marker_types?.reduce((acc, marker) => acc + (marker.markers?.length ?? 0), 0)}x`}
+                                                text={`${category.marker_types?.reduce(
+                                                    (acc, markerType) =>
+                                                        acc +
+                                                        (markerType.markers?.filter(
+                                                            markerMatchesSelectedLevel
+                                                        ).length ?? 0),
+                                                    0
+                                                )}x`}
                                                 onClick={() => setSelectedCategory(category)}
                                             />
 
@@ -149,6 +165,7 @@ export const MapInfo = ({
                         <MapInfoTypes
                             category={selectedCategory}
                             types={selectedCategory.marker_types ?? []}
+                            selectedLevelId={selectedLevelId}
                             onBack={() => {
                                 setSelectedCategory(null);
                                 onSelectType(undefined);

@@ -1,16 +1,18 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import { BannerItem } from './BannerItem';
 import { useBannerContext } from './BannerProvider';
 import type { BannerPublicItemDto } from '@/lib/api_client/gen/types.gen';
 import { cn } from '@/lib/utils';
+import { bannersControllerTrackEvent } from '@/lib/api_client/gen/sdk.gen';
+import { getPublicClient } from '@/lib/api_client/public_client';
 
 const IMAGE_ROTATION_MS = 7000;
 
 export function BannerSlot({ slotKey, className }: { slotKey: string; className?: string }) {
-    const { slotsByKey, isLoading, isError } = useBannerContext();
+    const { page, slotsByKey, isLoading, isError } = useBannerContext();
     const slot = slotsByKey[slotKey];
 
     const banners = useMemo(() => {
@@ -21,12 +23,9 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
     const [index, setIndex] = useState(0);
 
     useEffect(() => {
-        setIndex(0);
-    }, [banners.length]);
-
-    useEffect(() => {
         if (!slot || banners.length <= 1) return;
-        const current = banners[index];
+        const safeIndex = index % banners.length;
+        const current = banners[safeIndex];
         if (!current) return;
         if (current.type !== 'image') return;
 
@@ -41,6 +40,33 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
         if (banners.length <= 1) return;
         setIndex((prev) => (prev + 1) % banners.length);
     };
+
+    const safeIndex = banners.length > 0 ? index % banners.length : 0;
+    const currentBanner = banners[safeIndex] as BannerPublicItemDto | undefined;
+
+    const trackEvent = useCallback(
+        async (eventType: 'view' | 'click', bannerId?: string) => {
+            if (!bannerId) return;
+            try {
+                await bannersControllerTrackEvent({
+                    client: getPublicClient(),
+                    body: {
+                        banner_id: bannerId,
+                        event_type: eventType,
+                        page,
+                    },
+                });
+            } catch {
+                // Silent fail: tracking must not break banner rendering/navigation.
+            }
+        },
+        [page]
+    );
+
+    useEffect(() => {
+        if (!currentBanner?.id || !slot?.slot_key) return;
+        void trackEvent('view', currentBanner.id);
+    }, [currentBanner?.id, index, slot?.slot_key, trackEvent]);
 
     if (isError) {
         return null;
@@ -78,8 +104,6 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
         return null;
     }
 
-    const currentBanner = banners[index] as BannerPublicItemDto | undefined;
-
     if (!currentBanner) {
         return null;
     }
@@ -89,7 +113,14 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
             className={cn('relative overflow-hidden rounded-lg bg-black/10', className)}
             style={slotStyle}
         >
-            <BannerItem banner={currentBanner} onEnded={handleNext} onError={handleNext} />
+            <BannerItem
+                banner={currentBanner}
+                onEnded={handleNext}
+                onError={handleNext}
+                onClick={() => {
+                    void trackEvent('click', currentBanner.id);
+                }}
+            />
         </div>
     );
 }

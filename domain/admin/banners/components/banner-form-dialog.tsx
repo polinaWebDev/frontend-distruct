@@ -67,6 +67,22 @@ type BannerFormDialogProps = {
     onSuccess: () => void;
 };
 
+function normalizeBannerLinkUrl(rawValue?: string | null) {
+    const value = rawValue?.trim();
+    if (!value) return null;
+    if (/^https?:\/\//i.test(value)) return value;
+    return `https://${value}`;
+}
+
+function isValidHttpUrl(value: string) {
+    try {
+        const parsed = new URL(value);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
 export function BannerFormDialog({
     open,
     mode,
@@ -143,38 +159,53 @@ export function BannerFormDialog({
     }, [previewUrl, isEdit, banner]);
 
     const handleSubmit = async (data: CreateBannerFormData | UpdateBannerFormData) => {
-        const linkUrl = data.link_url?.trim() ? data.link_url : null;
-        const type = data.type as 'image' | 'video';
+        const linkUrl = normalizeBannerLinkUrl(data.link_url);
+        const selectedType = (data.type as 'image' | 'video' | undefined) ?? banner?.type;
+
+        if (linkUrl && !isValidHttpUrl(linkUrl)) {
+            toast.error('Некорректная ссылка. Укажите полный URL');
+            return;
+        }
+
+        if (!selectedType) {
+            toast.error('Не удалось определить тип баннера');
+            return;
+        }
 
         if (!isEdit && !file) {
             toast.error('Файл обязателен');
             return;
         }
 
-        if (isEdit && banner && type !== banner.type && !file) {
+        if (isEdit && banner && selectedType !== banner.type && !file) {
             toast.error('При смене типа требуется новый файл');
             return;
         }
 
         try {
             if (isEdit && banner) {
+                const updateBody: Record<string, unknown> = {
+                    title: data.title,
+                    link_url: linkUrl,
+                    isActive: data.isActive,
+                };
+
+                if (file) {
+                    updateBody.file = file;
+                    updateBody.type = selectedType;
+                }
+
                 await bannersAdminControllerUpdateBanner({
                     client: getPublicClient(),
                     path: { id: banner.id },
-                    body: {
-                        title: data.title,
-                        type,
-                        link_url: linkUrl,
-                        isActive: data.isActive,
-                        ...(file ? { file } : {}),
-                    } as any,
+                    body: updateBody as any,
                 });
             } else {
                 await bannersAdminControllerCreateBanner({
                     client: getPublicClient(),
                     body: {
                         title: data.title,
-                        type,
+                        type: selectedType,
                         link_url: linkUrl,
                         isActive: data.isActive,
                         ...(file ? { file } : {}),
