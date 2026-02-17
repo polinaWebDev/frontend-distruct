@@ -20,7 +20,6 @@ export const AppLayout = ({
     return (
         <div className={styles.page_wrapper}>
             <Header user={user} isMobileServer={isMobileServer} />
-
             {children}
             <ClientWidgets channel={twitchChannel} />
         </div>

@@ -79,10 +79,15 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
               aspectRatio: `${slot.width} / ${slot.height}`,
           }
         : undefined;
+    const loadingStyle = {
+        width: '100%',
+        maxWidth: slot ? Math.min(slot.width, 560) : 560,
+        height: 56,
+    };
 
     if (isLoading && !slot) {
         return (
-            <div className={cn('rounded-lg overflow-hidden', className)} style={{ height: 120 }}>
+            <div className={cn('rounded-lg overflow-hidden', className)} style={loadingStyle}>
                 <AppSkeleton />
             </div>
         );
@@ -94,7 +99,7 @@ export function BannerSlot({ slotKey, className }: { slotKey: string; className?
 
     if (isLoading) {
         return (
-            <div className={cn('rounded-lg overflow-hidden', className)} style={slotStyle}>
+            <div className={cn('rounded-lg overflow-hidden', className)} style={loadingStyle}>
                 <AppSkeleton />
             </div>
         );

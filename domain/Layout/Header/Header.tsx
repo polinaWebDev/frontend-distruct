@@ -69,6 +69,11 @@ export const Header = ({
                             selected={game === GameType.ArenaBreakout}
                         />
                         <HeaderGameItem
+                            game={GameType.EscapeFromTarkov}
+                            selected={game === GameType.EscapeFromTarkov}
+                            disabled
+                        />
+                        <HeaderGameItem
                             game={GameType.ArcRaiders}
                             selected={game === GameType.ArcRaiders}
                             disabled
@@ -76,11 +81,6 @@ export const Header = ({
                         <HeaderGameItem
                             game={GameType.ActiveMatter}
                             selected={game === GameType.ActiveMatter}
-                            disabled
-                        />
-                        <HeaderGameItem
-                            game={GameType.EscapeFromTarkov}
-                            selected={game === GameType.EscapeFromTarkov}
                             disabled
                         />
                     </div>

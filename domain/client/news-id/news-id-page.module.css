@@ -58,6 +58,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
+    align-self: stretch;
 
     margin-left: 92px;
     gap: 92px;

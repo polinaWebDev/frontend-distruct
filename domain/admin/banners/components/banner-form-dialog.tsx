@@ -188,6 +188,8 @@ export function BannerFormDialog({
                     title: data.title,
                     link_url: linkUrl,
                     isActive: data.isActive,
+                    is_active: data.isActive,
+                    active: data.isActive,
                 };
 
                 if (file) {
@@ -208,6 +210,8 @@ export function BannerFormDialog({
                         type: selectedType,
                         link_url: linkUrl,
                         isActive: data.isActive,
+                        is_active: data.isActive,
+                        active: data.isActive,
                         ...(file ? { file } : {}),
                     } as any,
                 });

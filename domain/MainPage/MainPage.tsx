@@ -1,4 +1,4 @@
-import hero_img from '@/lib/images/hero_img.webp';
+import hero_img from '@/lib/images/main-arena.webp';
 import mac_randomize from '@/lib/images/mac-randomize.webp';
 import mac_maps from '@/lib/images/mac-maps.webp';
 import mac_challenges from '@/lib/images/mac-challenges.webp';
