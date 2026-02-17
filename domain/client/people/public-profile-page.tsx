@@ -159,7 +159,6 @@ export const PublicProfilePage = ({ userId, game }: { userId: string; game: Game
                         src={getFileUrl(userData.avatar_url)}
                         alt={userData?.username ?? 'Пользователь'}
                         className={styles.avatar}
-                        crossOrigin="anonymous"
                     />
                 )}
                 <div>

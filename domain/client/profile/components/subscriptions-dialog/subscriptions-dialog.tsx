@@ -214,7 +214,6 @@ export const SubscriptionsDialog = ({
                                                         src={getFileUrl(friend.avatar_url)}
                                                         alt={friend.username}
                                                         className={styles.avatar}
-                                                        crossOrigin="anonymous"
                                                     />
                                                 ) : (
                                                     <div className={styles.placeholder}>
@@ -260,7 +259,6 @@ export const SubscriptionsDialog = ({
                                                         src={getFileUrl(user.avatar_url)}
                                                         alt={user.username}
                                                         className={styles.avatar}
-                                                        crossOrigin="anonymous"
                                                     />
                                                 ) : (
                                                     <div className={styles.placeholder}>

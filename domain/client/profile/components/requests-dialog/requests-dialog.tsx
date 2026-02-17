@@ -130,7 +130,6 @@ export const RequestsDialog = ({ incomingCount }: { incomingCount: number }) => 
                                                             )}
                                                             alt={request.user.username}
                                                             className={styles.avatar}
-                                                            crossOrigin="anonymous"
                                                         />
                                                     ) : (
                                                         <div className={styles.placeholder}>
@@ -188,7 +187,6 @@ export const RequestsDialog = ({ incomingCount }: { incomingCount: number }) => 
                                                             )}
                                                             alt={request.user.username}
                                                             className={styles.avatar}
-                                                            crossOrigin="anonymous"
                                                         />
                                                     ) : (
                                                         <div className={styles.placeholder}>

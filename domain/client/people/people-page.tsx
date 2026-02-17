@@ -189,7 +189,6 @@ export const PeoplePage = ({ game }: { game: GameType }) => {
                                             src={getFileUrl(user.avatar_url)}
                                             alt={user.username}
                                             className={styles.avatar}
-                                            crossOrigin="anonymous"
                                         />
                                     ) : (
                                         <div className={styles.placeholder}>

@@ -134,7 +134,6 @@ export const UsersPage = () => {
                                                         src={getFileUrl(user.avatar_url)}
                                                         alt={user.username}
                                                         className="w-10 h-10 rounded-full object-cover bg-muted"
-                                                        crossOrigin="anonymous"
                                                     />
                                                 </PhotoView>
                                             </PhotoProvider>
