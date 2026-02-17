@@ -8,14 +8,50 @@ export const AppDialogContent = ({
     children,
     className,
     onClose,
+    asForm = false,
+    onSubmit,
+    style,
 }: {
     children: React.ReactNode;
     className?: string;
     onClose: () => void;
+    asForm?: boolean;
+    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    style?: React.CSSProperties;
 }) => {
+    if (asForm) {
+        return (
+            <form
+                className={cn(styles.dialog_content, className)}
+                style={style}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+                onSubmit={(e) => {
+                    if (onSubmit) {
+                        onSubmit(e);
+                        return;
+                    }
+                    e.preventDefault();
+                }}
+            >
+                <button
+                    type="button"
+                    className={styles.dialog_close}
+                    onClick={onClose}
+                    aria-label="Закрыть"
+                >
+                    <XIcon size={16} strokeWidth={1.8} />
+                </button>
+                {children}
+            </form>
+        );
+    }
+
     return (
         <div
             className={cn(styles.dialog_content, className)}
+            style={style}
             onClick={(e) => {
                 e.stopPropagation();
             }}

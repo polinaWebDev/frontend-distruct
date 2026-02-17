@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useRef } from 'react';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { PlusIcon, PencilIcon, Trash2Icon, InfoIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -38,6 +38,12 @@ import { getFileUrl } from '@/lib/utils';
 
 export default function GearPage() {
     const queryClient = useQueryClient();
+    const pendingDeletesRef = useRef(
+        new Map<
+            string,
+            { timeoutId: ReturnType<typeof setTimeout>; snapshot: Array<[unknown, unknown]> }
+        >()
+    );
     const { gameType, setGameType } = useAdminGameTypeContext();
     const [searchName, setSearchName] = useState('');
     const limit = 20;
@@ -75,14 +81,46 @@ export default function GearPage() {
         return (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as GearEntity[];
     }, [data]);
 
+    const gearQueryPredicate = (query: { queryKey?: unknown[] }) =>
+        (query.queryKey?.[0] as { _id?: string } | undefined)?._id ===
+        'gearAdminControllerGetGearList';
+
+    const removeFromCache = (deletedId: string) => {
+        queryClient.setQueriesData({ predicate: gearQueryPredicate }, (oldData: any) => {
+            if (!oldData?.pages) {
+                return oldData;
+            }
+            return {
+                ...oldData,
+                pages: oldData.pages.map((page: any) => {
+                    if (!page?.data) return page;
+                    return {
+                        ...page,
+                        data: page.data.filter((item: GearEntity) => item.id !== deletedId),
+                    };
+                }),
+            };
+        });
+    };
+
+    const restoreSnapshot = (snapshot: Array<[unknown, unknown]>) => {
+        snapshot.forEach(([key, data]) => {
+            queryClient.setQueryData(key, data);
+        });
+    };
+
     // Delete mutation
     const deleteMutation = useMutation({
         ...gearAdminControllerRemoveGearMutation({
             client: getPublicClient(),
         }),
-        onSuccess: async () => {
+        onSuccess: async (_data, variables) => {
+            const deletedId = variables?.body?.id;
+            if (deletedId) {
+                pendingDeletesRef.current.delete(deletedId);
+            }
             await queryClient.invalidateQueries({
-                queryKey: ['gearAdminControllerGetGearList'],
+                predicate: gearQueryPredicate,
                 refetchType: 'all',
             });
             toast.success('Предмет успешно удалён');
@@ -92,10 +130,38 @@ export default function GearPage() {
         },
     });
 
+    const undoDelete = (id: string) => {
+        const pending = pendingDeletesRef.current.get(id);
+        if (!pending) return;
+        clearTimeout(pending.timeoutId);
+        restoreSnapshot(pending.snapshot);
+        pendingDeletesRef.current.delete(id);
+        toast.success('Удаление отменено');
+    };
+
     const handleDelete = (id: string) => {
         if (confirm('Вы уверены, что хотите удалить этот предмет?')) {
-            deleteMutation.mutate({
-                body: { id },
+            if (pendingDeletesRef.current.has(id)) {
+                return;
+            }
+
+            const snapshot = queryClient.getQueriesData({
+                predicate: gearQueryPredicate,
+            });
+            removeFromCache(id);
+            const timeoutId = setTimeout(() => {
+                deleteMutation.mutate({
+                    body: { id },
+                });
+            }, 5000);
+            pendingDeletesRef.current.set(id, { timeoutId, snapshot });
+
+            toast('Предмет будет удалён', {
+                duration: 5000,
+                action: {
+                    label: 'Отменить',
+                    onClick: () => undoDelete(id),
+                },
             });
         }
     };

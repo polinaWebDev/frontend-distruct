@@ -5,13 +5,7 @@ import styles from './RowActions.module.css';
 import rowStyles from './Row.module.css';
 import ArrowUp from '@/lib/icons/ArrowUp';
 import ArrowDown from '@/lib/icons/ArrowDown';
-import {
-    Dialog,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog';
+import { Root as DialogRoot } from '@radix-ui/react-dialog';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -22,11 +16,8 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import { RowSettingsDialog } from '@/domain/client/tiers/components/tiers/Board/RowSettingsDialog';
 
 type ButtonConfig = {
     id: 'settings' | 'move-up' | 'move-down';
@@ -49,18 +40,6 @@ const RowActions = ({ rowId }: { rowId: string }) => {
     const isOnlyTierRow = tierRows.length <= 1;
     const [open, setOpen] = useState(false);
     const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false);
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isValid },
-        reset,
-    } = useForm<{ label: string; color: string }>({
-        mode: 'onChange',
-        defaultValues: {
-            label: row?.title ?? '',
-            color: row?.color ?? '#444444',
-        },
-    });
 
     const handlers: Record<ButtonConfig['id'], () => void> = {
         settings: () => {
@@ -80,15 +59,6 @@ const RowActions = ({ rowId }: { rowId: string }) => {
         return false;
     };
 
-    useEffect(() => {
-        if (!open) return;
-
-        reset({
-            label: row?.title ?? '',
-            color: row?.color ?? '#444444',
-        });
-    }, [open, reset]);
-
     if (!row) return null;
 
     return (
@@ -105,79 +75,24 @@ const RowActions = ({ rowId }: { rowId: string }) => {
                     </button>
                 ))}
             </div>
-            <Dialog open={open} onOpenChange={setOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Настройки</DialogTitle>
-                    </DialogHeader>
-                    <form
-                        className="grid gap-4"
-                        onSubmit={handleSubmit((data) => {
-                            board.updateRow({
-                                rowId,
-                                title: data.label || row.title,
-                                color: data.color,
-                            });
-                            setOpen(false);
-                        })}
-                    >
-                        <label
-                            className={cn('grid gap-2 text-sm', errors.label && 'text-destructive')}
-                        >
-                            Label
-                            <Input
-                                placeholder="Название тира"
-                                aria-invalid={Boolean(errors.label)}
-                                className={cn(
-                                    errors.label &&
-                                        '!border-destructive focus-visible:!ring-destructive/40'
-                                )}
-                                {...register('label', {
-                                    setValueAs: (v) => v.trim(),
-                                    required: 'Название обязательно',
-                                    maxLength: { value: 5, message: 'Максимум 5 символов.' },
-                                })}
-                            />
-                            {errors.label ? (
-                                <span className="text-destructive text-xs">
-                                    {errors.label.message}
-                                </span>
-                            ) : null}
-                        </label>
-                        <label className="grid gap-2 text-sm">
-                            Цвет
-                            <Input
-                                type="color"
-                                className="h-10 w-20 cursor-pointer p-1"
-                                {...register('color')}
-                            />
-                        </label>
-                        <DialogFooter className="gap-2 sm:gap-2">
-                            <div className="flex items-center gap-2">
-                                {isOnlyTierRow ? (
-                                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                                        Нельзя удалить последнюю строку
-                                    </span>
-                                ) : null}
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    onClick={() => {
-                                        if (isOnlyTierRow) return;
-                                        setConfirmDeleteOpen(true);
-                                    }}
-                                    disabled={isOnlyTierRow}
-                                >
-                                    Удалить строку
-                                </Button>
-                            </div>
-                            <Button type="submit" disabled={!isValid}>
-                                Подтвердить
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+            <DialogRoot open={open} onOpenChange={setOpen}>
+                <RowSettingsDialog
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    initialLabel={row.title}
+                    initialColor={row.color ?? '#444444'}
+                    isOnlyTierRow={isOnlyTierRow}
+                    onOpenDeleteConfirm={() => setConfirmDeleteOpen(true)}
+                    onSubmit={(data) => {
+                        board.updateRow({
+                            rowId,
+                            title: data.label || row.title,
+                            color: data.color,
+                        });
+                        setOpen(false);
+                    }}
+                />
+            </DialogRoot>
             <AlertDialog open={confirmDeleteOpen} onOpenChange={setConfirmDeleteOpen}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
