@@ -8,7 +8,7 @@ export async function generateMetadata({
 }: {
     params: Promise<{ game: GameType; id: string }>;
 }): Promise<Metadata> {
-    const { game } = await params;
+    const { game, id } = await params;
     const gameLabel = GAME_TYPE_VALUES.find((g) => g.value === game)?.label ?? game;
     const title = `Тир-лист — ${gameLabel} | Distruct`;
     const description = `Публичный тир-лист по ${gameLabel}.`;

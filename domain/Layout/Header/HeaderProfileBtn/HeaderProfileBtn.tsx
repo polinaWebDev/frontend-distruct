@@ -38,7 +38,7 @@ export const HeaderProfileBtn = ({
                 }}
             >
                 <div className={styles.content}>
-                    <p>{user ? 'Личный кабинет' : 'Войти'}</p>
+                    <p>{user ? 'Профиль' : 'Войти'}</p>
 
                     <ChevronRightIcon className={styles.chevron} />
                 </div>
