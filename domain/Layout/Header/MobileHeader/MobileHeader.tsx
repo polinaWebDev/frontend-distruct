@@ -16,7 +16,6 @@ import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { HeaderProfileBtn } from '../HeaderProfileBtn/HeaderProfileBtn';
 import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
-import { InfoIcon } from '@/lib/icons/InfoIcon';
 import { Brain } from 'lucide-react';
 
 const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }) => {
@@ -73,10 +72,18 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                         game={GameType.ArenaBreakout}
                         onClick={() => setGameMenuOpen(false)}
                     />
-                    {/* <GameIconItem
+                    <GameIconItem
+                        game={GameType.EscapeFromTarkov}
+                        onClick={() => setGameMenuOpen(false)}
+                    />
+                    <GameIconItem
                         game={GameType.ArcRaiders}
                         onClick={() => setGameMenuOpen(false)}
-                    /> */}
+                    />
+                    <GameIconItem
+                        game={GameType.ActiveMatter}
+                        onClick={() => setGameMenuOpen(false)}
+                    />
                 </div>
             </div>
 
