@@ -21,8 +21,8 @@ export function Item({ item, rowId }: ItemProps) {
     const [panelSide, setPanelSide] = useState<'right' | 'left'>('right');
     const { setNodeRef, attributes, listeners, transform, transition, isDragging, isOver } =
         useSortable({
-            id: item.id,
-            data: { type: 'item', rowId },
+            id: `item:${item.id}`,
+            data: { type: 'item', rowId, itemId: String(item.id) },
             disabled: board.readOnly,
         });
 

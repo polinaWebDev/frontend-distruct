@@ -8,14 +8,14 @@ import styles from './Pool.module.css';
 export function Pool({ row }: { row: RowResponseDto }) {
     const board = useBoard();
     const { setNodeRef, isOver } = useDroppable({
-        id: row.id,
+        id: `row:${row.id}`,
         data: { type: 'row', rowId: row.id },
         disabled: board.readOnly,
     });
     return (
         <div className={styles.pool} ref={setNodeRef} data-over={isOver}>
             <SortableContext
-                items={row.items.map((item) => item.id)}
+                items={row.items.map((item) => `item:${item.id}`)}
                 strategy={verticalListSortingStrategy}
             >
                 <div className={styles.pool_items}>

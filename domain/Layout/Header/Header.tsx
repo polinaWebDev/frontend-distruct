@@ -18,6 +18,8 @@ import { NewsIcon } from '@/lib/icons/NewsIcon';
 import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
+import { InfoIcon } from '@/lib/icons/InfoIcon';
+import { Brain } from 'lucide-react';
 
 export const Header = ({
     user,
@@ -116,6 +118,12 @@ export const Header = ({
                             title="Новости"
                             href={`/${game}/news`}
                             showIndicator={hasUnread}
+                        />
+                        <HeaderNavItem
+                            icon={(className) => <Brain className={className} />}
+                            title="База знаний"
+                            href={`/${game}/knowledge-base`}
+                            disabled
                         />
                     </div>
                 )}

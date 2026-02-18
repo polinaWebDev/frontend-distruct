@@ -8,16 +8,28 @@ export const HeaderNavItem = ({
     href,
     onClick,
     showIndicator = false,
+    disabled = false,
 }: {
     icon: (className: string) => React.ReactNode;
     title: string;
     href: string;
     onClick?: () => void;
     showIndicator?: boolean;
+    disabled?: boolean;
 }) => {
     const pathname = usePathname();
 
     const isActive = pathname === href;
+
+    if (disabled) {
+        return (
+            <div className={clsx(styles.nav_item, styles.disabled)} aria-disabled="true">
+                <span className={styles.soon_badge}>скоро</span>
+                {icon(styles.icon)}
+                <div className={styles.text}>{title}</div>
+            </div>
+        );
+    }
 
     return (
         <Link

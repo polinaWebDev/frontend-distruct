@@ -22,7 +22,7 @@ const getLuminance = (hex: string) => {
 export function Row({ row }: { row: RowResponseDto }) {
     const board = useBoard();
     const { setNodeRef, isOver } = useDroppable({
-        id: row.id,
+        id: `row:${row.id}`,
         data: { type: 'row', rowId: row.id },
         disabled: board.readOnly,
     });
@@ -52,7 +52,7 @@ export function Row({ row }: { row: RowResponseDto }) {
                 </div>
                 <div className={styles.items_zone} ref={setNodeRef} data-over={isOver}>
                     <SortableContext
-                        items={row.items.map((item) => item.id)}
+                        items={row.items.map((item) => `item:${item.id}`)}
                         strategy={verticalListSortingStrategy}
                     >
                         <div className={styles.items_list}>
