@@ -15,6 +15,9 @@ import { getPublicClient } from '@/lib/api_client/public_client';
 import { friendsControllerIncomingOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { SubscriptionsDialog } from './components/subscriptions-dialog/subscriptions-dialog';
 import { useState } from 'react';
+import { Dialog } from '@/components/ui/dialog';
+import { AppDialog, AppDialogContent } from '@/ui/AppDialog/app-dialog';
+import { ProfileCustomizationDialog } from './components/profile-customization-dialog/profile-customization-dialog';
 
 export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     const searchParams = useSearchParams();
@@ -22,6 +25,8 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     const router = useRouter();
     const client = getPublicClient();
     const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+    const [isCustomizationDialogOpen, setIsCustomizationDialogOpen] = useState(false);
 
     const { data: incomingRequests } = useQuery({
         ...friendsControllerIncomingOptions({
@@ -40,43 +45,88 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     };
 
     return (
-        <div className={clsx(styles.container, 'page_width_wrapper header_margin_top')}>
-            <div className={styles.content}>
-                <div className={styles.left}>
-                    <ProfileAvatar url={profile.avatar_url} />
+        <>
+            <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+                <div className={clsx(styles.container, 'page_width_wrapper header_margin_top')}>
+                    <div className={styles.content}>
+                        <div className={styles.left}>
+                            <ProfileAvatar url={profile.avatar_url} />
 
-                    <AppBtn
-                        style="outline_red"
-                        text="Выйти из аккаунта"
-                        className={styles.logout_btn}
-                        onClick={() => {
-                            handleLogout();
-                        }}
-                    />
-                </div>
-                <div className={styles.right}>
-                    <ProfileUsername
-                        username={profile.username}
-                        isEditing={isEditingProfile}
-                        onEditingChange={setIsEditingProfile}
-                    />
-                    <p className={styles.email}>{profile.email}</p>
+                            <AppBtn
+                                style="outline_red"
+                                text="Выйти из аккаунта"
+                                className={styles.logout_btn}
+                                onClick={() => {
+                                    setIsLogoutDialogOpen(true);
+                                }}
+                            />
+                        </div>
+                        <div className={styles.right}>
+                            <ProfileUsername
+                                username={profile.username}
+                                isEditing={isEditingProfile}
+                                onEditingChange={setIsEditingProfile}
+                            />
+                            <p className={styles.email}>{profile.email}</p>
 
-                    <div className="flex flex-wrap gap-3">
-                        <SubscriptionsDialog currentUserId={profile.id} game={game} />
-                        <RequestsDialog incomingCount={incomingCount} />
+                            <AppBtn
+                                style="outline_bright"
+                                text="Кастомизация профиля"
+                                className={styles.customization_btn}
+                                onClick={() => {
+                                    setIsCustomizationDialogOpen(true);
+                                }}
+                            />
+                            <div className="flex flex-wrap gap-3">
+                                <SubscriptionsDialog currentUserId={profile.id} game={game} />
+                                <RequestsDialog incomingCount={incomingCount} />
+                            </div>
+
+                            <FriendsBlock game={game} />
+                            <ProfileBlock
+                                title="Тир-листы"
+                                desc="Снаряжение по тирам S, A, B, C и тп"
+                                actionLabel="Открыть"
+                                onAction={() => router.push(`/${game}/tiers`)}
+                            />
+                            <ProfileBlock title="Достижения" />
+                        </div>
                     </div>
-
-                    <FriendsBlock game={game} />
-                    <ProfileBlock
-                        title="Тир-листы"
-                        desc="Снаряжение по тирам S, A, B, C и тп"
-                        actionLabel="Открыть"
-                        onAction={() => router.push(`/${game}/tiers`)}
-                    />
-                    <ProfileBlock title="Достижения" />
                 </div>
-            </div>
-        </div>
+                <AppDialog
+                    title="Подтверждение выхода"
+                    onClose={() => setIsLogoutDialogOpen(false)}
+                >
+                    <AppDialogContent onClose={() => setIsLogoutDialogOpen(false)}>
+                        <h2 className={styles.logout_dialog_title}>Выйти из аккаунта?</h2>
+                        <p className={styles.logout_dialog_description}>
+                            Вы уверены, что хотите завершить текущую сессию?
+                        </p>
+                        <div className={styles.logout_dialog_buttons}>
+                            <AppBtn
+                                text="Выйти"
+                                style="outline_red"
+                                onClick={() => {
+                                    setIsLogoutDialogOpen(false);
+                                    handleLogout();
+                                }}
+                            />
+                            <AppBtn
+                                text="Отмена"
+                                style="outline_bright"
+                                onClick={() => {
+                                    setIsLogoutDialogOpen(false);
+                                }}
+                            />
+                        </div>
+                    </AppDialogContent>
+                </AppDialog>
+            </Dialog>
+            <ProfileCustomizationDialog
+                open={isCustomizationDialogOpen}
+                onOpenChange={setIsCustomizationDialogOpen}
+                userPoints={profile.points}
+            />
+        </>
     );
 };

@@ -2,6 +2,8 @@ import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import type { Metadata } from 'next';
 import { buildSocialMetadata } from '@/lib/seo';
 import { TiersPage } from '@/domain/client/tiers/tiers-page';
+import { getCurrentUser } from '@/actions/user/getCurrentUser';
+import { redirect } from 'next/navigation';
 
 export async function generateMetadata({
     params,
@@ -21,6 +23,11 @@ export async function generateMetadata({
 
 export default async function Page({ params }: { params: Promise<{ game: GameType }> }) {
     const { game } = await params;
+    const currentUser = await getCurrentUser();
 
-    return <TiersPage game={game} />;
+    if (!currentUser) {
+        redirect('/');
+    }
+
+    return <TiersPage game={game} currentUser={currentUser} />;
 }

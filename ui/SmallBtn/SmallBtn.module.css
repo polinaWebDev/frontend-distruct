@@ -117,41 +117,47 @@
 
     &.default {
         .content {
-            background-color: var(--brand-color);
+            background-color: var(--app-btn-bg, var(--brand-color));
 
             p {
-                color: black;
+                color: var(--app-btn-text, black);
             }
 
             .icon_fill path {
-                fill: black;
+                fill: var(--app-btn-text, black);
             }
 
             .icon_stroke path {
-                stroke: black;
+                stroke: var(--app-btn-text, black);
+            }
+        }
+
+        .part_icon {
+            path {
+                fill: var(--app-btn-part, var(--app-btn-bg, var(--brand-color)));
             }
         }
 
         &:hover {
             .content {
-                background-color: #d78312;
+                background-color: var(--app-btn-hover-bg, #d78312);
 
                 p {
-                    color: white;
+                    color: var(--app-btn-hover-text, white);
                 }
 
                 .icon_fill path {
-                    fill: white;
+                    fill: var(--app-btn-hover-text, white);
                 }
 
                 .icon_stroke path {
-                    stroke: white;
+                    stroke: var(--app-btn-hover-text, white);
                 }
             }
 
             .part_icon {
                 path {
-                    fill: #d78312;
+                    fill: var(--app-btn-part-hover, var(--app-btn-hover-bg, #d78312));
                 }
             }
         }
@@ -307,53 +313,55 @@
 
     &.outline_dark {
         .content {
-            background-color: transparent;
-            border: 1px solid #79808e;
+            background-color: var(--app-btn-outline-bg, transparent);
+            border: 1px solid var(--app-btn-border, #79808e);
 
             border-right: none;
 
             p {
-                color: #79808e;
+                color: var(--app-btn-text, #79808e);
             }
 
             .icon_fill path {
-                fill: #79808e;
+                fill: var(--app-btn-text, #79808e);
             }
 
             .icon_stroke path {
-                stroke: #79808e;
+                stroke: var(--app-btn-text, #79808e);
             }
         }
 
         .outline_part_icon {
             path {
-                stroke: #79808e;
+                stroke: var(--app-btn-border, #79808e);
                 fill: transparent;
             }
         }
 
         &:hover {
             .content {
-                border-color: var(--color-brand);
-                /* background-color: var(--color-brand); */
+                border-color: var(--app-btn-hover-border, var(--color-brand));
+                background-color: var(
+                    --app-btn-outline-hover-bg,
+                    var(--app-btn-outline-bg, transparent)
+                );
 
                 p {
-                    color: var(--color-brand);
+                    color: var(--app-btn-hover-text, var(--color-brand));
                 }
 
                 .icon_fill path {
-                    fill: var(--color-brand);
+                    fill: var(--app-btn-hover-text, var(--color-brand));
                 }
 
                 .icon_stroke path {
-                    stroke: var(--color-brand);
+                    stroke: var(--app-btn-hover-text, var(--color-brand));
                 }
             }
 
             .outline_part_icon {
                 path {
-                    stroke: var(--brand-color);
-                    /* fill: var(--brand-color); */
+                    stroke: var(--app-btn-hover-border, var(--brand-color));
                 }
             }
         }

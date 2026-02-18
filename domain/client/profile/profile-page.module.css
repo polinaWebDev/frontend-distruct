@@ -51,3 +51,36 @@
     max-width: 150px;
     margin-top: 32px;
 }
+
+.customization_btn {
+    max-width: 220px;
+    margin-bottom: 12px;
+}
+
+.logout_dialog_title {
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    text-align: left;
+    width: 100%;
+    font-family: var(--font-thicker);
+}
+
+.logout_dialog_description {
+    font-size: 16px;
+    font-weight: 400;
+    color: #929cad;
+    margin-top: 10px;
+    text-align: left;
+    width: 100%;
+}
+
+.logout_dialog_buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

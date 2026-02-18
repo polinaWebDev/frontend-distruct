@@ -9,6 +9,7 @@ import { TwitchIcon } from '@/lib/icons/TwitchIcon';
 import { InfoIcon } from '@/lib/icons/InfoIcon';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { CSSProperties } from 'react';
 
 const variants = cva(styles.btn, {
     variants: {
@@ -50,8 +51,23 @@ interface SmallBtnProps extends VariantProps<typeof variants> {
     text?: string;
     onClick?: () => void;
     className?: string;
+    contentClassName?: string;
+    textClassName?: string;
     disabled?: boolean;
     href?: string;
+    colorProps?: {
+        bgColor?: string;
+        textColor?: string;
+        hoverBgColor?: string;
+        hoverTextColor?: string;
+        partColor?: string;
+        partHoverColor?: string;
+        borderColor?: string;
+        hoverBorderColor?: string;
+        outlineBgColor?: string;
+        outlineHoverBgColor?: string;
+    };
+    inlineStyle?: CSSProperties;
 }
 
 const Icon = ({ name }: { name: 'twitch' | 'google' | 'info' }) => {
@@ -70,6 +86,8 @@ const Icon = ({ name }: { name: 'twitch' | 'google' | 'info' }) => {
 export const AppBtn = ({
     text,
     className,
+    contentClassName,
+    textClassName,
     onClick,
     disabled,
     icon,
@@ -77,6 +95,8 @@ export const AppBtn = ({
     weight,
     big,
     href,
+    colorProps,
+    inlineStyle,
 }: SmallBtnProps) => {
     const isOutline =
         style === 'outline_bright' ||
@@ -86,9 +106,9 @@ export const AppBtn = ({
 
     const content = (
         <>
-            <div className={styles.content}>
+            <div className={clsx(styles.content, contentClassName)}>
                 {icon && <Icon name={icon} />}
-                {text && <p>{text}</p>}
+                {text && <p className={textClassName}>{text}</p>}
             </div>
             {big ? (
                 !isOutline ? (
@@ -108,14 +128,49 @@ export const AppBtn = ({
     );
 
     const classes = clsx(variants({ disabled, style, weight, icon, big }), className);
+    const cssVars = {
+        ...(colorProps?.bgColor ? ({ '--app-btn-bg': colorProps.bgColor } as CSSProperties) : {}),
+        ...(colorProps?.textColor
+            ? ({ '--app-btn-text': colorProps.textColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.hoverBgColor
+            ? ({ '--app-btn-hover-bg': colorProps.hoverBgColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.hoverTextColor
+            ? ({ '--app-btn-hover-text': colorProps.hoverTextColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.partColor
+            ? ({ '--app-btn-part': colorProps.partColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.partHoverColor
+            ? ({ '--app-btn-part-hover': colorProps.partHoverColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.borderColor
+            ? ({ '--app-btn-border': colorProps.borderColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.hoverBorderColor
+            ? ({ '--app-btn-hover-border': colorProps.hoverBorderColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.outlineBgColor
+            ? ({ '--app-btn-outline-bg': colorProps.outlineBgColor } as CSSProperties)
+            : {}),
+        ...(colorProps?.outlineHoverBgColor
+            ? ({ '--app-btn-outline-hover-bg': colorProps.outlineHoverBgColor } as CSSProperties)
+            : {}),
+        ...inlineStyle,
+    } as CSSProperties;
 
     if (href) {
         if (disabled) {
-            return <span className={classes}>{content}</span>;
+            return (
+                <span className={classes} style={cssVars}>
+                    {content}
+                </span>
+            );
         }
 
         return (
-            <Link href={href} className={classes} onClick={onClick}>
+            <Link href={href} className={classes} onClick={onClick} style={cssVars}>
                 {content}
             </Link>
         );
@@ -124,6 +179,7 @@ export const AppBtn = ({
     return (
         <button
             className={classes}
+            style={cssVars}
             onClick={() => {
                 if (disabled) return;
                 onClick?.();

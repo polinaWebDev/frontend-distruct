@@ -1,16 +1,13 @@
 import {
-    GetRandomLoadoutResponseDto,
-    loadoutRandomizerControllerGenerateRandomLoadout,
     RandomChallengeWithCategoriesDto,
 } from '@/lib/api_client/gen';
-import { useMutation } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import styles from './RandomGearView.module.css';
 import { GoBackBig } from '@/ui/GoBackBig/GoBackBig';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
-import { getPublicClient } from '@/lib/api_client/public_client';
 import { RandomGearItem } from '../RandomGearItem/RandomGearItem';
 import { PhotoProvider } from 'react-photo-view';
+import { getRandomLoadout, getRandomLoadoutQueryKey } from './randomLoadout.query';
 
 export const RandomGearView = ({
     seed,
@@ -23,33 +20,10 @@ export const RandomGearView = ({
     onBack: () => void;
     onNewGen: () => void;
 }) => {
-    const [result, setResult] = useState<GetRandomLoadoutResponseDto | null>(null);
-    const { mutate, isPending } = useMutation({
-        mutationFn: async ({ id, seed }: { id: string; seed: string }) => {
-            setResult(null);
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            const res = await loadoutRandomizerControllerGenerateRandomLoadout({
-                body: {
-                    id: id,
-                    seed: seed,
-                },
-                client: getPublicClient(),
-            });
-
-            return res.data;
-        },
-        onSuccess: (data) => {
-            console.log(data);
-            setResult(data || null);
-        },
+    const { data: result, isPending } = useQuery({
+        queryKey: getRandomLoadoutQueryKey(challenge.id, seed),
+        queryFn: () => getRandomLoadout(challenge.id, seed),
     });
-
-    useEffect(() => {
-        mutate({
-            id: challenge.id,
-            seed: seed,
-        });
-    }, [seed, challenge, mutate]);
 
     return (
         <div className={styles.container}>

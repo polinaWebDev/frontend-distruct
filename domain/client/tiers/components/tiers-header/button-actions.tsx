@@ -1,6 +1,5 @@
 'use client';
 import { useTierListActions } from '@/domain/client/tiers/components/tiers/TierListActionsContext';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import ShareConfirmDialog from './ShareConfirmDialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import { ShareBtn } from '@/ui/ShareBtn/ShareBtn';
+import { AppDialog, AppDialogContent } from '@/ui/AppDialog/app-dialog';
+import { Root as DialogRoot } from '@radix-ui/react-dialog';
 
 const ButtonActions = () => {
     const { save, resetDraft, isSaving, saved, updatePrivacy, hasChanges } = useTierListActions();
@@ -73,12 +74,16 @@ const ButtonActions = () => {
                 onContinueWithoutSave={handleShareWithoutSave}
                 onSaveAndContinue={handleShareAfterSave}
             />
-            <Dialog open={shareOpen} onOpenChange={setShareOpen}>
-                <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Поделиться тир-листом</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4">
+            <DialogRoot open={shareOpen} onOpenChange={setShareOpen}>
+                <AppDialog title="Поделиться тир-листом" onClose={() => setShareOpen(false)}>
+                    <AppDialogContent
+                        onClose={() => setShareOpen(false)}
+                        className="grid gap-4"
+                        style={{ width: '100%', maxWidth: 540 }}
+                    >
+                        <h2 className="text-xl font-semibold leading-none tracking-tight">
+                            Поделиться тир-листом
+                        </h2>
                         <label className="grid gap-2 text-sm">
                             Ссылка на readonly тир-лист
                             <div className="flex gap-2">
@@ -106,9 +111,9 @@ const ButtonActions = () => {
                             />
                             Публичный тир-лист
                         </label>
-                    </div>
-                </DialogContent>
-            </Dialog>
+                    </AppDialogContent>
+                </AppDialog>
+            </DialogRoot>
         </div>
     );
 };

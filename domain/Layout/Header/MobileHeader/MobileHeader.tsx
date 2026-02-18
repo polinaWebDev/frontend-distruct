@@ -17,6 +17,8 @@ import { HeaderProfileBtn } from '../HeaderProfileBtn/HeaderProfileBtn';
 import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
 import BrainIcon from '@/lib/icons/BrainIcon';
+import { Dialog } from 'radix-ui';
+import { AuthDialog } from '../AuthDialog/AuthDialog';
 
 const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }) => {
     const { linkPath, onLinkClick } = useGameLink(game);
@@ -38,6 +40,7 @@ const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }
 export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: GameType }) => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [gameMenuOpen, setGameMenuOpen] = useState(false);
+    const [openAuthDialog, setOpenAuthDialog] = useState(false);
     const { hasUnread } = useNewsUnreadIndicator({ gameType: game });
     return (
         <div suppressHydrationWarning className={styles.container}>
@@ -105,7 +108,15 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                         icon={(className) => <TierIcon className={className} />}
                         title="Тир-листы"
                         href={`/${game}/tiers`}
-                        onClick={() => setMenuOpen(false)}
+                        onClick={(e) => {
+                            if (user) {
+                                setMenuOpen(false);
+                                return;
+                            }
+                            e.preventDefault();
+                            setMenuOpen(false);
+                            setOpenAuthDialog(true);
+                        }}
                     />
                     <HeaderNavItem
                         icon={(className) => <RandomizerIcon className={className} />}
@@ -136,6 +147,9 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                     />
                 </div>
             </div>
+            <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
+                <AuthDialog onClose={() => setOpenAuthDialog(false)} />
+            </Dialog.Root>
         </div>
     );
 };

@@ -2,6 +2,7 @@ import Link from 'next/link';
 import styles from './HeaderNavItem.module.css';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
+import { MouseEventHandler } from 'react';
 export const HeaderNavItem = ({
     icon,
     title,
@@ -14,7 +15,7 @@ export const HeaderNavItem = ({
     icon: (className: string) => React.ReactNode;
     title: string;
     href: string;
-    onClick?: () => void;
+    onClick?: MouseEventHandler<HTMLAnchorElement>;
     showIndicator?: boolean;
     disabled?: boolean;
     strokeIcon?: boolean;

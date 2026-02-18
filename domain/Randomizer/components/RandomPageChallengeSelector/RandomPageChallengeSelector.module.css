@@ -34,6 +34,10 @@
         margin-top: 50px;
         margin-bottom: 23px;
     }
+
+    .difficulty_items {
+        width: 100%;
+    }
 }
 
 .difficulty_items {
@@ -51,37 +55,19 @@
 }
 
 .difficulty_button {
-    position: relative;
+    flex: 0 0 156px;
+    width: 156px;
+    height: 40px;
+}
 
-    cursor: pointer;
-
-    p {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-
-        font-size: 16px;
-        font-weight: 500;
-
-        color: #c9ced8;
-
-        transition: 0.3s ease-in-out;
-
-        user-select: none;
-    }
-
-    svg {
-        path {
-            transition: 0.3s ease-in-out;
-        }
-    }
-
-    &.hovered {
-        p {
-            color: black;
-        }
-    }
+.difficulty_button_text {
+    width: 100%;
+    max-width: 100%;
+    font-size: 12px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .generate_button {
@@ -91,6 +77,8 @@
 .group_button {
     position: relative;
     cursor: pointer;
+    flex: 1 1 0;
+    min-width: 0;
 
     p {
         position: absolute;
@@ -103,6 +91,12 @@
 
         font-size: 13px;
         font-weight: 500;
+
+        width: calc(100% - 24px);
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     path {
@@ -125,6 +119,11 @@
     }
 }
 
+.group_button_icon {
+    width: 100%;
+    height: auto;
+}
+
 .challenge_selector_container {
     width: 100%;
     display: flex;
@@ -140,5 +139,9 @@
         font-size: 16px;
 
         margin-bottom: 20px;
+    }
+
+    .difficulty_items {
+        width: auto;
     }
 }

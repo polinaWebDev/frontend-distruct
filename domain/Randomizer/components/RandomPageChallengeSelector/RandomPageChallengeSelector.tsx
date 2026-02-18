@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './RandomPageChallengeSelector.module.css';
 import {
     RandomChallengeWithCategoriesDto,
     RandomGearChallengeGroupEntity,
 } from '@/lib/api_client/gen';
 import { getActiveTextColorBasedOnBg } from '../../utils/utils';
-import { DifficultyItemIcon } from '@/lib/icons/DifficultyItemIcon';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import clsx from 'clsx';
 import { RandomizerGroupIcon } from '@/lib/icons/RandomizerGroupIcon';
@@ -41,38 +40,33 @@ const DifficultyButton = ({
     onClick: () => void;
     selected: boolean;
 }) => {
-    const [hovered, setHovered] = useState(false);
-
-    const strokeColor = useMemo(() => {
-        if (!hovered && !selected) return inactive_color;
-
-        return activeColor;
-    }, [hovered, selected]);
-
-    const fillColor = useMemo(() => {
-        if (!hovered && !selected) return 'transparent';
-
-        return activeColor;
-    }, [hovered, selected]);
-
-    const textColor = useMemo(() => {
-        if (!hovered && !selected) return '#C9CED8';
-
-        return getActiveTextColorBasedOnBg(activeColor);
-    }, [activeColor, hovered, selected]);
+    const activeTextColor = getActiveTextColorBasedOnBg(activeColor);
 
     return (
-        <div
-            className={clsx(styles.difficulty_button, (selected || hovered) && styles.hovered)}
+        <AppBtn
+            text={challenge.name}
+            style={selected ? 'default' : 'outline_dark'}
             onClick={onClick}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-        >
-            <DifficultyItemIcon stroke={strokeColor} fill={fillColor} />
-            <p className={styles.difficulty_button_title} style={{ color: textColor }}>
-                {challenge.name}
-            </p>
-        </div>
+            className={styles.difficulty_button}
+            textClassName={styles.difficulty_button_text}
+            colorProps={
+                selected
+                    ? {
+                          bgColor: activeColor,
+                          textColor: activeTextColor,
+                          hoverBgColor: activeColor,
+                          hoverTextColor: activeTextColor,
+                          partColor: activeColor,
+                          partHoverColor: activeColor,
+                      }
+                    : {
+                          borderColor: inactive_color,
+                          textColor: '#C9CED8',
+                          hoverBorderColor: activeColor,
+                          hoverTextColor: activeTextColor,
+                      }
+            }
+        />
     );
 };
 
@@ -83,7 +77,20 @@ export const RandomPageChallengeGroupSelector = ({
     groups: RandomGearChallengeGroupEntity[];
     onSubmit: (group: RandomGearChallengeGroupEntity) => any;
 }) => {
-    const [selectedGroup, setSelectedGroup] = useState<RandomGearChallengeGroupEntity | null>(null);
+    const [selectedGroup, setSelectedGroup] = useState<RandomGearChallengeGroupEntity | null>(
+        groups[0] ?? null
+    );
+
+    useEffect(() => {
+        if (groups.length === 0) {
+            setSelectedGroup(null);
+            return;
+        }
+
+        setSelectedGroup((prevGroup) =>
+            prevGroup && groups.some((group) => group.id === prevGroup.id) ? prevGroup : groups[0]
+        );
+    }, [groups]);
 
     return (
         <div className={styles.container}>

@@ -44,7 +44,7 @@ export default async function MapsViewPage({
 }: {
     params: Promise<{ game: GameType; id: string }>;
 }) {
-    const { game, id } = await params;
+    const { id } = await params;
 
     const mapResponse = await mapsControllerGetMap({
         client: await getServerClient(),
@@ -57,5 +57,5 @@ export default async function MapsViewPage({
         return notFound();
     }
 
-    return <ClientMapDynamicWrapper game={game} map={mapResponse.data} />;
+    return <ClientMapDynamicWrapper map={mapResponse.data} />;
 }

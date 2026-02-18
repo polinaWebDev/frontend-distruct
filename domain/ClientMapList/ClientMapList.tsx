@@ -32,10 +32,7 @@ export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game
                             {(map.levels?.length ?? 0) > 0 && (
                                 <div className={styles.levels}>
                                     {[...(map.levels ?? [])]
-                                        .sort(
-                                            (a, b) =>
-                                                Number(a.sort_order) - Number(b.sort_order)
-                                        )
+                                        .sort((a, b) => Number(a.sort_order) - Number(b.sort_order))
                                         .map((level) => (
                                             <span key={level.id} className={styles.level_badge}>
                                                 {level.name}

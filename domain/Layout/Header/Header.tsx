@@ -9,7 +9,7 @@ import { HeaderNavItem } from './HeaderNavItem/HeaderNavItem';
 import { RandomizerIcon } from '@/lib/icons/RandomizerIcon';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Fragment, useEffect, useMemo } from 'react';
+import { Fragment, useEffect, useMemo, useState } from 'react';
 import { HeaderProfileBtn } from './HeaderProfileBtn/HeaderProfileBtn';
 import { UserResponseDto } from '@/lib/api_client/gen';
 import { MapsIcon } from '@/lib/icons/MapsIcon';
@@ -20,17 +20,14 @@ import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
 import BrainIcon from '@/lib/icons/BrainIcon';
 import { Trophy } from 'lucide-react';
+import { Dialog } from 'radix-ui';
+import { AuthDialog } from './AuthDialog/AuthDialog';
 
-export const Header = ({
-    user,
-    isMobileServer,
-}: {
-    user?: UserResponseDto;
-    isMobileServer: boolean;
-}) => {
+export const Header = ({ user }: { user?: UserResponseDto; isMobileServer: boolean }) => {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const router = useRouter();
+    const [openAuthDialog, setOpenAuthDialog] = useState(false);
 
     const { game: gameParam } = useParams<{ game: GameType }>();
     const gameQueryParam = searchParams.get('game') as GameType | null;
@@ -106,6 +103,11 @@ export const Header = ({
                             icon={(className) => <TierIcon className={className} />}
                             title="Тир-листы"
                             href={`/${game}/tiers`}
+                            onClick={(e) => {
+                                if (user) return;
+                                e.preventDefault();
+                                setOpenAuthDialog(true);
+                            }}
                         />
                         <HeaderNavItem
                             icon={(className) => <RandomizerIcon className={className} />}
@@ -135,6 +137,9 @@ export const Header = ({
                         />
                     </div>
                 )}
+                <Dialog.Root open={openAuthDialog} onOpenChange={setOpenAuthDialog}>
+                    <AuthDialog onClose={() => setOpenAuthDialog(false)} />
+                </Dialog.Root>
             </header>
         </Fragment>
     );

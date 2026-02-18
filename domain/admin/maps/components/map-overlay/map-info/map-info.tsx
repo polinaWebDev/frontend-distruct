@@ -18,6 +18,8 @@ import { EyeIcon, EyeOffIcon, Pencil } from 'lucide-react';
 import { Activity } from 'react';
 import clsx from 'clsx';
 import { useMedia } from 'react-use';
+import { InfoIcon } from '@/lib/icons/InfoIcon';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 export const MapInfo = ({
     map_data,
@@ -73,8 +75,32 @@ export const MapInfo = ({
 
                     <div className="flex justify-between items-end w-full">
                         <div className={styles.text}>
-                            <p>{map_data.description}</p>
-                            <h1>{map_data.name}</h1>
+                            <div className={styles.title_row}>
+                                <h1>{map_data.name}</h1>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <span
+                                            className={styles.info_btn}
+                                            aria-label="Информация о карте"
+                                        >
+                                            <InfoIcon />
+                                        </span>
+                                    </TooltipTrigger>
+                                    <TooltipContent
+                                        side="right"
+                                        sideOffset={8}
+                                        className={clsx(styles.map_tooltip, 'z-[350]')}
+                                        hideArrow
+                                    >
+                                        <p className={styles.map_tooltip_title}>
+                                            Информация о карте
+                                        </p>
+                                        <p className={styles.map_tooltip_text}>
+                                            {map_data.description || 'Описание карты отсутствует.'}
+                                        </p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </div>
                         </div>
 
                         <Button size={'icon'} variant={'ghost'} onClick={() => setHidden(!hidden)}>

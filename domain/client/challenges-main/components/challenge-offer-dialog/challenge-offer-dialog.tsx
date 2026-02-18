@@ -15,7 +15,7 @@ import { ChallengeFileUpload } from '@/domain/client/challenge-page/components/c
 const schema = z.object({
     title: z.string(),
     comment: z.string(),
-    files: z.array(z.instanceof(File)).min(1).max(5),
+    files: z.array(z.instanceof(File)).max(5),
 });
 
 export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
@@ -34,34 +34,33 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
         }),
         onSuccess: () => {
             toast.success('Челлендж успешно предложен');
+            form.reset();
             onClose();
-            location.reload();
         },
         onMutate: () => {
-            toast.loading('Загрузка файла...', { id: 'upload-for-review-toast' });
+            toast.loading('Отправка предложения...', { id: 'upload-for-review-toast' });
         },
         onSettled: () => {
             toast.dismiss('upload-for-review-toast');
         },
         onError: (error) => {
             console.error(error);
-            toast.error('Ошибка при загрузке файла');
+            toast.error('Ошибка при отправке предложения');
         },
     });
 
     const onSubmit = (data: z.infer<typeof schema>) => {
-        console.log(data);
         createOffer({
             body: {
                 title: data.title,
                 description: data.comment,
-                files: data.files,
+                files: data.files.length > 0 ? data.files : undefined,
             },
         });
     };
 
     return (
-        <AppDialog onClose={onClose} title="Загрузить для проверки">
+        <AppDialog onClose={onClose} title="Предложить челлендж">
             <AppDialogContent onClose={onClose}>
                 <div className={styles.content}>
                     <div className={styles.text}>
@@ -92,7 +91,7 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
                                     onChange={onChange}
                                     maxFiles={5}
                                     maxSize={100 * 1024 * 1024}
-                                    description="Приложите фото, которые помогут раскрыть суть челленджа"
+                                    description="При желании приложите фото, которые помогут раскрыть суть челленджа"
                                 />
                             )}
                         />
@@ -100,8 +99,8 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
 
                     <div className={styles.buttons}>
                         <AppBtn
-                            text="Загрузить"
-                            onClick={() => form.handleSubmit(onSubmit, console.log)()}
+                            text="Отправить"
+                            onClick={() => form.handleSubmit(onSubmit)()}
                             disabled={!form.formState.isValid || isPending}
                         />
                     </div>

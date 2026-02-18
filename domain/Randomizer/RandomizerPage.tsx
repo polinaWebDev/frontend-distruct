@@ -17,6 +17,11 @@ import { usePathname, useRouter } from 'next/navigation';
 import { v4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import { RandomGearView } from './components/RandomGearView/RandomGearView';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+    getRandomLoadout,
+    getRandomLoadoutQueryKey,
+} from './components/RandomGearView/randomLoadout.query';
 
 export const RandomizerPage = ({
     challenges,
@@ -28,6 +33,7 @@ export const RandomizerPage = ({
     groups: RandomGearChallengeGroupEntity[];
 }) => {
     const router = useRouter();
+    const queryClient = useQueryClient();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const challengeId = searchParams.get('challenge_id');
@@ -51,14 +57,27 @@ export const RandomizerPage = ({
                         onSubmit={(group) => {
                             const newParams = new URLSearchParams(searchParams.toString());
                             newParams.set('group_id', group.id);
-                            const availableChallengesId = challenges
+                            const firstChallenge = challenges
                                 .filter(
                                     (challenge) =>
                                         challenge.random_gear_challenge_group_id === group.id
                                 )
-                                .sort((a, b) => a.order - b.order)[0].id;
+                                .sort((a, b) => a.order - b.order)[0];
+
+                            if (!firstChallenge) {
+                                return;
+                            }
+
+                            const availableChallengesId = firstChallenge.id;
+                            const nextSeed = v4();
+
+                            void queryClient.prefetchQuery({
+                                queryKey: getRandomLoadoutQueryKey(availableChallengesId, nextSeed),
+                                queryFn: () => getRandomLoadout(availableChallengesId, nextSeed),
+                            });
+
                             newParams.set('challenge_id', availableChallengesId);
-                            newParams.set('seed', v4());
+                            newParams.set('seed', nextSeed);
                             router.push(`${pathname}?${newParams.toString()}`);
                         }}
                         groups={groups}
@@ -68,8 +87,15 @@ export const RandomizerPage = ({
                     <RandomPageChallengeSelector
                         onSubmit={(challenge) => {
                             const newParams = new URLSearchParams(searchParams.toString());
+                            const nextSeed = v4();
+
+                            void queryClient.prefetchQuery({
+                                queryKey: getRandomLoadoutQueryKey(challenge.id, nextSeed),
+                                queryFn: () => getRandomLoadout(challenge.id, nextSeed),
+                            });
+
                             newParams.set('challenge_id', challenge.id);
-                            newParams.set('seed', v4());
+                            newParams.set('seed', nextSeed);
                             router.push(`${pathname}?${newParams.toString()}`);
                         }}
                         currentChallengeId={challengeId}

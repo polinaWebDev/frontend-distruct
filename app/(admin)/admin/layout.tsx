@@ -7,7 +7,6 @@ import { AppSidebar } from '@/components/admin/AppSidebar';
 import { Separator } from '@/components/ui/separator';
 import { AdminGameTypeProvider } from '@/domain/admin/context/admin-game-type-context';
 
-export const dynamic = 'force-dynamic';
 export default async function Layout({ children }: { children: React.ReactNode }) {
     const user = await getCurrentUser();
 

@@ -1,0 +1,99 @@
+.dialogContent {
+    max-width: min(36rem, calc(100vw - 32px));
+    min-height: min(65svh, 680px);
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+}
+
+.tabsRoot {
+    width: 100%;
+}
+
+.tabsList {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    height: auto;
+    background: transparent;
+    padding: 0;
+}
+
+.tabTrigger {
+    width: 100%;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 36px;
+    padding: 6px 10px !important;
+    font-size: 14px !important;
+    line-height: 1.2;
+    border-radius: 10px;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-height: min(44svh, 460px);
+    overflow-y: auto;
+    margin-top: 12px;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-stroke);
+    border-radius: 12px;
+    background: var(--color-secondary-bg);
+}
+
+.itemDisabled {
+    opacity: 0.72;
+}
+
+.itemInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.itemName {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.itemDescription {
+    margin: 0;
+    font-size: 13px;
+    color: #a1aab8;
+}
+
+.unlockHint {
+    margin: 2px 0 0;
+    font-size: 12px;
+    color: #f2a1a1;
+}
+
+.empty {
+    text-align: center;
+    color: #8b94a6;
+    font-size: 13px;
+    padding: 16px 0;
+}
