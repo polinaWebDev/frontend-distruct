@@ -16,7 +16,7 @@ import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { HeaderProfileBtn } from '../HeaderProfileBtn/HeaderProfileBtn';
 import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
-import { Brain } from 'lucide-react';
+import BrainIcon from '@/lib/icons/BrainIcon';
 
 const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }) => {
     const { linkPath, onLinkClick } = useGameLink(game);
@@ -122,10 +122,11 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                         showIndicator={hasUnread}
                     />
                     <HeaderNavItem
-                        icon={(className) => <Brain className={className} />}
+                        icon={(className) => <BrainIcon className={className} />}
                         title="База знаний"
                         href={`/${game}/knowledge-base`}
                         disabled
+                        strokeIcon
                     />
 
                     <HeaderProfileBtn

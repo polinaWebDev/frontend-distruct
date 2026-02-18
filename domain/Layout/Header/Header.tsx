@@ -18,8 +18,8 @@ import { NewsIcon } from '@/lib/icons/NewsIcon';
 import { ChallengesIcon } from '@/lib/icons/ChallengesIcon';
 import { TierIcon } from '@/lib/icons/TierIcon';
 import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadState';
-import { InfoIcon } from '@/lib/icons/InfoIcon';
-import { Brain } from 'lucide-react';
+import BrainIcon from '@/lib/icons/BrainIcon';
+import { Trophy } from 'lucide-react';
 
 export const Header = ({
     user,
@@ -120,10 +120,18 @@ export const Header = ({
                             showIndicator={hasUnread}
                         />
                         <HeaderNavItem
-                            icon={(className) => <Brain className={className} />}
+                            icon={(className) => <BrainIcon className={className} />}
                             title="База знаний"
                             href={`/${game}/knowledge-base`}
                             disabled
+                            strokeIcon
+                        />
+                        <HeaderNavItem
+                            icon={(className) => <Trophy className={className} />}
+                            title="Рейтинг"
+                            href={`/${game}/rating`}
+                            disabled
+                            strokeIcon
                         />
                     </div>
                 )}

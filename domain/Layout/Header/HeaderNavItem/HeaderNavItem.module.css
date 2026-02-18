@@ -26,6 +26,15 @@
         }
     }
 
+    .stroke_icon {
+        path {
+            fill: none;
+            stroke: #797f89;
+            stroke-width: 1.7;
+            transition: 0.3s;
+        }
+    }
+
     .text {
         font-size: 15px;
         font-weight: 500;
@@ -36,12 +45,19 @@
     }
 
     &.active,
-    &:hover {
+    &:not(.disabled):hover {
         border-color: #f5a02f;
 
         .icon {
             path {
                 fill: #f5a02f;
+            }
+        }
+
+        .stroke_icon {
+            path {
+                fill: none;
+                stroke: #f5a02f;
             }
         }
 
@@ -52,9 +68,12 @@
 }
 
 .disabled {
-    cursor: default;
-    pointer-events: none;
+    cursor: not-allowed;
     opacity: 0.8;
+
+    * {
+        cursor: not-allowed;
+    }
 }
 
 .soon_badge {
@@ -73,6 +92,7 @@
     font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
+    cursor: not-allowed;
 }
 
 .indicator {

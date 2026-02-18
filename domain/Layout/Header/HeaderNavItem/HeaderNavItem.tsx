@@ -9,6 +9,7 @@ export const HeaderNavItem = ({
     onClick,
     showIndicator = false,
     disabled = false,
+    strokeIcon = false,
 }: {
     icon: (className: string) => React.ReactNode;
     title: string;
@@ -16,16 +17,18 @@ export const HeaderNavItem = ({
     onClick?: () => void;
     showIndicator?: boolean;
     disabled?: boolean;
+    strokeIcon?: boolean;
 }) => {
     const pathname = usePathname();
 
     const isActive = pathname === href;
+    const iconClassName = clsx(styles.icon, strokeIcon && styles.stroke_icon);
 
     if (disabled) {
         return (
             <div className={clsx(styles.nav_item, styles.disabled)} aria-disabled="true">
                 <span className={styles.soon_badge}>скоро</span>
-                {icon(styles.icon)}
+                {icon(iconClassName)}
                 <div className={styles.text}>{title}</div>
             </div>
         );
@@ -38,7 +41,7 @@ export const HeaderNavItem = ({
             onClick={onClick}
         >
             {showIndicator && <span className={styles.indicator} aria-hidden="true" />}
-            {icon(styles.icon)}
+            {icon(iconClassName)}
             <div className={styles.text}>{title}</div>
         </Link>
     );

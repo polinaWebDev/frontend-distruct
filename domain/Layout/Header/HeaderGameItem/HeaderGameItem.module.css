@@ -59,8 +59,11 @@
     position: relative;
 
     &.disabled {
-        cursor: default;
-        pointer-events: none;
+        cursor: not-allowed;
+
+        * {
+            cursor: not-allowed;
+        }
     }
 }
 
@@ -80,6 +83,7 @@
     font-weight: 700;
     line-height: 1;
     text-transform: uppercase;
+    cursor: not-allowed;
 }
 
 .selected_line {

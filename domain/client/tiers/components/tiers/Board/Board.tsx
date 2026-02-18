@@ -265,7 +265,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
                             />
                         ) : null}
                     </div>
-                    {poolRow && <Pool row={poolRow} />}
+                    {!readOnly && poolRow ? <Pool row={poolRow} /> : null}
                 </div>
                 {!readOnly ? (
                     <DragOverlay adjustScale={false}>
