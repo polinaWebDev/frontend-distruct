@@ -912,6 +912,12 @@ export type PublicGearRarityDto = {
     color?: string | null;
 };
 
+export type PublicGearTypeDto = {
+    id: string;
+    name?: string | null;
+    image_url?: string | null;
+};
+
 export type PublicGearDto = {
     id: string;
     name: string;
@@ -919,6 +925,7 @@ export type PublicGearDto = {
     image_url?: string | null;
     color: string;
     rarity?: PublicGearRarityDto | null;
+    type?: PublicGearTypeDto | null;
     tier: number;
 };
 

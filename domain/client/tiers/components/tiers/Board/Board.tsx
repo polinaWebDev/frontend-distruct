@@ -1,6 +1,8 @@
 'use client';
 import { useBoard } from '@/domain/client/tiers/components/tiers/Board/BoardContext';
 import { Row } from '@/domain/client/tiers/components/tiers/Board/Row';
+import { useGearById } from '@/domain/client/tiers/components/tiers/GearContext';
+import { PublicGearDto } from '@/lib/api_client/gen';
 import {
     DndContext,
     DragEndEvent,
@@ -19,8 +21,23 @@ type BoardProps = {
     readOnly?: boolean;
 };
 
+type TypeOption = {
+    id: string;
+    name: string;
+};
+
+function getTypeOption(gear: PublicGearDto | undefined): TypeOption | null {
+    const typeId = gear?.type?.id;
+    if (!typeId) return null;
+    return {
+        id: typeId,
+        name: gear.type?.name?.trim() || typeId,
+    };
+}
+
 export function Board({ tierListId, readOnly = false }: BoardProps) {
     const board = useBoard();
+    const gearById = useGearById();
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
     const logDnd = (...args: unknown[]) => {
         console.info('[tiers-dnd]', ...args);
@@ -28,6 +45,18 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const poolRow = board.rows.find((row) => row.type === 'pool');
     const tierRows = board.rows.filter((row) => row.type !== 'pool');
+    const typeOptions = useMemo(() => {
+        const byId = new Map<string, TypeOption>();
+        for (const row of board.rows) {
+            for (const item of row.items) {
+                const option = getTypeOption(gearById[item.gearId]);
+                if (option && !byId.has(option.id)) {
+                    byId.set(option.id, option);
+                }
+            }
+        }
+        return Array.from(byId.values()).sort((a, b) => a.name.localeCompare(b.name, 'ru'));
+    }, [board.rows, gearById]);
 
     const activeItem = useMemo(() => {
         if (!activeItemId) return null;
@@ -265,7 +294,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
                             />
                         ) : null}
                     </div>
-                    {!readOnly && poolRow ? <Pool row={poolRow} /> : null}
+                    {!readOnly && poolRow ? <Pool row={poolRow} typeOptions={typeOptions} /> : null}
                 </div>
                 {!readOnly ? (
                     <DragOverlay adjustScale={false}>

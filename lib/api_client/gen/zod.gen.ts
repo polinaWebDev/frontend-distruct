@@ -1046,6 +1046,18 @@ export const zPublicGearRarityDto = z.object({
     ]))
 });
 
+export const zPublicGearTypeDto = z.object({
+    id: z.string(),
+    name: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    image_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
 export const zPublicGearDto = z.object({
     id: z.string(),
     name: z.string(),
@@ -1057,6 +1069,10 @@ export const zPublicGearDto = z.object({
     color: z.string(),
     rarity: z.optional(z.union([
         zPublicGearRarityDto,
+        z.null()
+    ])),
+    type: z.optional(z.union([
+        zPublicGearTypeDto,
         z.null()
     ])),
     tier: z.number()
