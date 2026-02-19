@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { AppControlledInput } from '@/ui/AppInput/AppInput';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
 
 const schema = z.object({
     contact_info: z.string().min(1),
@@ -26,11 +27,27 @@ export const PurchaseRewardDialog = ({
     balance: number;
 }) => {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const { mutate, isPending, error } = useMutation({
+    const queryClient = useQueryClient();
+    const { mutate, isPending } = useMutation({
         ...shopControllerPurchaseMutation({
             client: getPublicClient(),
         }),
-        onSuccess: () => {
+        onSuccess: async (isPurchased) => {
+            if (!isPurchased) {
+                toast.error('Не удалось купить награду');
+                return;
+            }
+
+            await Promise.all([
+                queryClient.invalidateQueries({
+                    predicate: (query) =>
+                        query.queryKey[0] === 'seasonControllerGetCurrentSeasonBalance',
+                }),
+                queryClient.invalidateQueries({
+                    predicate: (query) => query.queryKey[0] === 'shopControllerGetList',
+                }),
+            ]);
+
             setShowSuccessDialog(true);
         },
         onError: (error) => {

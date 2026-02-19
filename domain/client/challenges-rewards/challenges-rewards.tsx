@@ -88,6 +88,8 @@ export const ChallengesRewards = ({
         }),
         enabled: authenticated,
         initialData: seasonBalance,
+        staleTime: 0,
+        refetchOnMount: 'always',
     });
 
     const currentBalance = liveSeasonBalance?.balance ?? seasonBalance?.balance ?? 0;
