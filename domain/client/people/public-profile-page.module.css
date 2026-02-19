@@ -1,46 +1,82 @@
 .container {
+    min-height: calc(100svh - var(--header-height));
+    width: 100%;
+
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
 }
 
-.header {
+.content {
+    width: 100%;
+}
+
+.content_inner {
+    max-width: 733px;
+    width: 100%;
+    margin: 0 auto;
+
     display: flex;
-    gap: 16px;
-    align-items: center;
-    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 50px;
+}
+
+.left {
+    flex-shrink: 0;
+}
+
+.right {
+    width: 100%;
 }
 
 .avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
+    width: 296px;
+    height: 296px;
+    border-radius: 16px;
     object-fit: cover;
-    background: #2a2f3a;
+    background: #1b1c1f;
 }
 
 .placeholder {
-    width: 72px;
-    height: 72px;
-    border-radius: 50%;
-    background: #2a2f3a;
+    width: 296px;
+    height: 296px;
+    border-radius: 16px;
+    background: #1b1c1f;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: 600;
-    color: #c5c9d3;
-    font-size: 20px;
+    color: #79808e;
+    font-size: 48px;
 }
 
 .title {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 36px;
+    font-weight: 500;
     color: #fff;
+    margin-bottom: 8px;
 }
 
 .subtitle {
-    font-size: 14px;
-    color: #8b94a6;
+    font-size: 15px;
+    font-weight: 500;
+    color: #79808e;
+    margin-bottom: 20px;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.primary_action {
+    margin-bottom: 20px;
 }
 
 .lists {
@@ -50,30 +86,54 @@
 }
 
 .listCard {
-    border: 1px solid var(--color-stroke);
-    border-radius: 16px;
-    padding: 14px;
-    background: var(--color-secondary-bg);
+    border: 1px solid #34363d;
+    border-radius: 13px;
+    padding: 16px;
+    background: #0f0f10;
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
 .listTitle {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 600;
     color: #fff;
+    font-family: var(--font-thicker);
 }
 
 .listMeta {
     font-size: 13px;
-    color: #9aa3b2;
+    color: #79808e;
 }
 
 .emptyState {
-    padding: 32px;
-    text-align: center;
-    color: #8b94a6;
-    border: 1px dashed var(--color-stroke);
-    border-radius: 16px;
+    width: 100%;
+    border: 1px solid #34363d;
+    border-radius: 13px;
+    background: #0f0f10;
+    padding: 22px;
+    color: #79808e;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+@media (max-width: 840px) {
+    .content_inner {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 24px;
+    }
+
+    .title {
+        font-size: 24px;
+    }
+
+    .avatar,
+    .placeholder {
+        width: min(296px, 100%);
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
 }

@@ -54,13 +54,38 @@
 .difficulty_item {
 }
 
-.difficulty_button {
+.difficulty_tabs_root {
+    width: auto;
+}
+
+.difficulty_tab {
     flex: 0 0 156px;
     width: 156px;
     height: 40px;
+    border: 1px solid var(--difficulty-border);
+    background: transparent;
+    color: var(--difficulty-text);
+    transition:
+        color 0.15s ease-in-out,
+        background-color 0.15s ease-in-out,
+        border-color 0.15s ease-in-out;
+
+    &[data-state='active'] {
+        background: var(--difficulty-active-bg);
+        border-color: var(--difficulty-active-bg);
+        color: var(--difficulty-active-text);
+    }
+
+    @media (hover: hover) {
+        &:hover {
+            border-color: var(--difficulty-hover-border);
+            background: var(--difficulty-active-bg);
+            color: var(--difficulty-hover-text);
+        }
+    }
 }
 
-.difficulty_button_text {
+.difficulty_tab_text {
     width: 100%;
     max-width: 100%;
     font-size: 12px;
@@ -143,5 +168,10 @@
 
     .difficulty_items {
         width: auto;
+        height: auto;
+        background: transparent;
+        border: none;
+        padding: 0;
+        border-radius: 0;
     }
 }

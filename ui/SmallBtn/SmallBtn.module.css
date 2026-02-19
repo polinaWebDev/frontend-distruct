@@ -2,6 +2,13 @@
     width: 100%;
     /* height: 50px; */
     cursor: pointer;
+    border: none;
+    background: transparent;
+    padding: 0;
+    appearance: none;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 
     display: flex;
     align-items: flex-start;
@@ -138,26 +145,28 @@
             }
         }
 
-        &:hover {
-            .content {
-                background-color: var(--app-btn-hover-bg, #d78312);
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    background-color: var(--app-btn-hover-bg, #d78312);
 
-                p {
-                    color: var(--app-btn-hover-text, white);
+                    p {
+                        color: var(--app-btn-hover-text, white);
+                    }
+
+                    .icon_fill path {
+                        fill: var(--app-btn-hover-text, white);
+                    }
+
+                    .icon_stroke path {
+                        stroke: var(--app-btn-hover-text, white);
+                    }
                 }
 
-                .icon_fill path {
-                    fill: var(--app-btn-hover-text, white);
-                }
-
-                .icon_stroke path {
-                    stroke: var(--app-btn-hover-text, white);
-                }
-            }
-
-            .part_icon {
-                path {
-                    fill: var(--app-btn-part-hover, var(--app-btn-hover-bg, #d78312));
+                .part_icon {
+                    path {
+                        fill: var(--app-btn-part-hover, var(--app-btn-hover-bg, #d78312));
+                    }
                 }
             }
         }
@@ -186,26 +195,28 @@
             }
         }
 
-        &:hover {
-            .content {
-                background-color: #4b62f2;
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    background-color: #4b62f2;
 
-                p {
-                    color: white;
+                    p {
+                        color: white;
+                    }
+
+                    .icon_fill path {
+                        fill: white;
+                    }
+
+                    .icon_stroke path {
+                        stroke: white;
+                    }
                 }
 
-                .icon_fill path {
-                    fill: white;
-                }
-
-                .icon_stroke path {
-                    stroke: white;
-                }
-            }
-
-            .part_icon {
-                path {
-                    fill: #4b62f2;
+                .part_icon {
+                    path {
+                        fill: #4b62f2;
+                    }
                 }
             }
         }
@@ -234,26 +245,28 @@
             }
         }
 
-        &:hover {
-            .content {
-                background-color: #4b62f2;
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    background-color: #4b62f2;
 
-                p {
-                    color: white;
+                    p {
+                        color: white;
+                    }
+
+                    .icon_fill path {
+                        fill: white;
+                    }
+
+                    .icon_stroke path {
+                        stroke: white;
+                    }
                 }
 
-                .icon_fill path {
-                    fill: white;
-                }
-
-                .icon_stroke path {
-                    stroke: white;
-                }
-            }
-
-            .part_icon {
-                path {
-                    fill: #4b62f2;
+                .part_icon {
+                    path {
+                        fill: #4b62f2;
+                    }
                 }
             }
         }
@@ -286,26 +299,28 @@
             }
         }
 
-        &:hover {
-            .content {
-                border-color: var(--color-brand);
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    border-color: var(--color-brand);
 
-                p {
-                    color: var(--color-brand);
+                    p {
+                        color: var(--color-brand);
+                    }
+
+                    .icon_fill path {
+                        fill: var(--color-brand);
+                    }
+
+                    .icon_stroke path {
+                        stroke: var(--color-brand);
+                    }
                 }
 
-                .icon_fill path {
-                    fill: var(--color-brand);
-                }
-
-                .icon_stroke path {
-                    stroke: var(--color-brand);
-                }
-            }
-
-            .outline_part_icon {
-                path {
-                    stroke: var(--brand-color);
+                .outline_part_icon {
+                    path {
+                        stroke: var(--brand-color);
+                    }
                 }
             }
         }
@@ -338,30 +353,32 @@
             }
         }
 
-        &:hover {
-            .content {
-                border-color: var(--app-btn-hover-border, var(--color-brand));
-                background-color: var(
-                    --app-btn-outline-hover-bg,
-                    var(--app-btn-outline-bg, transparent)
-                );
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    border-color: var(--app-btn-hover-border, var(--color-brand));
+                    background-color: var(
+                        --app-btn-outline-hover-bg,
+                        var(--app-btn-outline-bg, transparent)
+                    );
 
-                p {
-                    color: var(--app-btn-hover-text, var(--color-brand));
+                    p {
+                        color: var(--app-btn-hover-text, var(--color-brand));
+                    }
+
+                    .icon_fill path {
+                        fill: var(--app-btn-hover-text, var(--color-brand));
+                    }
+
+                    .icon_stroke path {
+                        stroke: var(--app-btn-hover-text, var(--color-brand));
+                    }
                 }
 
-                .icon_fill path {
-                    fill: var(--app-btn-hover-text, var(--color-brand));
-                }
-
-                .icon_stroke path {
-                    stroke: var(--app-btn-hover-text, var(--color-brand));
-                }
-            }
-
-            .outline_part_icon {
-                path {
-                    stroke: var(--app-btn-hover-border, var(--brand-color));
+                .outline_part_icon {
+                    path {
+                        stroke: var(--app-btn-hover-border, var(--brand-color));
+                    }
                 }
             }
         }
@@ -394,28 +411,30 @@
             }
         }
 
-        &:hover {
-            .content {
-                border-color: var(--color-brand);
-                /* background-color: var(--color-brand); */
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    border-color: var(--color-brand);
+                    /* background-color: var(--color-brand); */
 
-                p {
-                    color: var(--color-brand);
+                    p {
+                        color: var(--color-brand);
+                    }
+
+                    .icon_fill path {
+                        fill: var(--color-brand);
+                    }
+
+                    .icon_stroke path {
+                        stroke: var(--color-brand);
+                    }
                 }
 
-                .icon_fill path {
-                    fill: var(--color-brand);
-                }
-
-                .icon_stroke path {
-                    stroke: var(--color-brand);
-                }
-            }
-
-            .outline_part_icon {
-                path {
-                    stroke: var(--brand-color);
-                    /* fill: var(--brand-color); */
+                .outline_part_icon {
+                    path {
+                        stroke: var(--brand-color);
+                        /* fill: var(--brand-color); */
+                    }
                 }
             }
         }
@@ -448,28 +467,30 @@
             }
         }
 
-        &:hover {
-            .content {
-                border-color: white;
-                /* background-color: var(--color-brand); */
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    border-color: white;
+                    /* background-color: var(--color-brand); */
 
-                p {
-                    color: white;
+                    p {
+                        color: white;
+                    }
+
+                    .icon_fill path {
+                        fill: white;
+                    }
+
+                    .icon_stroke path {
+                        stroke: white;
+                    }
                 }
 
-                .icon_fill path {
-                    fill: white;
-                }
-
-                .icon_stroke path {
-                    stroke: white;
-                }
-            }
-
-            .outline_part_icon {
-                path {
-                    stroke: white;
-                    /* fill: var(--brand-color); */
+                .outline_part_icon {
+                    path {
+                        stroke: white;
+                        /* fill: var(--brand-color); */
+                    }
                 }
             }
         }
@@ -500,26 +521,28 @@
             }
         }
 
-        &:hover {
-            .content {
-                background-color: #27272a;
+        @media (hover: hover) {
+            &:hover {
+                .content {
+                    background-color: #27272a;
 
-                p {
-                    color: #79808e;
+                    p {
+                        color: #79808e;
+                    }
+
+                    .icon_fill path {
+                        fill: #79808e;
+                    }
+
+                    .icon_stroke path {
+                        stroke: #79808e;
+                    }
                 }
 
-                .icon_fill path {
-                    fill: #79808e;
-                }
-
-                .icon_stroke path {
-                    stroke: #79808e;
-                }
-            }
-
-            .part_icon {
-                path {
-                    fill: #27272a;
+                .part_icon {
+                    path {
+                        fill: #27272a;
+                    }
                 }
             }
         }

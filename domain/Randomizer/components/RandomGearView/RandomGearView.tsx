@@ -1,6 +1,4 @@
-import {
-    RandomChallengeWithCategoriesDto,
-} from '@/lib/api_client/gen';
+import { RandomChallengeWithCategoriesDto } from '@/lib/api_client/gen';
 import { useQuery } from '@tanstack/react-query';
 import styles from './RandomGearView.module.css';
 import { GoBackBig } from '@/ui/GoBackBig/GoBackBig';
@@ -15,15 +13,18 @@ export const RandomGearView = ({
     onBack,
     onNewGen,
 }: {
-    seed: string;
+    seed: string | null;
     challenge: RandomChallengeWithCategoriesDto;
     onBack: () => void;
     onNewGen: () => void;
 }) => {
+    const hasSeed = !!seed;
     const { data: result, isPending } = useQuery({
         queryKey: getRandomLoadoutQueryKey(challenge.id, seed),
         queryFn: () => getRandomLoadout(challenge.id, seed),
+        enabled: hasSeed,
     });
+    const isLoadoutLoading = hasSeed && isPending;
 
     return (
         <div className={styles.container}>
@@ -36,29 +37,29 @@ export const RandomGearView = ({
             </div> */}
 
             <div className={styles.loadout_container}>
-                <PhotoProvider>
-                    {challenge.categories.map((category) => {
-                        const item = result?.result.find(
-                            (item) => item.category_id === category.category_id
-                        );
+                {hasSeed && (
+                    <PhotoProvider>
+                        {challenge.categories.map((category) => {
+                            const item = result?.result.find(
+                                (item) => item.category_id === category.category_id
+                            );
 
-                        if (!isPending && !item?.gear) return null;
+                            if (!isLoadoutLoading && !item?.gear) return null;
 
-                        console.log(item?.gear);
-
-                        return (
-                            <RandomGearItem
-                                key={category.category_id}
-                                category={category}
-                                gear={item?.gear || null}
-                                isLoading={isPending}
-                            />
-                        );
-                    })}
-                </PhotoProvider>
+                            return (
+                                <RandomGearItem
+                                    key={category.category_id}
+                                    category={category}
+                                    gear={item?.gear || null}
+                                    isLoading={isLoadoutLoading}
+                                />
+                            );
+                        })}
+                    </PhotoProvider>
+                )}
             </div>
 
-            {result?.additional_condition && (
+            {hasSeed && result?.additional_condition && (
                 <div className={styles.additional_challenges_container}>
                     <p className={styles.title}>Дополнительное усложнение</p>
                     <div className={styles.items}>
@@ -71,7 +72,7 @@ export const RandomGearView = ({
 
             <div className={styles.bottom_btns}>
                 <AppBtn
-                    disabled={isPending}
+                    disabled={isLoadoutLoading}
                     text="Новая генерация"
                     onClick={onNewGen}
                     style="default"

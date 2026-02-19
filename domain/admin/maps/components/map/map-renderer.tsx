@@ -253,6 +253,7 @@ export const MapRenderer = memo(
         });
 
         const iconCreateFunction = useCallback(createClusterCustomIcon, []);
+        const shouldUseClusters = !admin && !selectedTypeId;
 
         const handleMarkerDragEnd = useCallback(
             (marker: MapDataMarkerDto, latlng: LatLng) => {
@@ -396,7 +397,7 @@ export const MapRenderer = memo(
                             </EnhancedMarker>
                         ))}
                     </>
-                ) : (
+                ) : shouldUseClusters ? (
                     <MarkerClusterGroup
                         key={clusterGroupKey}
                         iconCreateFunction={iconCreateFunction}
@@ -425,6 +426,27 @@ export const MapRenderer = memo(
                             />
                         ))}
                     </MarkerClusterGroup>
+                ) : (
+                    <>
+                        {markers.map((marker) => (
+                            <EnhancedMarker
+                                position={[marker.marker.latitude, marker.marker.longitude]}
+                                key={marker.marker.id}
+                                eventHandlers={{
+                                    click: (e) => {
+                                        onMarkerClick?.(marker.marker);
+                                        console.log(e);
+                                    },
+                                }}
+                                icon={
+                                    <MapMarker
+                                        marker_type={marker.marker_type}
+                                        color={marker.color}
+                                    />
+                                }
+                            />
+                        ))}
+                    </>
                 )}
 
                 {clickedLatLng && admin && (

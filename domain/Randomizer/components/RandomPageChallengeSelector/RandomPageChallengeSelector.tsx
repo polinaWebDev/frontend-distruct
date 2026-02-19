@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { CSSProperties, useState } from 'react';
 import styles from './RandomPageChallengeSelector.module.css';
 import {
     RandomChallengeWithCategoriesDto,
@@ -8,6 +8,8 @@ import { getActiveTextColorBasedOnBg } from '../../utils/utils';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import clsx from 'clsx';
 import { RandomizerGroupIcon } from '@/lib/icons/RandomizerGroupIcon';
+import { Tabs, TabsList } from '@/components/ui/tabs';
+import AppTabsTrigger from '@/ui/AppTabsTrigger/AppTabsTrigger';
 
 const inactive_color = '#5D6369';
 
@@ -33,40 +35,31 @@ const DifficultyButton = ({
     challenge,
     activeColor,
     onClick,
-    selected,
 }: {
     challenge: RandomChallengeWithCategoriesDto;
     activeColor: string;
     onClick: () => void;
-    selected: boolean;
 }) => {
     const activeTextColor = getActiveTextColorBasedOnBg(activeColor);
 
     return (
-        <AppBtn
-            text={challenge.name}
-            style={selected ? 'default' : 'outline_dark'}
+        <AppTabsTrigger
+            value={challenge.id}
             onClick={onClick}
-            className={styles.difficulty_button}
-            textClassName={styles.difficulty_button_text}
-            colorProps={
-                selected
-                    ? {
-                          bgColor: activeColor,
-                          textColor: activeTextColor,
-                          hoverBgColor: activeColor,
-                          hoverTextColor: activeTextColor,
-                          partColor: activeColor,
-                          partHoverColor: activeColor,
-                      }
-                    : {
-                          borderColor: inactive_color,
-                          textColor: '#C9CED8',
-                          hoverBorderColor: activeColor,
-                          hoverTextColor: activeTextColor,
-                      }
+            className={styles.difficulty_tab}
+            style={
+                {
+                    '--difficulty-border': inactive_color,
+                    '--difficulty-text': '#C9CED8',
+                    '--difficulty-hover-border': activeColor,
+                    '--difficulty-hover-text': activeTextColor,
+                    '--difficulty-active-bg': activeColor,
+                    '--difficulty-active-text': activeTextColor,
+                } as CSSProperties
             }
-        />
+        >
+            <span className={styles.difficulty_tab_text}>{challenge.name}</span>
+        </AppTabsTrigger>
     );
 };
 
@@ -77,20 +70,8 @@ export const RandomPageChallengeGroupSelector = ({
     groups: RandomGearChallengeGroupEntity[];
     onSubmit: (group: RandomGearChallengeGroupEntity) => any;
 }) => {
-    const [selectedGroup, setSelectedGroup] = useState<RandomGearChallengeGroupEntity | null>(
-        groups[0] ?? null
-    );
-
-    useEffect(() => {
-        if (groups.length === 0) {
-            setSelectedGroup(null);
-            return;
-        }
-
-        setSelectedGroup((prevGroup) =>
-            prevGroup && groups.some((group) => group.id === prevGroup.id) ? prevGroup : groups[0]
-        );
-    }, [groups]);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(groups[0]?.id ?? null);
+    const selectedGroup = groups.find((group) => group.id === selectedGroupId) ?? groups[0] ?? null;
 
     return (
         <div className={styles.container}>
@@ -104,7 +85,7 @@ export const RandomPageChallengeGroupSelector = ({
                     <GroupButton
                         key={group.id}
                         group={group}
-                        onClick={() => setSelectedGroup(group)}
+                        onClick={() => setSelectedGroupId(group.id)}
                         selected={selectedGroup?.id === group.id}
                     />
                 ))}
@@ -135,20 +116,37 @@ export const RandomPageChallengeSelector = ({
     challenges: RandomChallengeWithCategoriesDto[];
     currentChallengeId?: string | null;
 }) => {
+    const [optimisticSelection, setOptimisticSelection] = useState<{
+        id: string;
+        baseId: string | null;
+    } | null>(null);
+    const normalizedCurrentId = currentChallengeId ?? null;
+    const selectedChallengeId =
+        optimisticSelection && optimisticSelection.baseId === normalizedCurrentId
+            ? optimisticSelection.id
+            : normalizedCurrentId;
+
     return (
         <div className={styles.challenge_selector_container}>
             <p className={styles.challenge_picker_title}>Уровень сложности</p>
-            <div className={styles.difficulty_items}>
-                {challenges.map((challenge) => (
-                    <DifficultyButton
-                        key={challenge.id}
-                        challenge={challenge}
-                        activeColor={challenge.color}
-                        onClick={() => onSubmit(challenge)}
-                        selected={currentChallengeId === challenge.id}
-                    />
-                ))}
-            </div>
+            <Tabs value={selectedChallengeId ?? ''} className={styles.difficulty_tabs_root}>
+                <TabsList className={styles.difficulty_items}>
+                    {challenges.map((challenge) => (
+                        <DifficultyButton
+                            key={challenge.id}
+                            challenge={challenge}
+                            activeColor={challenge.color}
+                            onClick={() => {
+                                setOptimisticSelection({
+                                    id: challenge.id,
+                                    baseId: normalizedCurrentId,
+                                });
+                                onSubmit(challenge);
+                            }}
+                        />
+                    ))}
+                </TabsList>
+            </Tabs>
         </div>
     );
 };

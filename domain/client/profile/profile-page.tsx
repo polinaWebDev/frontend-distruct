@@ -49,47 +49,49 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
             <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
                 <div className={clsx(styles.container, 'page_width_wrapper header_margin_top')}>
                     <div className={styles.content}>
-                        <div className={styles.left}>
-                            <ProfileAvatar url={profile.avatar_url} />
+                        <div className={styles.content_inner}>
+                            <div className={styles.left}>
+                                <ProfileAvatar url={profile.avatar_url} />
 
-                            <AppBtn
-                                style="outline_red"
-                                text="Выйти из аккаунта"
-                                className={styles.logout_btn}
-                                onClick={() => {
-                                    setIsLogoutDialogOpen(true);
-                                }}
-                            />
-                        </div>
-                        <div className={styles.right}>
-                            <ProfileUsername
-                                username={profile.username}
-                                isEditing={isEditingProfile}
-                                onEditingChange={setIsEditingProfile}
-                            />
-                            <p className={styles.email}>{profile.email}</p>
-
-                            <AppBtn
-                                style="outline_bright"
-                                text="Кастомизация профиля"
-                                className={styles.customization_btn}
-                                onClick={() => {
-                                    setIsCustomizationDialogOpen(true);
-                                }}
-                            />
-                            <div className="flex flex-wrap gap-3">
-                                <SubscriptionsDialog currentUserId={profile.id} game={game} />
-                                <RequestsDialog incomingCount={incomingCount} />
+                                <AppBtn
+                                    style="outline_red"
+                                    text="Выйти из аккаунта"
+                                    className={styles.logout_btn}
+                                    onClick={() => {
+                                        setIsLogoutDialogOpen(true);
+                                    }}
+                                />
                             </div>
+                            <div className={styles.right}>
+                                <ProfileUsername
+                                    username={profile.username}
+                                    isEditing={isEditingProfile}
+                                    onEditingChange={setIsEditingProfile}
+                                />
+                                <p className={styles.email}>{profile.email}</p>
 
-                            <FriendsBlock game={game} />
-                            <ProfileBlock
-                                title="Тир-листы"
-                                desc="Снаряжение по тирам S, A, B, C и тп"
-                                actionLabel="Открыть"
-                                onAction={() => router.push(`/${game}/tiers`)}
-                            />
-                            <ProfileBlock title="Достижения" />
+                                <AppBtn
+                                    style="outline_bright"
+                                    text="Кастомизация профиля"
+                                    className={styles.customization_btn}
+                                    onClick={() => {
+                                        setIsCustomizationDialogOpen(true);
+                                    }}
+                                />
+                                <div className="flex flex-wrap gap-3">
+                                    <SubscriptionsDialog currentUserId={profile.id} game={game} />
+                                    <RequestsDialog incomingCount={incomingCount} />
+                                </div>
+
+                                <FriendsBlock game={game} />
+                                <ProfileBlock
+                                    title="Тир-листы"
+                                    desc="Снаряжение по тирам S, A, B, C и тп"
+                                    actionLabel="Открыть"
+                                    onAction={() => router.push(`/${game}/tiers`)}
+                                />
+                                <ProfileBlock title="Достижения" />
+                            </div>
                         </div>
                     </div>
                 </div>

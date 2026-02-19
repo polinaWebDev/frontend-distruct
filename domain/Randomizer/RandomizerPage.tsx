@@ -17,15 +17,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { v4 } from 'uuid';
 import { useSearchParams } from 'next/navigation';
 import { RandomGearView } from './components/RandomGearView/RandomGearView';
-import { useQueryClient } from '@tanstack/react-query';
-import {
-    getRandomLoadout,
-    getRandomLoadoutQueryKey,
-} from './components/RandomGearView/randomLoadout.query';
 
 export const RandomizerPage = ({
     challenges,
-    game,
     groups,
 }: {
     game: GameType;
@@ -33,7 +27,6 @@ export const RandomizerPage = ({
     groups: RandomGearChallengeGroupEntity[];
 }) => {
     const router = useRouter();
-    const queryClient = useQueryClient();
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const challengeId = searchParams.get('challenge_id');
@@ -71,11 +64,6 @@ export const RandomizerPage = ({
                             const availableChallengesId = firstChallenge.id;
                             const nextSeed = v4();
 
-                            void queryClient.prefetchQuery({
-                                queryKey: getRandomLoadoutQueryKey(availableChallengesId, nextSeed),
-                                queryFn: () => getRandomLoadout(availableChallengesId, nextSeed),
-                            });
-
                             newParams.set('challenge_id', availableChallengesId);
                             newParams.set('seed', nextSeed);
                             router.push(`${pathname}?${newParams.toString()}`);
@@ -88,12 +76,6 @@ export const RandomizerPage = ({
                         onSubmit={(challenge) => {
                             const newParams = new URLSearchParams(searchParams.toString());
                             const nextSeed = v4();
-
-                            void queryClient.prefetchQuery({
-                                queryKey: getRandomLoadoutQueryKey(challenge.id, nextSeed),
-                                queryFn: () => getRandomLoadout(challenge.id, nextSeed),
-                            });
-
                             newParams.set('challenge_id', challenge.id);
                             newParams.set('seed', nextSeed);
                             router.push(`${pathname}?${newParams.toString()}`);

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
+import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import {
     friendsControllerAcceptMutation,
@@ -153,99 +154,113 @@ export const PublicProfilePage = ({ userId, game }: { userId: string; game: Game
 
     return (
         <div className={`${styles.container} page_width_wrapper header_margin_top`}>
-            <div className={styles.header}>
-                {userData?.avatar_url && (
-                    <img
-                        src={getFileUrl(userData.avatar_url)}
-                        alt={userData?.username ?? 'Пользователь'}
-                        className={styles.avatar}
-                    />
-                )}
-                <div>
-                    <p className={styles.title}>
-                        {isUserLoading ? 'Загрузка...' : (userData?.username ?? 'Пользователь')}
-                    </p>
-                    <p className={styles.subtitle}>Публичные тир-листы</p>
-                </div>
-
-                {userData && (
-                    <>
-                        {incomingRequest ? (
-                            <div className="flex gap-2">
-                                <Button
-                                    variant="default"
-                                    disabled={acceptRequestMutation.isPending}
-                                    onClick={() =>
-                                        acceptRequestMutation.mutate({
-                                            body: { requestId: incomingRequest.id },
-                                        })
-                                    }
-                                >
-                                    Принять
-                                </Button>
-                                <Button
-                                    variant="outline"
-                                    disabled={rejectRequestMutation.isPending}
-                                    onClick={() =>
-                                        rejectRequestMutation.mutate({
-                                            body: { requestId: incomingRequest.id },
-                                        })
-                                    }
-                                >
-                                    Отклонить
-                                </Button>
-                            </div>
-                        ) : isFriend ? (
-                            <Button
-                                variant="outline"
-                                disabled={removeFriendMutation.isPending}
-                                onClick={() =>
-                                    removeFriendMutation.mutate({
-                                        body: { userId: userData.id },
-                                    })
-                                }
-                            >
-                                Удалить из друзей
-                            </Button>
-                        ) : outgoingRequest ? (
-                            <Button variant="outline" disabled>
-                                Запрос отправлен
-                            </Button>
+            <div className={styles.content}>
+                <div className={styles.content_inner}>
+                    <div className={styles.left}>
+                        {userData?.avatar_url ? (
+                            <img
+                                src={getFileUrl(userData.avatar_url)}
+                                alt={userData?.username ?? 'Пользователь'}
+                                className={styles.avatar}
+                            />
                         ) : (
-                            <Button
-                                variant="default"
-                                disabled={sendRequestMutation.isPending}
-                                onClick={() =>
-                                    sendRequestMutation.mutate({
-                                        body: { userId: userData.id },
-                                    })
-                                }
-                            >
-                                Добавить в друзья
-                            </Button>
+                            <div className={styles.placeholder}>
+                                {(userData?.username ?? 'U').slice(0, 1).toUpperCase()}
+                            </div>
                         )}
-                    </>
-                )}
-            </div>
+                    </div>
 
-            {isTierListsLoading ? (
-                <div className={styles.emptyState}>Загрузка тир-листов...</div>
-            ) : tierLists.length === 0 ? (
-                <div className={styles.emptyState}>Публичные тир-листы не найдены</div>
-            ) : (
-                <div className={styles.lists}>
-                    {tierLists.map((list) => (
-                        <Link
-                            href={`/${game}/tiers/${list.id}`}
-                            key={list.id}
-                            className={styles.listCard}
-                        >
-                            <p className={styles.listTitle}>{list.title}</p>
-                            <p className={styles.listMeta}>{list.categoryName}</p>
-                        </Link>
-                    ))}
+                    <div className={styles.right}>
+                        <p className={styles.title}>
+                            {isUserLoading ? 'Загрузка...' : (userData?.username ?? 'Пользователь')}
+                        </p>
+                        <p className={styles.subtitle}>Публичные тир-листы</p>
+
+                        {userData && (
+                            <>
+                                {incomingRequest ? (
+                                    <div className={styles.actions}>
+                                        <Button
+                                            variant="default"
+                                            disabled={acceptRequestMutation.isPending}
+                                            onClick={() =>
+                                                acceptRequestMutation.mutate({
+                                                    body: { requestId: incomingRequest.id },
+                                                })
+                                            }
+                                        >
+                                            Принять
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            disabled={rejectRequestMutation.isPending}
+                                            onClick={() =>
+                                                rejectRequestMutation.mutate({
+                                                    body: { requestId: incomingRequest.id },
+                                                })
+                                            }
+                                        >
+                                            Отклонить
+                                        </Button>
+                                    </div>
+                                ) : isFriend ? (
+                                    <Button
+                                        variant="outline"
+                                        className={styles.primary_action}
+                                        disabled={removeFriendMutation.isPending}
+                                        onClick={() =>
+                                            removeFriendMutation.mutate({
+                                                body: { userId: userData.id },
+                                            })
+                                        }
+                                    >
+                                        Удалить из друзей
+                                    </Button>
+                                ) : outgoingRequest ? (
+                                    <Button
+                                        variant="outline"
+                                        className={styles.primary_action}
+                                        disabled
+                                    >
+                                        Запрос отправлен
+                                    </Button>
+                                ) : (
+                                    <AppBtn
+                                        text="Добавить в друзья"
+                                        style="outline_bright"
+                                        className={styles.primary_action}
+                                        disabled={sendRequestMutation.isPending}
+                                        onClick={() =>
+                                            sendRequestMutation.mutate({
+                                                body: { userId: userData.id },
+                                            })
+                                        }
+                                    />
+                                )}
+                            </>
+                        )}
+
+                        {isTierListsLoading ? (
+                            <div className={styles.emptyState}>Загрузка тир-листов...</div>
+                        ) : tierLists.length === 0 ? (
+                            <div className={styles.emptyState}>Публичные тир-листы не найдены</div>
+                        ) : (
+                            <div className={styles.lists}>
+                                {tierLists.map((list) => (
+                                    <Link
+                                        href={`/${game}/tiers/${list.id}`}
+                                        key={list.id}
+                                        className={styles.listCard}
+                                    >
+                                        <p className={styles.listTitle}>{list.title}</p>
+                                        <p className={styles.listMeta}>{list.categoryName}</p>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 };
