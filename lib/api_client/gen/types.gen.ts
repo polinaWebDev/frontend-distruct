@@ -3880,3 +3880,14 @@ export type TwitchControllerGetWidgetStatusResponses = {
 };
 
 export type TwitchControllerGetWidgetStatusResponse = TwitchControllerGetWidgetStatusResponses[keyof TwitchControllerGetWidgetStatusResponses];
+
+export type MetricsControllerGetMetricsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/metrics';
+};
+
+export type MetricsControllerGetMetricsResponses = {
+    200: unknown;
+};

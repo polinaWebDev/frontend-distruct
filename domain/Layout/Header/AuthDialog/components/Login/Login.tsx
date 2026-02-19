@@ -77,6 +77,7 @@ export const Login = ({ onSubmit }: { onSubmit: (data: z.infer<typeof loginSchem
                     text="Вход с помощью Twitch"
                     icon="twitch"
                     style="twitch"
+                    disabled
                     onClick={() => {
                         window.location.href = twitchLoginUrl;
                     }}
@@ -85,6 +86,7 @@ export const Login = ({ onSubmit }: { onSubmit: (data: z.infer<typeof loginSchem
                     text="Вход с помощью Google"
                     icon="google"
                     style="google"
+                    disabled
                     onClick={() => {
                         window.location.href = `${process.env.NEXT_PUBLIC_GOOGLE_OAUTH_URL}`;
                     }}

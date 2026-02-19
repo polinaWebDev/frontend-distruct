@@ -3723,6 +3723,12 @@ export const zTwitchControllerGetWidgetStatusData = z.object({
 
 export const zTwitchControllerGetWidgetStatusResponse = zTwitchStreamWidgetDto;
 
+export const zMetricsControllerGetMetricsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
 export const zNewsControllerGetAllNewsData = z.object({
     body: z.optional(z.never()),
     path: z.optional(z.never()),
