@@ -19,7 +19,13 @@ const getLuminance = (hex: string) => {
     return (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 };
 
-export function Row({ row }: { row: RowResponseDto }) {
+export function Row({
+    row,
+    previewIndex = null,
+}: {
+    row: RowResponseDto;
+    previewIndex?: number | null;
+}) {
     const board = useBoard();
     const { setNodeRef, isOver } = useDroppable({
         id: `row:${row.id}`,
@@ -57,13 +63,31 @@ export function Row({ row }: { row: RowResponseDto }) {
                     >
                         <div className={styles.items_list}>
                             {row.items.length > 0 ? (
-                                row.items.map((item) => (
-                                    <Item key={item.id} item={item} rowId={row.id} />
-                                ))
+                                <>
+                                    {row.items.map((item, index) => (
+                                        <div key={item.id} className={styles.item_slot}>
+                                            {previewIndex === index ? (
+                                                <span
+                                                    className={styles.preview_slot}
+                                                    aria-hidden="true"
+                                                />
+                                            ) : null}
+                                            <Item item={item} rowId={row.id} />
+                                        </div>
+                                    ))}
+                                    {previewIndex !== null && previewIndex >= row.items.length ? (
+                                        <span className={styles.preview_slot} aria-hidden="true" />
+                                    ) : null}
+                                </>
                             ) : (
-                                <span className={styles.row_placeholder}>
-                                    Перетащите предметы сюда
-                                </span>
+                                <>
+                                    {previewIndex !== null ? (
+                                        <span className={styles.preview_slot} aria-hidden="true" />
+                                    ) : null}
+                                    <span className={styles.row_placeholder}>
+                                        Перетащите предметы сюда
+                                    </span>
+                                </>
                             )}
                         </div>
                     </SortableContext>

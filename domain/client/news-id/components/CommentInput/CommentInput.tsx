@@ -9,11 +9,19 @@ import { commentsControllerCreateNewsCommentMutation } from '@/lib/api_client/ge
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+
+const normalizeSpaces = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const schema = z.object({
     content: z
         .string()
-        .min(1, 'Комментарий не может быть пустым')
-        .max(500, 'Комментарий не может быть больше 500 символов'),
+        .transform(normalizeSpaces)
+        .pipe(
+            z
+                .string()
+                .min(1, 'Комментарий не может быть пустым')
+                .max(500, 'Комментарий не может быть больше 500 символов')
+        ),
 });
 
 export const CommentInput = ({ refetch, news_id }: { refetch: () => void; news_id: string }) => {

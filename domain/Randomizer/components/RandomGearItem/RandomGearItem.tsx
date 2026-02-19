@@ -23,7 +23,7 @@ export const RandomGearItem = ({
                 className={clsx(styles.loadout_item, category.is_long_slot && styles.long_slot)}
                 key={category.category_id}
             >
-                <p className={clsx(styles.title, 'truncate')}>{category.category_name}</p>
+                <p className={styles.title}>{category.category_name}</p>
                 <div
                     className={clsx(
                         styles.gear_image_container,
@@ -43,7 +43,7 @@ export const RandomGearItem = ({
                         </PhotoView>
                     )}
                 </div>
-                <p className={clsx(styles.desc, 'truncate')}>{gear?.name ?? '-'}</p>
+                <p className={styles.desc}>{gear?.name ?? '-'}</p>
             </div>
 
             {gear && gear.description && gear.description.length > 0 && (

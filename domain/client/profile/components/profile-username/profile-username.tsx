@@ -11,8 +11,18 @@ import { usersControllerEditUsernameMutation } from '@/lib/api_client/gen/@tanst
 import { toast } from 'sonner';
 import clsx from 'clsx';
 
+const normalizeSpaces = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const schema = z.object({
-    username: z.string().min(1).max(32),
+    username: z
+        .string()
+        .transform(normalizeSpaces)
+        .pipe(
+            z
+                .string()
+                .min(3, 'Имя пользователя должно быть не короче 3 символов')
+                .max(32, 'Имя пользователя должно быть не длиннее 32 символов')
+        ),
 });
 
 export const ProfileUsername = ({

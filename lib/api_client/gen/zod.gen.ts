@@ -29,7 +29,7 @@ export const zEditAvatarDto = z.object({
 });
 
 export const zEditUsernameDto = z.object({
-    username: z.string().min(3)
+    username: z.string().min(3).max(32)
 });
 
 export const zAdminEditUserDto = z.object({
@@ -277,7 +277,7 @@ export const zVoteNewsCommentRequestDto = z.object({
 });
 
 export const zCreateNewsCommentRequestDto = z.object({
-    content: z.string(),
+    content: z.string().max(500),
     news_id: z.string()
 });
 
@@ -822,10 +822,7 @@ export const zRemoveChallengeSeasonDto = z.object({
 
 export const zCreateChallengeOfferDto = z.object({
     title: z.string(),
-    description: z.optional(z.union([
-        z.string(),
-        z.null()
-    ])),
+    description: z.string(),
     files: z.optional(z.array(z.string()))
 });
 

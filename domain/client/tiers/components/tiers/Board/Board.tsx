@@ -10,7 +10,7 @@ import {
     DragStartEvent,
     DragOverEvent,
 } from '@dnd-kit/core';
-import { useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Pool } from '@/domain/client/tiers/components/tiers/Board/Pool';
 import { ItemOverlay } from '@/domain/client/tiers/components/tiers/Board/Item';
 import styles from './Board.module.css';
@@ -26,6 +26,13 @@ type TypeOption = {
     name: string;
 };
 
+type DragPreviewState = {
+    activeItemId: string;
+    fromRowId: string;
+    toRowId: string;
+    targetIndex: number;
+};
+
 function getTypeOption(gear: PublicGearDto | undefined): TypeOption | null {
     const typeId = gear?.type?.id;
     if (!typeId) return null;
@@ -39,7 +46,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
     const board = useBoard();
     const gearById = useGearById();
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
-    const lastDragOverActionRef = useRef<string | null>(null);
+    const [dragPreview, setDragPreview] = useState<DragPreviewState | null>(null);
     const logDnd = (...args: unknown[]) => {
         console.info('[tiers-dnd]', ...args);
     };
@@ -74,7 +81,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const handleDragStart = (event: DragStartEvent) => {
         if (readOnly) return;
-        lastDragOverActionRef.current = null;
+        setDragPreview(null);
         const fromData = event.active.data.current?.itemId as string | undefined;
         if (fromData) {
             setActiveItemId(fromData);
@@ -191,66 +198,60 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const handleDragOver = (event: DragOverEvent) => {
         if (readOnly) return;
+        // Avoid draft state updates on every pointer move to prevent render loops (#185).
         const ctx = getDragContext(event);
         if (!ctx) {
-            logDnd('dragOver: skipped (no context)');
+            setDragPreview(null);
             return;
         }
-
         const { activeRow, overRow, activeIndex, overItemId, targetIndex } = ctx;
-        const dragOverSignature = [
-            String(event.active.id),
-            String(activeRow.id),
-            String(overRow.id),
-            String(activeIndex),
-            overItemId ?? 'none',
-            String(targetIndex),
-        ].join('|');
+        const targetIndexNormalized =
+            targetIndex === -1 ? overRow.items.length : Math.max(0, targetIndex);
+        const activeId =
+            (event.active.data.current?.itemId as string | undefined) ??
+            (String(event.active.id).startsWith('item:')
+                ? String(event.active.id).slice(5)
+                : String(event.active.id));
 
-        if (lastDragOverActionRef.current === dragOverSignature) {
+        if (activeRow.id === overRow.id && targetIndexNormalized === activeIndex) {
+            setDragPreview(null);
             return;
         }
 
-        if (activeRow.id === overRow.id) {
-            if (overItemId && targetIndex !== -1 && targetIndex !== activeIndex) {
-                lastDragOverActionRef.current = dragOverSignature;
-                logDnd('dragOver: reorder', {
-                    rowId: activeRow.id,
-                    startIndex: activeIndex,
-                    finishIndex: targetIndex,
-                });
-                board.reorderCard({
-                    rowId: activeRow.id,
-                    startIndex: activeIndex,
-                    finishIndex: targetIndex,
-                });
+        setDragPreview((prev) => {
+            if (
+                prev &&
+                prev.activeItemId === activeId &&
+                prev.fromRowId === String(activeRow.id) &&
+                prev.toRowId === String(overRow.id) &&
+                prev.targetIndex === targetIndexNormalized
+            ) {
+                return prev;
             }
-            return;
-        }
-
-        lastDragOverActionRef.current = dragOverSignature;
-        logDnd('dragOver: move', {
-            fromRowId: activeRow.id,
-            toRowId: overRow.id,
-            cardIndex: activeIndex,
-            targetIndex: targetIndex === -1 ? undefined : targetIndex,
+            return {
+                activeItemId: activeId,
+                fromRowId: String(activeRow.id),
+                toRowId: String(overRow.id),
+                targetIndex: targetIndexNormalized,
+            };
         });
-        board.moveCard({
+        logDnd('dragOver: preview-only', {
             fromRowId: activeRow.id,
             toRowId: overRow.id,
             cardIndex: activeIndex,
-            targetIndex: targetIndex === -1 ? undefined : targetIndex,
+            overItemId,
+            targetIndex: targetIndexNormalized,
         });
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
         if (readOnly) {
             setActiveItemId(null);
-            lastDragOverActionRef.current = null;
+            setDragPreview(null);
             return;
         }
         setActiveItemId(null);
-        lastDragOverActionRef.current = null;
+        setDragPreview(null);
         const ctx = getDragContext(event);
         if (!ctx) {
             logDnd('dragEnd: skipped (no context)');
@@ -287,7 +288,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const handleDragCancel = () => {
         setActiveItemId(null);
-        lastDragOverActionRef.current = null;
+        setDragPreview(null);
         logDnd('dragCancel');
     };
 
@@ -302,7 +303,15 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
                 <div className="board" data-tier-list-id={tierListId}>
                     <div className={styles.row_wrap}>
                         {tierRows.map((row) => (
-                            <Row key={row.id} row={row} />
+                            <Row
+                                key={row.id}
+                                row={row}
+                                previewIndex={
+                                    dragPreview && dragPreview.toRowId === String(row.id)
+                                        ? dragPreview.targetIndex
+                                        : null
+                                }
+                            />
                         ))}
                         {!board.readOnly ? (
                             <AppBtn
@@ -313,7 +322,17 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
                             />
                         ) : null}
                     </div>
-                    {!readOnly && poolRow ? <Pool row={poolRow} typeOptions={typeOptions} /> : null}
+                    {!readOnly && poolRow ? (
+                        <Pool
+                            row={poolRow}
+                            typeOptions={typeOptions}
+                            previewIndex={
+                                dragPreview && dragPreview.toRowId === String(poolRow.id)
+                                    ? dragPreview.targetIndex
+                                    : null
+                            }
+                        />
+                    ) : null}
                 </div>
                 {!readOnly ? (
                     <DragOverlay adjustScale={false}>

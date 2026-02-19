@@ -114,3 +114,17 @@
     flex-wrap: wrap;
     gap: 10px;
 }
+
+.item_slot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.preview_slot {
+    width: 108px;
+    height: 80px;
+    border: 1px dashed #f5a02f;
+    border-radius: 10px;
+    background: rgba(245, 160, 47, 0.08);
+}

@@ -39,7 +39,7 @@ export async function TierListByCategory({
 
     return (
         <GearProvider gearById={gearById}>
-            <TierList tierList={res.data} actions={actions} />
+            <TierList tierList={res.data} actions={actions} useTabsContent={false} />
         </GearProvider>
     );
 }

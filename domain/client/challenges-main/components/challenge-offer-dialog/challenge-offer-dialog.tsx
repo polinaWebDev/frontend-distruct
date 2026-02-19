@@ -12,9 +12,17 @@ import { offerControllerCreateOfferMutation } from '@/lib/api_client/gen/@tansta
 import { toast } from 'sonner';
 import { ChallengeFileUpload } from '@/domain/client/challenge-page/components/challenge-file-upload/challenge-file-upload';
 
+const normalizeSpaces = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const schema = z.object({
-    title: z.string(),
-    comment: z.string(),
+    title: z
+        .string()
+        .transform(normalizeSpaces)
+        .pipe(z.string().min(1, 'Введите заголовок').max(255, 'Максимум 255 символов')),
+    comment: z
+        .string()
+        .transform(normalizeSpaces)
+        .pipe(z.string().min(1, 'Опишите суть челленджа').max(2000, 'Максимум 2000 символов')),
     files: z.array(z.instanceof(File)).max(5),
 });
 
@@ -26,6 +34,7 @@ export const ChallengeOfferDialog = ({ onClose }: { onClose: () => void }) => {
             comment: '',
             files: [],
         },
+        mode: 'onChange',
     });
 
     const { mutate: createOffer, isPending } = useMutation({

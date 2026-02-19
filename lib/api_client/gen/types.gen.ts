@@ -743,7 +743,7 @@ export type RemoveChallengeSeasonDto = {
 
 export type CreateChallengeOfferDto = {
     title: string;
-    description?: string | null;
+    description: string;
     files?: Array<Blob | File>;
 };
 

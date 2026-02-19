@@ -100,6 +100,39 @@
     }
 }
 
+.game_icon_item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.disabled_game_icon_item {
+    cursor: not-allowed;
+
+    * {
+        cursor: not-allowed;
+    }
+}
+
+.soon_badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    z-index: 2;
+
+    padding: 2px 6px;
+    border-radius: 999px;
+
+    background: #111112;
+    color: #f5a02f;
+
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
 .game_menu_container {
     width: 100%;
     height: 100svh;
@@ -122,7 +155,9 @@
     align-items: flex-start;
     justify-content: center;
 
-    padding-top: 150px;
+    overflow-y: auto;
+    padding-top: clamp(96px, 16svh, 150px);
+    padding-bottom: 24px;
 
     .game_list {
         display: flex;
@@ -155,7 +190,9 @@
     align-items: flex-start;
     justify-content: center;
 
-    padding-top: 150px;
+    overflow-y: auto;
+    padding-top: clamp(96px, 16svh, 150px);
+    padding-bottom: 24px;
 
     .nav_menu_list {
         display: flex;
@@ -163,5 +200,15 @@
         align-items: center;
         justify-content: center;
         gap: 20px;
+    }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+    .game_menu_container {
+        padding-top: 82px;
+    }
+
+    .nav_menu_container {
+        padding-top: 82px;
     }
 }

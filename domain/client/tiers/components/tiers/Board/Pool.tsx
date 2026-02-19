@@ -5,13 +5,6 @@ import { ItemResponseDto, PublicGearDto, RowResponseDto } from '@/lib/api_client
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { useMemo, useState } from 'react';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import styles from './Pool.module.css';
 
 type TypeOption = {
@@ -28,10 +21,24 @@ function getTypeOption(gear: PublicGearDto | undefined): TypeOption | null {
     };
 }
 
-export function Pool({ row, typeOptions }: { row: RowResponseDto; typeOptions: TypeOption[] }) {
+export function Pool({
+    row,
+    typeOptions,
+    previewIndex = null,
+}: {
+    row: RowResponseDto;
+    typeOptions: TypeOption[];
+    previewIndex?: number | null;
+}) {
     const board = useBoard();
     const gearById = useGearById();
     const [selectedTypeId, setSelectedTypeId] = useState<string>('all');
+    const availableTypeIds = useMemo(
+        () => new Set(typeOptions.map((type) => type.id)),
+        [typeOptions]
+    );
+    const effectiveSelectedTypeId =
+        selectedTypeId === 'all' || availableTypeIds.has(selectedTypeId) ? selectedTypeId : 'all';
     const isPoolEmpty = row.items.length === 0;
     const { setNodeRef, isOver } = useDroppable({
         id: `row:${row.id}`,
@@ -40,39 +47,43 @@ export function Pool({ row, typeOptions }: { row: RowResponseDto; typeOptions: T
     });
 
     const sortedItems = useMemo(() => {
-        if (selectedTypeId === 'all') return row.items;
+        if (effectiveSelectedTypeId === 'all') return row.items;
         const matched: ItemResponseDto[] = [];
         const rest: ItemResponseDto[] = [];
         row.items.forEach((item) => {
             const option = getTypeOption(gearById[item.gearId]);
-            if (option?.id === selectedTypeId) {
+            if (option?.id === effectiveSelectedTypeId) {
                 matched.push(item);
                 return;
             }
             rest.push(item);
         });
         return [...matched, ...rest];
-    }, [gearById, row.items, selectedTypeId]);
+    }, [effectiveSelectedTypeId, gearById, row.items]);
 
     return (
         <div className={styles.pool} ref={setNodeRef} data-over={isOver}>
             {typeOptions.length > 0 ? (
                 <div className={styles.controls}>
-                    <Select value={selectedTypeId} onValueChange={setSelectedTypeId}>
-                        <SelectTrigger
-                            className={`${styles.typeSelect} rounded-xl border-[#34363d] bg-[#1b1d24] px-3 py-2 text-sm font-medium text-muted-foreground transition-all data-[state=open]:border-ded data-[state=open]:text-primary-foreground data-[state=open]:shadow`}
-                        >
-                            <SelectValue placeholder="Фильтр по типу" />
-                        </SelectTrigger>
-                        <SelectContent className="border-[#34363d] bg-[#1b1d24]">
-                            <SelectItem value="all">Все типы</SelectItem>
-                            {typeOptions.map((type) => (
-                                <SelectItem key={type.id} value={type.id}>
-                                    {type.name}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    <select
+                        className={`${styles.typeSelect} rounded-xl border border-[#34363d] bg-[#1b1d24] px-3 py-2 text-sm font-medium text-muted-foreground transition-all focus:border-ded focus:text-primary-foreground focus:shadow focus:outline-none`}
+                        value={effectiveSelectedTypeId}
+                        onChange={(event) => {
+                            const nextValue = event.target.value;
+                            setSelectedTypeId(
+                                nextValue === 'all' || availableTypeIds.has(nextValue)
+                                    ? nextValue
+                                    : 'all'
+                            );
+                        }}
+                    >
+                        <option value="all">Все типы</option>
+                        {typeOptions.map((type) => (
+                            <option key={type.id} value={type.id}>
+                                {type.name}
+                            </option>
+                        ))}
+                    </select>
                 </div>
             ) : null}
             <SortableContext
@@ -81,9 +92,26 @@ export function Pool({ row, typeOptions }: { row: RowResponseDto; typeOptions: T
             >
                 <div className={styles.pool_items}>
                     {isPoolEmpty ? (
-                        <p className={styles.empty_state}>Предметы не найдены</p>
+                        <>
+                            {previewIndex !== null ? (
+                                <span className={styles.preview_slot} aria-hidden="true" />
+                            ) : null}
+                            <p className={styles.empty_state}>Предметы не найдены</p>
+                        </>
                     ) : (
-                        sortedItems.map((item) => <Item key={item.id} item={item} rowId={row.id} />)
+                        <>
+                            {sortedItems.map((item, index) => (
+                                <div key={item.id} className={styles.item_slot}>
+                                    {previewIndex === index ? (
+                                        <span className={styles.preview_slot} aria-hidden="true" />
+                                    ) : null}
+                                    <Item item={item} rowId={row.id} />
+                                </div>
+                            ))}
+                            {previewIndex !== null && previewIndex >= sortedItems.length ? (
+                                <span className={styles.preview_slot} aria-hidden="true" />
+                            ) : null}
+                        </>
                     )}
                 </div>
             </SortableContext>

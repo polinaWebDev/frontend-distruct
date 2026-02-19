@@ -13,7 +13,7 @@ import {
     tiersControllerUpdateTierListPrivacy,
 } from '@/lib/api_client/gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
-import { useState, type ReactNode, useLayoutEffect, useMemo } from 'react';
+import { useCallback, useState, type ReactNode, useLayoutEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import { TierListActionsProvider } from './TierListActionsContext';
 
@@ -36,6 +36,9 @@ const TierList = ({
         () => JSON.stringify(saved) !== JSON.stringify(draft),
         [saved, draft]
     );
+    const handleBoardChange = useCallback((next: TierListResponseDto) => {
+        setDraft(next);
+    }, []);
 
     // Ререндер гарантированно один, controlled mount update
     useLayoutEffect(() => {
@@ -51,7 +54,8 @@ const TierList = ({
                 if (!row.id || savedRowIds.has(row.id)) {
                     return row;
                 }
-                const { id, ...rest } = row;
+                const rest = { ...row };
+                delete (rest as Partial<typeof row>).id;
                 return rest;
             });
             const response = await tiersControllerUpdateTierList({
@@ -114,12 +118,7 @@ const TierList = ({
                     <BoardProvider
                         key={draft.id + JSON.stringify(draft.updatedAt ?? '')}
                         initialState={draft}
-                        onChange={(next: TierListResponseDto) =>
-                            setDraft((prev) => ({
-                                ...prev,
-                                ...next,
-                            }))
-                        }
+                        onChange={handleBoardChange}
                         readOnly={readOnly}
                     >
                         <Board tierListId={tierList.id} readOnly={readOnly} />
@@ -129,12 +128,7 @@ const TierList = ({
                 <BoardProvider
                     key={draft.id + JSON.stringify(draft.updatedAt ?? '')}
                     initialState={draft}
-                    onChange={(next: TierListResponseDto) =>
-                        setDraft((prev) => ({
-                            ...prev,
-                            ...next,
-                        }))
-                    }
+                    onChange={handleBoardChange}
                     readOnly={readOnly}
                 >
                     <Board tierListId={tierList.id} readOnly={readOnly} />

@@ -26,3 +26,9 @@ export const GAME_TYPE_VALUES: {
         label: 'Active Matter',
     },
 ];
+
+export const ENABLED_CLIENT_GAME_TYPES: GameType[] = [GameType.ArenaBreakout];
+
+export const isEnabledClientGameType = (game: string | null | undefined): game is GameType => {
+    return ENABLED_CLIENT_GAME_TYPES.some((enabledGame) => enabledGame === game);
+};

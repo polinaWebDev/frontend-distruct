@@ -25,6 +25,7 @@
     .title {
         font-family: var(--font-thicker);
         font-size: 18px;
+        line-height: 1.2;
 
         text-align: left;
         color: white;
@@ -34,10 +35,23 @@
         width: 100%;
 
         margin-bottom: 10px;
+
+        white-space: normal;
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+
+        @media (max-width: 1000px) {
+            font-size: 16px;
+        }
     }
 
     .desc {
         font-size: 13px;
+        line-height: 1.25;
         font-weight: 400;
 
         color: #79808e;
@@ -45,6 +59,13 @@
         max-width: 140px;
 
         text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
     .gear_image_container {

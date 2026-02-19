@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { DistructLogo } from '@/lib/icons/DistructLogo';
 import { MenuIcon } from '@/lib/icons/MenuIcon';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GameIcon } from '../HeaderGameItem/HeaderGameItem';
 import { useGameLink } from '../utils/useGameLink';
 import { HeaderNavItem } from '../HeaderNavItem/HeaderNavItem';
@@ -19,9 +19,30 @@ import { useNewsUnreadIndicator } from '@/domain/client/news/hooks/useNewsReadSt
 import BrainIcon from '@/lib/icons/BrainIcon';
 import { Dialog } from 'radix-ui';
 import { AuthDialog } from '../AuthDialog/AuthDialog';
+import { Trophy } from 'lucide-react';
 
-const GameIconItem = ({ game, onClick }: { game: GameType; onClick: () => void }) => {
+const GameIconItem = ({
+    game,
+    onClick,
+    disabled = false,
+}: {
+    game: GameType;
+    onClick: () => void;
+    disabled?: boolean;
+}) => {
     const { linkPath, onLinkClick } = useGameLink(game);
+
+    if (disabled) {
+        return (
+            <div
+                className={clsx(styles.game_icon_item, styles.disabled_game_icon_item)}
+                aria-disabled="true"
+            >
+                <span className={styles.soon_badge}>скоро</span>
+                <GameIcon black game={game} selected={false} disabled />
+            </div>
+        );
+    }
 
     return (
         <Link
@@ -42,6 +63,19 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
     const [gameMenuOpen, setGameMenuOpen] = useState(false);
     const [openAuthDialog, setOpenAuthDialog] = useState(false);
     const { hasUnread } = useNewsUnreadIndicator({ gameType: game });
+
+    useEffect(() => {
+        const closeMenus = () => {
+            setMenuOpen(false);
+            setGameMenuOpen(false);
+        };
+
+        window.addEventListener('resize', closeMenus);
+        return () => {
+            window.removeEventListener('resize', closeMenus);
+        };
+    }, []);
+
     return (
         <div suppressHydrationWarning className={styles.container}>
             <Link href={`/?game=${game}`} className={clsx(styles.logo, styles.box_style)}>
@@ -78,14 +112,17 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                     <GameIconItem
                         game={GameType.EscapeFromTarkov}
                         onClick={() => setGameMenuOpen(false)}
+                        disabled
                     />
                     <GameIconItem
                         game={GameType.ArcRaiders}
                         onClick={() => setGameMenuOpen(false)}
+                        disabled
                     />
                     <GameIconItem
                         game={GameType.ActiveMatter}
                         onClick={() => setGameMenuOpen(false)}
+                        disabled
                     />
                 </div>
             </div>
@@ -136,6 +173,13 @@ export const MobileHeader = ({ user, game }: { user?: UserResponseDto; game: Gam
                         icon={(className) => <BrainIcon className={className} />}
                         title="База знаний"
                         href={`/${game}/knowledge-base`}
+                        disabled
+                        strokeIcon
+                    />
+                    <HeaderNavItem
+                        icon={(className) => <Trophy className={className} />}
+                        title="Рейтинг"
+                        href={`/${game}/rating`}
                         disabled
                         strokeIcon
                     />

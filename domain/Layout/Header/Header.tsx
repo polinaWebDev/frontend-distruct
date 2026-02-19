@@ -1,6 +1,6 @@
 'use client';
 
-import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
+import { GameType, isEnabledClientGameType } from '@/lib/enums/game_type.enum';
 import styles from './Header.module.css';
 import { HeaderGameItem } from './HeaderGameItem/HeaderGameItem';
 import clsx from 'clsx';
@@ -36,73 +36,88 @@ export const Header = ({ user }: { user?: UserResponseDto; isMobileServer: boole
         return gameParam || gameQueryParam;
     }, [gameParam, gameQueryParam]);
 
-    const isGameParamCorrect = useMemo(() => {
-        return GAME_TYPE_VALUES.some((g) => g.value === game);
+    const activeGame = useMemo(() => {
+        if (isEnabledClientGameType(game)) {
+            return game;
+        }
+        return GameType.ArenaBreakout;
     }, [game]);
 
-    const { hasUnread } = useNewsUnreadIndicator({ gameType: game });
+    const { hasUnread } = useNewsUnreadIndicator({ gameType: activeGame });
 
     useEffect(() => {
-        if (!game) {
-            const defaultGame = GameType.ArenaBreakout;
-            router.push(pathname + '?game=' + defaultGame);
+        const defaultGame = GameType.ArenaBreakout;
+
+        if (isEnabledClientGameType(game)) {
+            return;
         }
-    }, [game, pathname, router]);
+
+        if (gameParam) {
+            const pathNameParts = pathname.split('/');
+            pathNameParts[1] = defaultGame;
+            router.replace(pathNameParts.join('/'));
+            return;
+        }
+
+        const nextParams = new URLSearchParams(searchParams.toString());
+        nextParams.set('game', defaultGame);
+        router.replace(`${pathname}?${nextParams.toString()}`);
+    }, [game, gameParam, pathname, router, searchParams]);
 
     return (
         <Fragment>
-            <MobileHeader user={user} game={game ?? GameType.ArenaBreakout} />
+            <MobileHeader user={user} game={activeGame} />
 
             <header
                 className={clsx(styles.header_wrapper, 'page_width_wrapper')}
                 suppressHydrationWarning
             >
                 <div className={styles.header_top_bar}>
-                    <Link href={`/?game=${game ?? GameType.ArenaBreakout}`}>
+                    <Link href={`/?game=${activeGame}`}>
                         <DistructLogo className={styles.logo} />
                     </Link>
 
                     <div className={styles.games}>
                         <HeaderGameItem
                             game={GameType.ArenaBreakout}
-                            selected={game === GameType.ArenaBreakout}
+                            selected={activeGame === GameType.ArenaBreakout}
                         />
                         <HeaderGameItem
                             game={GameType.EscapeFromTarkov}
-                            selected={game === GameType.EscapeFromTarkov}
+                            selected={activeGame === GameType.EscapeFromTarkov}
                             disabled
                         />
                         <HeaderGameItem
                             game={GameType.ArcRaiders}
-                            selected={game === GameType.ArcRaiders}
+                            selected={activeGame === GameType.ArcRaiders}
                             disabled
                         />
                         <HeaderGameItem
                             game={GameType.ActiveMatter}
-                            selected={game === GameType.ActiveMatter}
+                            selected={activeGame === GameType.ActiveMatter}
                             disabled
                         />
                     </div>
 
-                    <HeaderProfileBtn user={user} game={game ?? GameType.ArenaBreakout} />
+                    <HeaderProfileBtn user={user} game={activeGame} />
                 </div>
 
-                {game && isGameParamCorrect && (
+                {isEnabledClientGameType(game) && (
                     <div className={styles.header_bottom_bar}>
                         <HeaderNavItem
                             icon={(className) => <ChallengesIcon className={className} />}
                             title="Челленджи"
-                            href={`/${game}/challenges`}
+                            href={`/${activeGame}/challenges`}
                         />
                         <HeaderNavItem
                             icon={(className) => <MapsIcon className={className} />}
                             title="Карты"
-                            href={`/${game}/maps`}
+                            href={`/${activeGame}/maps`}
                         />
                         <HeaderNavItem
                             icon={(className) => <TierIcon className={className} />}
                             title="Тир-листы"
-                            href={`/${game}/tiers`}
+                            href={`/${activeGame}/tiers`}
                             onClick={(e) => {
                                 if (user) return;
                                 e.preventDefault();
@@ -112,26 +127,26 @@ export const Header = ({ user }: { user?: UserResponseDto; isMobileServer: boole
                         <HeaderNavItem
                             icon={(className) => <RandomizerIcon className={className} />}
                             title="Рандомайзер"
-                            href={`/${game}/randomizer`}
+                            href={`/${activeGame}/randomizer`}
                         />
 
                         <HeaderNavItem
                             icon={(className) => <NewsIcon className={className} />}
                             title="Новости"
-                            href={`/${game}/news`}
+                            href={`/${activeGame}/news`}
                             showIndicator={hasUnread}
                         />
                         <HeaderNavItem
                             icon={(className) => <BrainIcon className={className} />}
                             title="База знаний"
-                            href={`/${game}/knowledge-base`}
+                            href={`/${activeGame}/knowledge-base`}
                             disabled
                             strokeIcon
                         />
                         <HeaderNavItem
                             icon={(className) => <Trophy className={className} />}
                             title="Рейтинг"
-                            href={`/${game}/rating`}
+                            href={`/${activeGame}/rating`}
                             disabled
                             strokeIcon
                         />

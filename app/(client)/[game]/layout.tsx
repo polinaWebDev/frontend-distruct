@@ -1,5 +1,5 @@
-import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
-import { notFound } from 'next/navigation';
+import { GameType, isEnabledClientGameType } from '@/lib/enums/game_type.enum';
+import { redirect } from 'next/navigation';
 
 export default async function Layout({
     children,
@@ -10,8 +10,8 @@ export default async function Layout({
 }) {
     const { game } = await params;
 
-    if (!GAME_TYPE_VALUES.some((g) => g.value === game)) {
-        return notFound();
+    if (!isEnabledClientGameType(game)) {
+        return redirect(`/${GameType.ArenaBreakout}`);
     }
 
     return <>{children}</>;

@@ -11,8 +11,18 @@ import { useMutation } from '@tanstack/react-query';
 import { challengesClientControllerSendChallengeToReviewMutation } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { toast } from 'sonner';
 
+const normalizeSpaces = (value: string) => value.replace(/\s+/g, ' ').trim();
+
 const schema = z.object({
-    comment: z.string(),
+    comment: z
+        .string()
+        .transform(normalizeSpaces)
+        .pipe(
+            z
+                .string()
+                .min(1, 'Комментарий не может быть пустым')
+                .max(1000, 'Максимум 1000 символов')
+        ),
     files: z.array(z.instanceof(File)).min(1).max(1),
 });
 
@@ -29,6 +39,7 @@ export const UploadForReviewDialog = ({
             comment: '',
             files: [],
         },
+        mode: 'onChange',
     });
 
     const { mutate: uploadForReview, isPending } = useMutation({
@@ -53,7 +64,6 @@ export const UploadForReviewDialog = ({
     });
 
     const onSubmit = (data: z.infer<typeof schema>) => {
-        console.log(data);
         uploadForReview({
             body: {
                 user_comment: data.comment,
@@ -101,7 +111,7 @@ export const UploadForReviewDialog = ({
                     <div className={styles.buttons}>
                         <AppBtn
                             text="Загрузить"
-                            onClick={() => form.handleSubmit(onSubmit, console.log)()}
+                            onClick={() => form.handleSubmit(onSubmit)()}
                             disabled={!form.formState.isValid || isPending}
                         />
                     </div>

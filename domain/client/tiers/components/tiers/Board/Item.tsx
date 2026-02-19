@@ -51,7 +51,7 @@ export function Item({ item, rowId }: ItemProps) {
         transform: CSS.Transform.toString(transform),
         transition,
         backgroundColor: isDragging ? 'transparent' : hexToRgba(rarityColor, 0.15),
-        border: isDragging ? '1px dashed #999' : '1px solid ' + rarityColor,
+        border: isDragging ? '1px solid transparent' : '1px solid ' + rarityColor,
     };
 
     return (
