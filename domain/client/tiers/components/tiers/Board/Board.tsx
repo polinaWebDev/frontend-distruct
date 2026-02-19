@@ -10,7 +10,7 @@ import {
     DragStartEvent,
     DragOverEvent,
 } from '@dnd-kit/core';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Pool } from '@/domain/client/tiers/components/tiers/Board/Pool';
 import { ItemOverlay } from '@/domain/client/tiers/components/tiers/Board/Item';
 import styles from './Board.module.css';
@@ -39,6 +39,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
     const board = useBoard();
     const gearById = useGearById();
     const [activeItemId, setActiveItemId] = useState<string | null>(null);
+    const lastDragOverActionRef = useRef<string | null>(null);
     const logDnd = (...args: unknown[]) => {
         console.info('[tiers-dnd]', ...args);
     };
@@ -73,6 +74,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const handleDragStart = (event: DragStartEvent) => {
         if (readOnly) return;
+        lastDragOverActionRef.current = null;
         const fromData = event.active.data.current?.itemId as string | undefined;
         if (fromData) {
             setActiveItemId(fromData);
@@ -196,9 +198,22 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
         }
 
         const { activeRow, overRow, activeIndex, overItemId, targetIndex } = ctx;
+        const dragOverSignature = [
+            String(event.active.id),
+            String(activeRow.id),
+            String(overRow.id),
+            String(activeIndex),
+            overItemId ?? 'none',
+            String(targetIndex),
+        ].join('|');
+
+        if (lastDragOverActionRef.current === dragOverSignature) {
+            return;
+        }
 
         if (activeRow.id === overRow.id) {
             if (overItemId && targetIndex !== -1 && targetIndex !== activeIndex) {
+                lastDragOverActionRef.current = dragOverSignature;
                 logDnd('dragOver: reorder', {
                     rowId: activeRow.id,
                     startIndex: activeIndex,
@@ -213,6 +228,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
             return;
         }
 
+        lastDragOverActionRef.current = dragOverSignature;
         logDnd('dragOver: move', {
             fromRowId: activeRow.id,
             toRowId: overRow.id,
@@ -230,9 +246,11 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
     const handleDragEnd = (event: DragEndEvent) => {
         if (readOnly) {
             setActiveItemId(null);
+            lastDragOverActionRef.current = null;
             return;
         }
         setActiveItemId(null);
+        lastDragOverActionRef.current = null;
         const ctx = getDragContext(event);
         if (!ctx) {
             logDnd('dragEnd: skipped (no context)');
@@ -269,6 +287,7 @@ export function Board({ tierListId, readOnly = false }: BoardProps) {
 
     const handleDragCancel = () => {
         setActiveItemId(null);
+        lastDragOverActionRef.current = null;
         logDnd('dragCancel');
     };
 
