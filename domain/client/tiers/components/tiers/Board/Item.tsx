@@ -13,6 +13,10 @@ type ItemProps = {
     rowId: string;
 };
 
+function resolveRarityColor(color: string | null | undefined) {
+    return typeof color === 'string' && color.trim().length > 0 ? color : '#999999';
+}
+
 export function Item({ item, rowId }: ItemProps) {
     const board = useBoard();
     const gearById = useGearById();
@@ -40,13 +44,14 @@ export function Item({ item, rowId }: ItemProps) {
         setPanelSide(spaceRight < panelWidth + panelGap ? 'left' : 'right');
     };
 
+    const rarityColor = resolveRarityColor(gear?.rarity?.color);
     const style = {
         width: '108px',
         height: '80px',
         transform: CSS.Transform.toString(transform),
         transition,
-        backgroundColor: isDragging ? 'transparent' : hexToRgba(gear.rarity.color, 0.15),
-        border: isDragging ? '1px dashed #999' : '1px solid ' + gear.rarity.color,
+        backgroundColor: isDragging ? 'transparent' : hexToRgba(rarityColor, 0.15),
+        border: isDragging ? '1px dashed #999' : '1px solid ' + rarityColor,
     };
 
     return (
@@ -86,11 +91,12 @@ export function Item({ item, rowId }: ItemProps) {
 export function ItemOverlay({ item }: { item: ItemResponseDto }) {
     const gearById = useGearById();
     const gear = gearById[item.gearId];
+    const rarityColor = resolveRarityColor(gear?.rarity?.color);
     const style = {
         width: '108px',
         height: '80px',
-        backgroundColor: hexToRgba(gear.rarity.color, 0.15) ?? undefined,
-        border: '1px solid ' + gear.rarity.color,
+        backgroundColor: hexToRgba(rarityColor, 0.15) ?? undefined,
+        border: '1px solid ' + rarityColor,
     };
 
     return (
