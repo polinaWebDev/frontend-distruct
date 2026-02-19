@@ -53,6 +53,9 @@ export default async function Page({ params }: { params: Promise<{ game: GameTyp
         },
     });
 
+    console.log('currentSeason', currentSeason);
+    console.log('seasonBalance', seasonBalance.data?.balance);
+
     if (!currentSeason.data) {
         return (
             <div
