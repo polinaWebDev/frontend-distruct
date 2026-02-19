@@ -89,19 +89,33 @@
 .btn_container {
     margin-left: auto;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     justify-content: center;
+    gap: 8px;
 
     padding-right: 30px;
 
     @media (max-width: 620px) {
         padding-right: 0;
         margin-left: unset;
+        align-items: flex-start;
 
         padding-bottom: 20px;
     }
 
     .btn {
         width: 150px;
+    }
+
+    .quantity_text {
+        font-size: 13px;
+        font-weight: 500;
+        color: #79808e;
+        text-align: right;
+
+        @media (max-width: 620px) {
+            text-align: left;
+        }
     }
 }

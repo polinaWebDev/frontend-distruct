@@ -18,8 +18,11 @@ import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Dialog } from 'radix-ui';
 import { AuthDialog } from '@/domain/Layout/Header/AuthDialog/AuthDialog';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { shopControllerGetListInfiniteOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import {
+    seasonControllerGetCurrentSeasonBalanceOptions,
+    shopControllerGetListInfiniteOptions,
+} from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { RewardItem } from './components/reward-item/reward-item';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
@@ -76,6 +79,19 @@ export const ChallengesRewards = ({
         return shopItems?.pages.flatMap((page) => page ?? []) ?? [];
     }, [shopItems]);
 
+    const { data: liveSeasonBalance } = useQuery({
+        ...seasonControllerGetCurrentSeasonBalanceOptions({
+            query: {
+                game_type: game,
+            },
+            client: getPublicClient(),
+        }),
+        enabled: authenticated,
+        initialData: seasonBalance,
+    });
+
+    const currentBalance = liveSeasonBalance?.balance ?? seasonBalance?.balance ?? 0;
+
     return (
         <BannerProvider page="challenges_rewards">
             <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
@@ -88,7 +104,7 @@ export const ChallengesRewards = ({
                             </ChallengeInfoBlockTitle>
                             <ChallengeInfoBlockPoints
                                 btnText="Награды"
-                                points={seasonBalance?.balance ?? 0}
+                                points={currentBalance}
                                 subTitle="Кол-во ваших очков"
                             />
                         </ChallengeInfoBlock>
@@ -136,7 +152,7 @@ export const ChallengesRewards = ({
                                 <RewardItem
                                     key={reward.id}
                                     reward={reward}
-                                    balance={seasonBalance?.balance ?? 0}
+                                    balance={currentBalance}
                                 />
                             ))}
                             {(isFetchingNextPage || isPending) && (

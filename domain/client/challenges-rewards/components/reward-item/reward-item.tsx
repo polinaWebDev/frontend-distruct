@@ -34,13 +34,6 @@ export const RewardItem = ({
                         <p className={styles.title}>{reward.name}</p>
                         <p className={styles.desc}>{reward.description}</p>
                     </div>
-
-                    <div className={styles.item}>
-                        <p className={styles.title}>
-                            {reward.is_infinite ? 'Бесконечно' : reward.quantity + ' шт'}
-                        </p>
-                        <p className={styles.desc}>Осталось</p>
-                    </div>
                 </div>
 
                 <div className={styles.btn_container}>
@@ -50,6 +43,9 @@ export const RewardItem = ({
                         style={'outline_brand'}
                         onClick={() => setOpenPurchaseRewardDialog(true)}
                     />
+                    <p className={styles.quantity_text}>
+                        ({reward.is_infinite ? 'Бесконечно' : `${reward.quantity} шт.`})
+                    </p>
                 </div>
             </div>
             <Dialog.Root open={openPurchaseRewardDialog} onOpenChange={setOpenPurchaseRewardDialog}>
