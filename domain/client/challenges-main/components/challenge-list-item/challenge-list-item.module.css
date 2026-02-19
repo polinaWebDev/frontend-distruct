@@ -3,6 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 24px;
 
     padding: 20px 30px 20px 20px;
 
@@ -20,16 +21,17 @@
         transition: 0.15s;
     }
 
-    .text_container {
-        width: 100%;
+    .content {
+        flex: 1;
         display: flex;
-        justify-content: flex-start;
+        justify-content: space-between;
         align-items: center;
-
-        gap: 32px;
+        gap: 24px;
 
         @media (max-width: 600px) {
+            width: 100%;
             flex-wrap: wrap;
+            justify-content: flex-start;
         }
     }
 
@@ -61,6 +63,12 @@
             max-width: 380px;
         }
     }
+
+    .meta_container {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+    }
 }
 
 .text_item {
@@ -91,11 +99,9 @@
 .btn {
     max-width: 150px;
     width: 100%;
-
-    margin-left: 23px;
+    flex-shrink: 0;
 
     @media (max-width: 600px) {
-        margin-left: 0;
         margin-top: 20px;
         width: 100%;
         max-width: unset;

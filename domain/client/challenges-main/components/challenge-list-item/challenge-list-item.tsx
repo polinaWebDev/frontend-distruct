@@ -99,22 +99,24 @@ export const ChallengeListItem = ({
                 }
             }}
         >
-            <div className={styles.text_container}>
+            <div className={styles.content}>
                 <div className={styles.title_container}>
                     <p className={styles.title}>{challenge.title}</p>
                     <p className={styles.desc}>{challenge.short_description}</p>
                 </div>
 
-                <div className={styles.text_item}>
-                    <div className={styles.text_item_title}>Сложность</div>
-                    <div className={styles.text_item_desc} style={{ color: difficulty?.color }}>
-                        {difficulty?.adjective}
+                <div className={styles.meta_container}>
+                    <div className={styles.text_item}>
+                        <div className={styles.text_item_title}>Сложность</div>
+                        <div className={styles.text_item_desc} style={{ color: difficulty?.color }}>
+                            {difficulty?.adjective}
+                        </div>
                     </div>
-                </div>
 
-                <div className={styles.text_item}>
-                    <div className={styles.text_item_title}>Очков</div>
-                    <div className={styles.text_item_desc}>{challenge.prize_amount}</div>
+                    <div className={styles.text_item}>
+                        <div className={styles.text_item_title}>Очков</div>
+                        <div className={styles.text_item_desc}>{challenge.prize_amount}</div>
+                    </div>
                 </div>
             </div>
 

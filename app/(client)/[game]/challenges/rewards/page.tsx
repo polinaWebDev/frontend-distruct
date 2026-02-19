@@ -9,6 +9,9 @@ import { GAME_TYPE_VALUES, GameType } from '@/lib/enums/game_type.enum';
 import type { Metadata } from 'next';
 import { buildSocialMetadata } from '@/lib/seo';
 import { notFound } from 'next/navigation';
+import { unstable_noStore as noStore } from 'next/cache';
+
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
     params,
@@ -27,6 +30,7 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: Promise<{ game: GameType }> }) {
+    noStore();
     const { game } = await params;
 
     const currentSeason = await seasonControllerGetCurrentSeason({
