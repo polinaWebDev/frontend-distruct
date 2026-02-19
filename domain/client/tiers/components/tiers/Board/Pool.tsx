@@ -56,23 +56,25 @@ export function Pool({ row, typeOptions }: { row: RowResponseDto; typeOptions: T
 
     return (
         <div className={styles.pool} ref={setNodeRef} data-over={isOver}>
-            <div className={styles.controls}>
-                <Select value={selectedTypeId} onValueChange={setSelectedTypeId}>
-                    <SelectTrigger
-                        className={`${styles.typeSelect} rounded-xl border-[#34363d] bg-[#1b1d24] px-3 py-2 text-sm font-medium text-muted-foreground transition-all data-[state=open]:border-ded data-[state=open]:text-primary-foreground data-[state=open]:shadow`}
-                    >
-                        <SelectValue placeholder="Фильтр по типу" />
-                    </SelectTrigger>
-                    <SelectContent className="border-[#34363d] bg-[#1b1d24]">
-                        <SelectItem value="all">Все типы</SelectItem>
-                        {typeOptions.map((type) => (
-                            <SelectItem key={type.id} value={type.id}>
-                                {type.name}
-                            </SelectItem>
-                        ))}
-                    </SelectContent>
-                </Select>
-            </div>
+            {typeOptions.length > 0 ? (
+                <div className={styles.controls}>
+                    <Select value={selectedTypeId} onValueChange={setSelectedTypeId}>
+                        <SelectTrigger
+                            className={`${styles.typeSelect} rounded-xl border-[#34363d] bg-[#1b1d24] px-3 py-2 text-sm font-medium text-muted-foreground transition-all data-[state=open]:border-ded data-[state=open]:text-primary-foreground data-[state=open]:shadow`}
+                        >
+                            <SelectValue placeholder="Фильтр по типу" />
+                        </SelectTrigger>
+                        <SelectContent className="border-[#34363d] bg-[#1b1d24]">
+                            <SelectItem value="all">Все типы</SelectItem>
+                            {typeOptions.map((type) => (
+                                <SelectItem key={type.id} value={type.id}>
+                                    {type.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            ) : null}
             <SortableContext
                 items={sortedItems.map((item) => `item:${item.id}`)}
                 strategy={verticalListSortingStrategy}
