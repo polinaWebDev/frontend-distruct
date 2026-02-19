@@ -38,13 +38,7 @@ export type ChallengesRewardsProps = {
 
 const LIMIT = 20;
 
-export const ChallengesRewards = ({
-    game,
-    season,
-    seasonBalance,
-    authenticated,
-}: ChallengesRewardsProps) => {
-    const [showOfferDialog, setShowOfferDialog] = useState(false);
+export const ChallengesRewards = ({ game, season, seasonBalance }: ChallengesRewardsProps) => {
     const [openAuthDialog, setOpenAuthDialog] = useState(false);
 
     const {
@@ -86,7 +80,6 @@ export const ChallengesRewards = ({
             },
             client: getPublicClient(),
         }),
-        enabled: authenticated,
         initialData: seasonBalance,
         staleTime: 0,
         refetchOnMount: 'always',
