@@ -12,9 +12,6 @@ import styles from '@/domain/client/challenges-main/components/challenges-list/c
 import pageStyles from './challenges-page.module.css';
 import clsx from 'clsx';
 import { CalendarX } from 'lucide-react';
-import { unstable_noStore as noStore } from 'next/cache';
-
-export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({
     params,
@@ -33,7 +30,6 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: Promise<{ game: GameType }> }) {
-    noStore();
     const { game } = await params;
 
     const currentSeason = await seasonControllerGetCurrentSeason({
@@ -53,14 +49,9 @@ export default async function Page({ params }: { params: Promise<{ game: GameTyp
         },
     });
 
-    console.log('currentSeason', currentSeason);
-    console.log('seasonBalance', seasonBalance.data?.balance);
-
     if (!currentSeason.data) {
         return (
-            <div
-                className={clsx('page_width_wrapper', pageStyles.empty_container, styles.container)}
-            >
+            <div className={clsx('page_width_wrapper', pageStyles.empty_container, styles.container)}>
                 <div className={clsx(styles.empty_state, pageStyles.empty_state_reset)}>
                     <CalendarX className={styles.empty_state_icon} />
                     <span className={styles.empty_state_text}>Сезона еще не начат</span>

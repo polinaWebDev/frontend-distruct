@@ -18,11 +18,8 @@ import { formatDate } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { Dialog } from 'radix-ui';
 import { AuthDialog } from '@/domain/Layout/Header/AuthDialog/AuthDialog';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import {
-    seasonControllerGetCurrentSeasonBalanceOptions,
-    shopControllerGetListInfiniteOptions,
-} from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { shopControllerGetListInfiniteOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { RewardItem } from './components/reward-item/reward-item';
 import { AppSkeleton } from '@/ui/AppSkeleton/AppSkeleton';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
@@ -38,7 +35,13 @@ export type ChallengesRewardsProps = {
 
 const LIMIT = 20;
 
-export const ChallengesRewards = ({ game, season, seasonBalance }: ChallengesRewardsProps) => {
+export const ChallengesRewards = ({
+    game,
+    season,
+    seasonBalance,
+    authenticated,
+}: ChallengesRewardsProps) => {
+    const [showOfferDialog, setShowOfferDialog] = useState(false);
     const [openAuthDialog, setOpenAuthDialog] = useState(false);
 
     const {
@@ -73,20 +76,6 @@ export const ChallengesRewards = ({ game, season, seasonBalance }: ChallengesRew
         return shopItems?.pages.flatMap((page) => page ?? []) ?? [];
     }, [shopItems]);
 
-    const { data: liveSeasonBalance } = useQuery({
-        ...seasonControllerGetCurrentSeasonBalanceOptions({
-            query: {
-                game_type: game,
-            },
-            client: getPublicClient(),
-        }),
-        initialData: seasonBalance,
-        staleTime: 0,
-        refetchOnMount: 'always',
-    });
-
-    const currentBalance = liveSeasonBalance?.balance ?? seasonBalance?.balance ?? 0;
-
     return (
         <BannerProvider page="challenges_rewards">
             <div className={clsx(styles.wrapper, 'header_margin_top', 'page_width_wrapper')}>
@@ -99,7 +88,7 @@ export const ChallengesRewards = ({ game, season, seasonBalance }: ChallengesRew
                             </ChallengeInfoBlockTitle>
                             <ChallengeInfoBlockPoints
                                 btnText="Награды"
-                                points={currentBalance}
+                                points={seasonBalance?.balance ?? 0}
                                 subTitle="Кол-во ваших очков"
                             />
                         </ChallengeInfoBlock>
@@ -147,7 +136,7 @@ export const ChallengesRewards = ({ game, season, seasonBalance }: ChallengesRew
                                 <RewardItem
                                     key={reward.id}
                                     reward={reward}
-                                    balance={currentBalance}
+                                    balance={seasonBalance?.balance ?? 0}
                                 />
                             ))}
                             {(isFetchingNextPage || isPending) && (
