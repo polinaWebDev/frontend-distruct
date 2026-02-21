@@ -32,8 +32,6 @@ out/
 build
 dist
 
-app/_components
-
 
 # Debug
 npm-debug.log*
