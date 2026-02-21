@@ -18,6 +18,7 @@ import { createClusterCustomIcon } from '@/domain/admin/maps/components/map/comp
 import { EnhancedMarker } from './enhanced-marker';
 import {
     mapsControllerGetMapQueryKey,
+    mapsMarkerAdminControllerCreateMapMarkerMutation,
     mapsMarkerAdminControllerRemoveMapMarkerMutation,
     mapsMarkerAdminControllerUpdateMapMarkerMutation,
 } from '@/lib/api_client/gen/@tanstack/react-query.gen';
@@ -78,6 +79,35 @@ const removeMarkerFromMapData = (data: MapDataResponseDto, markerId: string) => 
 };
 
 const getMarkerLevelIds = (marker: MapDataMarkerDto) => marker.map_level_ids ?? [];
+const DUPLICATE_MARKER_COORDINATE_OFFSET = 0.00003;
+
+const mapMarkerBodySerializer = (body: {
+    name?: string;
+    description?: string;
+    latitude?: number;
+    longitude?: number;
+    type_id?: string;
+    floor_id?: string;
+    map_level_ids?: string[];
+    map_id?: string;
+    info_link?: string;
+}) => {
+    const data = new FormData();
+
+    if (body.name !== undefined) data.append('name', body.name);
+    if (body.description !== undefined) data.append('description', body.description);
+    if (body.latitude !== undefined) data.append('latitude', String(body.latitude));
+    if (body.longitude !== undefined) data.append('longitude', String(body.longitude));
+    if (body.type_id !== undefined) data.append('type_id', body.type_id);
+    if (body.floor_id !== undefined) data.append('floor_id', body.floor_id);
+    if (body.map_level_ids) {
+        body.map_level_ids.forEach((id) => data.append('map_level_ids[]', id));
+    }
+    if (body.map_id !== undefined) data.append('map_id', body.map_id);
+    if (body.info_link !== undefined) data.append('info_link', body.info_link);
+
+    return data;
+};
 
 export const MapRenderer = memo(
     ({
@@ -223,6 +253,30 @@ export const MapRenderer = memo(
                 }
             },
         });
+        const duplicateMarkerMutation = useMutation({
+            ...mapsMarkerAdminControllerCreateMapMarkerMutation({
+                client: getPublicClient(),
+            }),
+            onMutate: () => {
+                toast.loading('Дублирование метки...', { id: 'duplicate-marker-toast' });
+            },
+            onSuccess: () => {
+                toast.success('Метка продублирована');
+            },
+            onError: (error) => {
+                console.error(error);
+                toast.error('Ошибка при дублировании метки');
+            },
+            onSettled: () => {
+                queryClient.invalidateQueries({
+                    queryKey: mapsControllerGetMapQueryKey({
+                        path: { id: map_id },
+                        client: getPublicClient(),
+                    }),
+                });
+                toast.dismiss('duplicate-marker-toast');
+            },
+        });
         const removeMarkerMutation = useMutation({
             ...mapsMarkerAdminControllerRemoveMapMarkerMutation({
                 client: getPublicClient(),
@@ -287,6 +341,39 @@ export const MapRenderer = memo(
                 });
             },
             [admin, removeMarkerMutation]
+        );
+        const handleDuplicateMarker = useCallback(
+            (marker: MapDataMarkerDto) => {
+                if (!admin) return;
+
+                const fallbackLevelId = selectedLevelId ?? map_data.levels?.[0]?.id;
+                const mapLevelIds = marker.map_level_ids?.length
+                    ? marker.map_level_ids
+                    : fallbackLevelId
+                      ? [fallbackLevelId]
+                      : [];
+
+                if (!mapLevelIds.length) {
+                    toast.error('Нельзя продублировать метку без выбранной сложности');
+                    return;
+                }
+
+                duplicateMarkerMutation.mutate({
+                    body: {
+                        name: marker.name,
+                        description: marker.description ?? undefined,
+                        latitude: marker.latitude + DUPLICATE_MARKER_COORDINATE_OFFSET,
+                        longitude: marker.longitude + DUPLICATE_MARKER_COORDINATE_OFFSET,
+                        type_id: marker.type_id,
+                        floor_id: marker.floor_id ?? activeFloorId,
+                        map_level_ids: mapLevelIds,
+                        map_id,
+                        info_link: marker.info_link ?? undefined,
+                    },
+                    bodySerializer: mapMarkerBodySerializer,
+                });
+            },
+            [admin, selectedLevelId, map_data.levels, duplicateMarkerMutation, activeFloorId, map_id]
         );
 
         return (
@@ -385,6 +472,14 @@ export const MapRenderer = memo(
                                             onClick={() => onMarkerClick?.(marker.marker)}
                                         >
                                             <Info />
+                                        </Button>
+                                        <Button
+                                            size={'sm'}
+                                            variant="secondary"
+                                            disabled={duplicateMarkerMutation.isPending}
+                                            onClick={() => handleDuplicateMarker(marker.marker)}
+                                        >
+                                            Дублировать
                                         </Button>
                                         <Button
                                             size={'icon'}
