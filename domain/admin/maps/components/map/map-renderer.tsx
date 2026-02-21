@@ -406,7 +406,7 @@ export const MapRenderer = memo(
                         animate
                         animateAddingMarkers
                         disableClusteringAtZoom={maxZoom}
-                        spiderfyOnMaxZoom
+                        spiderfyOnMaxZoom={false}
                         showCoverageOnHover={false}
                     >
                         {markers.map((marker) => (
