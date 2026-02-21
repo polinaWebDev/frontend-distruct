@@ -14,7 +14,31 @@ export const zUserResponseDto = z.object({
         'admin',
         'user'
     ]),
-    points: z.number()
+    points: z.number(),
+    equipped_profile_background_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    equipped_profile_frame_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    equipped_avatar_outline_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    profile_background_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    profile_frame_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    avatar_outline_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
 });
 
 export const zGetUserListResponseDto = z.object({
@@ -48,6 +72,18 @@ export const zPublicUserResponseDto = z.object({
     id: z.string(),
     username: z.string(),
     avatar_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    profile_background_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    profile_frame_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    avatar_outline_url: z.optional(z.union([
         z.string(),
         z.null()
     ]))
@@ -513,7 +549,12 @@ export const zCreateChallengeDto = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.optional(z.union([
         z.iso.datetime(),
@@ -545,7 +586,12 @@ export const zUpdateChallengeDto = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.optional(z.union([
         z.iso.datetime(),
@@ -589,7 +635,12 @@ export const zChallengeEntity = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.union([
         z.iso.datetime(),
@@ -655,7 +706,12 @@ export const zGetAllChallengesResponseItemDto = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.union([
         z.iso.datetime(),
@@ -721,6 +777,109 @@ export const zChallengeSeason = z.object({
     ])
 });
 
+export const zPrizeCosmeticSummaryDto = z.object({
+    id: z.string(),
+    name: z.string(),
+    type: z.enum([
+        'profile_background',
+        'profile_frame',
+        'avatar_outline'
+    ]),
+    asset_url: z.string()
+});
+
+export const zChallengeShopItemResponseDto = z.object({
+    id: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    name: z.string(),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
+    image_url: z.union([
+        z.string(),
+        z.null()
+    ]),
+    price: z.number(),
+    is_infinite: z.boolean(),
+    is_active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
+    is_repeatable_purchase_allowed: z.boolean().default(true),
+    order: z.number(),
+    quantity: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    challenge_season_id: z.string(),
+    prize_cosmetic: z.optional(z.union([
+        zPrizeCosmeticSummaryDto,
+        z.null()
+    ]))
+});
+
+export const zCreateChallengeShopItemDto = z.object({
+    name: z.string(),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
+    price: z.number(),
+    is_infinite: z.boolean(),
+    is_active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
+    is_repeatable_purchase_allowed: z.boolean().default(true),
+    order: z.number(),
+    quantity: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    challenge_season_id: z.string(),
+    file: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+export const zUpdateChallengeShopItemDto = z.object({
+    name: z.string(),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
+    price: z.number(),
+    is_infinite: z.boolean(),
+    is_active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
+    is_repeatable_purchase_allowed: z.boolean().default(true),
+    order: z.number(),
+    quantity: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    challenge_season_id: z.string(),
+    file: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    id: z.string()
+});
+
+export const zRemoveChallengeShopItemDto = z.object({
+    id: z.string()
+});
+
+export const zReversePurchaseDto = z.object({
+    id: z.string()
+});
+
 export const zChallengeShopItemEntity = z.object({
     id: z.string(),
     createdAt: z.iso.datetime(),
@@ -741,54 +900,15 @@ export const zChallengeShopItemEntity = z.object({
     price: z.number(),
     is_infinite: z.boolean(),
     is_active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
+    is_repeatable_purchase_allowed: z.boolean().default(true),
     order: z.number(),
     quantity: z.number(),
-    challenge_season_id: z.string()
-});
-
-export const zCreateChallengeShopItemDto = z.object({
-    name: z.string(),
-    description: z.union([
-        z.string(),
-        z.null()
-    ]),
-    price: z.number(),
-    is_infinite: z.boolean(),
-    is_active: z.boolean(),
-    order: z.number(),
-    quantity: z.number(),
-    challenge_season_id: z.string(),
-    file: z.optional(z.union([
-        z.string(),
-        z.null()
-    ]))
-});
-
-export const zUpdateChallengeShopItemDto = z.object({
-    name: z.string(),
-    description: z.union([
-        z.string(),
-        z.null()
-    ]),
-    price: z.number(),
-    is_infinite: z.boolean(),
-    is_active: z.boolean(),
-    order: z.number(),
-    quantity: z.number(),
-    challenge_season_id: z.string(),
-    file: z.optional(z.union([
+    prize_cosmetic_id: z.optional(z.union([
         z.string(),
         z.null()
     ])),
-    id: z.string()
-});
-
-export const zRemoveChallengeShopItemDto = z.object({
-    id: z.string()
-});
-
-export const zReversePurchaseDto = z.object({
-    id: z.string()
+    challenge_season_id: z.string()
 });
 
 export const zCreateChallengeSeasonDto = z.object({
@@ -826,9 +946,174 @@ export const zCreateChallengeOfferDto = z.object({
     files: z.optional(z.array(z.string()))
 });
 
+export const zChallengeShopItemClientListItemDto = z.object({
+    id: z.string(),
+    createdAt: z.iso.datetime(),
+    updatedAt: z.iso.datetime(),
+    deletedAt: z.union([
+        z.iso.datetime(),
+        z.null()
+    ]),
+    name: z.string(),
+    description: z.union([
+        z.string(),
+        z.null()
+    ]),
+    image_url: z.union([
+        z.string(),
+        z.null()
+    ]),
+    price: z.number(),
+    is_infinite: z.boolean(),
+    is_active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
+    is_repeatable_purchase_allowed: z.boolean().default(true),
+    order: z.number(),
+    quantity: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    challenge_season_id: z.string(),
+    prize_cosmetic: z.optional(z.union([
+        zPrizeCosmeticSummaryDto,
+        z.null()
+    ])),
+    is_one_time: z.boolean(),
+    is_already_purchased_by_user: z.boolean(),
+    user_purchase_count: z.optional(z.union([
+        z.number(),
+        z.null()
+    ]))
+});
+
 export const zPurchaseShopItemDto = z.object({
     item_id: z.string(),
-    contact_info: z.string()
+    contact_info: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+export const zEquipProfileCosmeticDto = z.object({
+    cosmetic_id: z.string()
+});
+
+export const zUnequipProfileCosmeticDto = z.object({
+    type: z.enum([
+        'profile_background',
+        'profile_frame',
+        'avatar_outline'
+    ])
+});
+
+export const zCreateProfileCosmeticDto = z.object({
+    name: z.string(),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    type: z.enum([
+        'profile_background',
+        'profile_frame',
+        'avatar_outline'
+    ]),
+    asset_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    is_active: z.optional(z.boolean()).default(true),
+    source_type: z.optional(z.enum([
+        'challenge_reward',
+        'season_shop_item',
+        'admin_manual',
+        'promo_code',
+        'shop_gift'
+    ])),
+    source_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    file: z.optional(z.string())
+});
+
+export const zUpdateProfileCosmeticDto = z.object({
+    name: z.optional(z.string()),
+    description: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    type: z.optional(z.enum([
+        'profile_background',
+        'profile_frame',
+        'avatar_outline'
+    ])),
+    asset_url: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    is_active: z.optional(z.boolean()).default(true),
+    source_type: z.optional(z.enum([
+        'challenge_reward',
+        'season_shop_item',
+        'admin_manual',
+        'promo_code',
+        'shop_gift'
+    ])),
+    source_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    file: z.optional(z.string()),
+    id: z.string()
+});
+
+export const zGrantProfileCosmeticDto = z.object({
+    user_id: z.string(),
+    cosmetic_id: z.string(),
+    source_type: z.optional(z.enum([
+        'challenge_reward',
+        'season_shop_item',
+        'admin_manual',
+        'promo_code',
+        'shop_gift'
+    ])),
+    source_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+export const zBindProfileCosmeticSourceItemDto = z.object({
+    cosmetic_id: z.string(),
+    source_id: z.string()
+});
+
+export const zBindProfileCosmeticsBatchDto = z.object({
+    source_type: z.enum([
+        'challenge_reward',
+        'season_shop_item'
+    ]),
+    bindings: z.array(zBindProfileCosmeticSourceItemDto)
+});
+
+export const zUpsertCosmeticBindingDto = z.object({
+    source_type: z.enum([
+        'challenge_reward',
+        'season_shop_item',
+        'admin_manual',
+        'promo_code',
+        'shop_gift'
+    ]),
+    source_id: z.string(),
+    cosmetic_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ]))
+});
+
+export const zBulkUpsertCosmeticBindingsDto = z.object({
+    items: z.array(zUpsertCosmeticBindingDto)
 });
 
 export const zCreateGearDto = z.object({
@@ -2044,6 +2329,18 @@ export const zUser = z.object({
     news_seen_at: z.optional(z.union([
         z.iso.datetime(),
         z.null()
+    ])),
+    equipped_profile_background_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    equipped_profile_frame_id: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
+    equipped_avatar_outline_id: z.optional(z.union([
+        z.string(),
+        z.null()
     ]))
 });
 
@@ -2111,7 +2408,12 @@ export const zGetAllChallengesWithProgressItemDto = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.union([
         z.iso.datetime(),
@@ -2154,7 +2456,12 @@ export const zGetChallengeByIdWithProgressResponseDto = z.object({
     short_description: z.string(),
     challenge_level: z.number(),
     prize_amount: z.number(),
+    prize_cosmetic_id: z.optional(z.union([
+        z.record(z.string(), z.unknown()),
+        z.null()
+    ])),
     active: z.boolean(),
+    is_contact_info_required: z.boolean().default(false),
     start_date: z.iso.datetime(),
     end_date: z.union([
         z.iso.datetime(),
@@ -2209,7 +2516,10 @@ export const zChallengeShopPurchaseEntity = z.object({
     ]),
     challenge_shop_item_id: z.string(),
     user_id: z.string(),
-    contact_info: z.string(),
+    contact_info: z.optional(z.union([
+        z.string(),
+        z.null()
+    ])),
     item: zChallengeShopItemEntity,
     user: z.optional(zUser)
 });
@@ -2722,7 +3032,17 @@ export const zChallengesShopAdminControllerGetListData = z.object({
     }))
 });
 
-export const zChallengesShopAdminControllerGetListResponse = z.array(zChallengeShopItemEntity);
+export const zChallengesShopAdminControllerGetListResponse = z.array(zChallengeShopItemResponseDto);
+
+export const zChallengesShopAdminControllerGetByIdData = z.object({
+    body: z.optional(z.never()),
+    path: z.object({
+        id: z.string()
+    }),
+    query: z.optional(z.never())
+});
+
+export const zChallengesShopAdminControllerGetByIdResponse = zChallengeShopItemResponseDto;
 
 export const zChallengesShopAdminControllerCreateData = z.object({
     body: zCreateChallengeShopItemDto,
@@ -2813,7 +3133,7 @@ export const zShopControllerGetListData = z.object({
     })
 });
 
-export const zShopControllerGetListResponse = z.array(zChallengeShopItemEntity);
+export const zShopControllerGetListResponse = z.array(zChallengeShopItemClientListItemDto);
 
 export const zShopControllerPurchaseData = z.object({
     body: zPurchaseShopItemDto,
@@ -2822,6 +3142,115 @@ export const zShopControllerPurchaseData = z.object({
 });
 
 export const zShopControllerPurchaseResponse = z.boolean();
+
+export const zProfileCosmeticsControllerGetMyCosmeticsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsControllerEquipData = z.object({
+    body: zEquipProfileCosmeticDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsControllerEquipResponse = z.boolean();
+
+export const zProfileCosmeticsControllerUnequipData = z.object({
+    body: zUnequipProfileCosmeticDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsControllerUnequipResponse = z.boolean();
+
+export const zProfileCosmeticsAdminControllerGetListData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        search: z.optional(z.string()),
+        type: z.optional(z.string()),
+        source_type: z.optional(z.string()),
+        source_id: z.optional(z.string()),
+        is_active: z.optional(z.boolean())
+    }))
+});
+
+export const zProfileCosmeticsAdminControllerGetOptionsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        search: z.optional(z.string()),
+        type: z.optional(z.string()),
+        is_active: z.optional(z.boolean())
+    }))
+});
+
+export const zProfileCosmeticsAdminControllerCreateData = z.object({
+    body: zCreateProfileCosmeticDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsAdminControllerUpdateData = z.object({
+    body: zUpdateProfileCosmeticDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsAdminControllerUpdateResponse = z.boolean();
+
+export const zProfileCosmeticsAdminControllerGrantData = z.object({
+    body: zGrantProfileCosmeticDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zProfileCosmeticsAdminControllerGrantResponse = z.record(z.string(), z.unknown());
+
+export const zProfileCosmeticsAdminControllerBindBatchData = z.object({
+    body: zBindProfileCosmeticsBatchDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zRewardSourcesAdminControllerGetOptionsData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.object({
+        source_type: z.string(),
+        search: z.optional(z.string()),
+        is_active: z.optional(z.boolean())
+    })
+});
+
+export const zCosmeticBindingsAdminControllerGetListData = z.object({
+    body: z.optional(z.never()),
+    path: z.optional(z.never()),
+    query: z.optional(z.object({
+        source_type: z.optional(z.string()),
+        source_id: z.optional(z.string()),
+        cosmetic_id: z.optional(z.string()),
+        search: z.optional(z.string()),
+        page: z.optional(z.number().gte(1)).default(1),
+        limit: z.optional(z.number().gte(1)).default(50)
+    }))
+});
+
+export const zCosmeticBindingsAdminControllerUpsertData = z.object({
+    body: zUpsertCosmeticBindingDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
+
+export const zCosmeticBindingsAdminControllerUpsertResponse = z.record(z.string(), z.unknown());
+
+export const zCosmeticBindingsAdminControllerBulkUpsertData = z.object({
+    body: zBulkUpsertCosmeticBindingsDto,
+    path: z.optional(z.never()),
+    query: z.optional(z.never())
+});
 
 export const zGearAdminControllerCreateGearData = z.object({
     body: zCreateGearDto,

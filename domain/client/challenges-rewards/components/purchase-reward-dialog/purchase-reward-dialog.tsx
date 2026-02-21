@@ -1,7 +1,7 @@
 import { AppDialogContent, AppDialog } from '@/ui/AppDialog/app-dialog';
 import styles from './purchase-reward-dialog.module.css';
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
-import { ChallengeShopItemEntity } from '@/lib/api_client/gen';
+import { ChallengeShopItemClientListItemDto } from '@/lib/api_client/gen';
 import { useMutation } from '@tanstack/react-query';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { shopControllerPurchaseMutation } from '@/lib/api_client/gen/@tanstack/react-query.gen';
@@ -11,9 +11,10 @@ import { useForm } from 'react-hook-form';
 import { AppControlledInput } from '@/ui/AppInput/AppInput';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { isOneTimePurchaseBlocked } from '../../utils/purchase-status';
 
 const schema = z.object({
-    contact_info: z.string().min(1),
+    contact_info: z.string().optional(),
 });
 
 export const PurchaseRewardDialog = ({
@@ -22,11 +23,13 @@ export const PurchaseRewardDialog = ({
     balance,
 }: {
     onClose: () => void;
-    item: ChallengeShopItemEntity;
+    item: ChallengeShopItemClientListItemDto;
     balance: number;
 }) => {
     const [showSuccessDialog, setShowSuccessDialog] = useState(false);
-    const { mutate, isPending, error } = useMutation({
+    const [blockedByServer, setBlockedByServer] = useState(false);
+    const purchaseBlocked = isOneTimePurchaseBlocked(item) || blockedByServer;
+    const { mutate, isPending } = useMutation({
         ...shopControllerPurchaseMutation({
             client: getPublicClient(),
         }),
@@ -35,6 +38,12 @@ export const PurchaseRewardDialog = ({
         },
         onError: (error) => {
             console.error(error);
+            const status = (error as { response?: { status?: number } })?.response?.status;
+            if (status === 400 && item.is_repeatable_purchase_allowed === false) {
+                setBlockedByServer(true);
+                toast.error('Эта награда уже куплена');
+                return;
+            }
             toast.error('Ошибка при покупке награды');
         },
     });
@@ -44,13 +53,28 @@ export const PurchaseRewardDialog = ({
         defaultValues: {
             contact_info: '',
         },
+        mode: 'onChange',
     });
 
     const handleSubmit = (data: z.infer<typeof schema>) => {
+        if (purchaseBlocked) {
+            toast.error('Эта награда уже куплена');
+            return;
+        }
+
+        if (item.is_contact_info_required && !data.contact_info?.trim()) {
+            form.setError('contact_info', {
+                type: 'required',
+                message: 'Контактная информация обязательна для этого товара',
+            });
+            return;
+        }
+
+        form.clearErrors('contact_info');
         mutate({
             body: {
                 item_id: item.id,
-                contact_info: data.contact_info,
+                contact_info: data.contact_info?.trim() || undefined,
             },
         });
     };
@@ -67,20 +91,36 @@ export const PurchaseRewardDialog = ({
                             Вы уверены, что хотите купить эту награду?
                         </p>
 
-                        <AppControlledInput
-                            control={form.control}
-                            name="contact_info"
-                            label="Контактная информация"
-                            placeholder="Введите вашу контактную информацию"
-                            className="mt-8"
-                        />
+                        {item.is_contact_info_required && (
+                            <AppControlledInput
+                                control={form.control}
+                                name="contact_info"
+                                label="Контактная информация"
+                                placeholder="Введите вашу контактную информацию"
+                                className="mt-8"
+                            />
+                        )}
+                        {!item.is_contact_info_required && (
+                            <p className={styles.description}>
+                                Контактная информация не обязательна для этого товара.
+                            </p>
+                        )}
 
                         <div className={styles.buttons}>
                             <AppBtn
-                                text={balance < item.price ? 'Недостаточно очков' : 'Купить'}
+                                text={
+                                    purchaseBlocked
+                                        ? 'Уже куплено'
+                                        : balance < item.price
+                                          ? 'Недостаточно очков'
+                                          : 'Купить'
+                                }
                                 onClick={form.handleSubmit(handleSubmit)}
                                 disabled={
-                                    isPending || !form.formState.isValid || balance < item.price
+                                    purchaseBlocked ||
+                                    isPending ||
+                                    (item.is_contact_info_required && !form.formState.isValid) ||
+                                    balance < item.price
                                 }
                             />
                             <AppBtn text={'Отмена'} onClick={onClose} style="outline_red" />
@@ -91,7 +131,9 @@ export const PurchaseRewardDialog = ({
                     <>
                         <h1 className={styles.title}>Успешно</h1>
                         <p className={styles.description}>
-                            Вы успешно купили эту награду. С вами свяжутся в ближайшее время.
+                            {item.is_contact_info_required
+                                ? 'Вы успешно купили эту награду. С вами свяжутся в ближайшее время.'
+                                : 'Вы успешно купили эту награду. Предмет скоро окажется у вас.'}
                         </p>
 
                         <div className={styles.buttons}>

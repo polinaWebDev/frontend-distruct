@@ -40,7 +40,10 @@ export const NewsAdminPage = () => {
     const pendingDeletesRef = useRef(
         new Map<
             string,
-            { timeoutId: ReturnType<typeof setTimeout>; snapshot: Array<[unknown, unknown]> }
+            {
+                timeoutId: ReturnType<typeof setTimeout>;
+                snapshot: Array<[readonly unknown[], unknown]>;
+            }
         >()
     );
     const [gameType, setGameType] = useAdminGameTypeFilter<GameType | 'all'>(
@@ -81,7 +84,7 @@ export const NewsAdminPage = () => {
     }, [data]);
 
     // Delete mutation
-    const newsQueryPredicate = (query: { queryKey?: unknown[] }) =>
+    const newsQueryPredicate = (query: { queryKey?: readonly unknown[] }) =>
         (query.queryKey?.[0] as { _id?: string } | undefined)?._id === 'newsControllerGetAllNews';
 
     const removeFromCache = (deletedId: string) => {
@@ -102,7 +105,7 @@ export const NewsAdminPage = () => {
         });
     };
 
-    const restoreSnapshot = (snapshot: Array<[unknown, unknown]>) => {
+    const restoreSnapshot = (snapshot: Array<[readonly unknown[], unknown]>) => {
         snapshot.forEach(([key, data]) => {
             queryClient.setQueryData(key, data);
         });

@@ -6,7 +6,7 @@ export default async function Layout({
     params,
 }: {
     children: React.ReactNode;
-    params: Promise<{ game: GameType }>;
+    params: Promise<{ game: string }>;
 }) {
     const { game } = await params;
 

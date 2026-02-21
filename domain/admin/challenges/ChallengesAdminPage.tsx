@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery } from '@tanstack/react-query';
 import { InfoIcon, PencilIcon, PlusIcon, Trash2Icon } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -34,6 +34,7 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
+import Image from 'next/image';
 import { GameType, GAME_TYPE_VALUES } from '@/lib/enums/game_type.enum';
 import { useAdminGameTypeFilter } from '@/domain/admin/hooks/useAdminGameType';
 import { useAdminGameTypeContext } from '@/domain/admin/context/admin-game-type-context';
@@ -43,11 +44,29 @@ import {
 } from '@/lib/enums/challenge_difficulty.enum';
 import { ChallengeFormDialog } from './components/ChallengeFormDialog';
 import { ViewChallengeDialog } from './components/ViewChallengeDialog';
+import { getFileUrl } from '@/lib/utils';
 
 const PAGE_LIMIT = 15;
 
+const getChallengePrizeImage = (challenge: GetAllChallengesResponseItemDto): string | null => {
+    const prize = challenge.prize_cosmetic_id;
+    if (!prize || typeof prize !== 'object') return null;
+
+    const record = prize as Record<string, unknown>;
+    const direct = record.asset_url;
+    if (typeof direct === 'string' && direct.trim()) return direct;
+
+    const nested = record.prize_cosmetic;
+    if (nested && typeof nested === 'object') {
+        const nestedRecord = nested as Record<string, unknown>;
+        const nestedAsset = nestedRecord.asset_url;
+        if (typeof nestedAsset === 'string' && nestedAsset.trim()) return nestedAsset;
+    }
+
+    return null;
+};
+
 export const ChallengesAdminPage = () => {
-    const queryClient = useQueryClient();
     const { setGameType } = useAdminGameTypeContext();
     const [searchName, setSearchName] = useState('');
     const [gameTypeFilter, setGameTypeFilter] = useAdminGameTypeFilter<GameType | ''>(
@@ -233,6 +252,7 @@ export const ChallengesAdminPage = () => {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Превью</TableHead>
                                 <TableHead>Название</TableHead>
                                 <TableHead>Игра</TableHead>
                                 <TableHead>Сложность</TableHead>
@@ -250,8 +270,24 @@ export const ChallengesAdminPage = () => {
                                 const season = seasons.find(
                                     (item) => item.id === challenge.season_id
                                 );
+                                const prizeImage = getChallengePrizeImage(challenge);
                                 return (
                                     <TableRow key={challenge.id}>
+                                        <TableCell>
+                                            {prizeImage ? (
+                                                <Image
+                                                    src={getFileUrl(prizeImage)}
+                                                    alt={challenge.title}
+                                                    width={48}
+                                                    height={48}
+                                                    className="h-12 w-12 rounded-md object-cover border"
+                                                />
+                                            ) : (
+                                                <span className="text-xs text-muted-foreground">
+                                                    Нет
+                                                </span>
+                                            )}
+                                        </TableCell>
                                         <TableCell className="max-w-xs">
                                             <div className="font-medium">{challenge.title}</div>
                                             <p className="text-xs text-muted-foreground line-clamp-2">

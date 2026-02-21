@@ -61,8 +61,7 @@ export async function TiersPage({
                     <TabsContent key={category.id} value={category.id}>
                         <TierListByCategory
                             categoryId={category.id}
-                            actions={<ButtonActions authenticated={isAuthenticated} />}
-                            authenticated={isAuthenticated}
+                            actions={<ButtonActions />}
                         />
                     </TabsContent>
                 ))}

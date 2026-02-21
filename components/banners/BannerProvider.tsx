@@ -4,7 +4,9 @@ import { createContext, useContext, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { bannersControllerGetBannersOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
-import type { BannerPublicSlotDto, BannerSlotPage } from '@/lib/api_client/gen/types.gen';
+import type { BannerPublicSlotDto, BannersControllerGetBannersData } from '@/lib/api_client/gen/types.gen';
+
+type BannerSlotPage = BannersControllerGetBannersData['query']['page'];
 
 export type BannerContextValue = {
     page: BannerSlotPage;

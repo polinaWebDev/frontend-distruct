@@ -41,7 +41,10 @@ export default function GearPage() {
     const pendingDeletesRef = useRef(
         new Map<
             string,
-            { timeoutId: ReturnType<typeof setTimeout>; snapshot: Array<[unknown, unknown]> }
+            {
+                timeoutId: ReturnType<typeof setTimeout>;
+                snapshot: Array<[readonly unknown[], unknown]>;
+            }
         >()
     );
     const { gameType, setGameType } = useAdminGameTypeContext();
@@ -81,7 +84,7 @@ export default function GearPage() {
         return (data?.pages.flatMap((page) => page?.data ?? []) ?? []) as GearEntity[];
     }, [data]);
 
-    const gearQueryPredicate = (query: { queryKey?: unknown[] }) =>
+    const gearQueryPredicate = (query: { queryKey?: readonly unknown[] }) =>
         (query.queryKey?.[0] as { _id?: string } | undefined)?._id ===
         'gearAdminControllerGetGearList';
 
@@ -103,7 +106,7 @@ export default function GearPage() {
         });
     };
 
-    const restoreSnapshot = (snapshot: Array<[unknown, unknown]>) => {
+    const restoreSnapshot = (snapshot: Array<[readonly unknown[], unknown]>) => {
         snapshot.forEach(([key, data]) => {
             queryClient.setQueryData(key, data);
         });

@@ -164,6 +164,7 @@ export const CreateMapDialog = ({
                                         <FormControl>
                                             <Textarea
                                                 {...field}
+                                                value={field.value ?? ''}
                                                 placeholder="Описание карты"
                                                 rows={3}
                                             />

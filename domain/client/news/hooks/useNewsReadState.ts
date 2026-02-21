@@ -9,13 +9,13 @@ import {
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-const newsClientQueryPredicate = (query: { queryKey?: unknown[] }) =>
+const newsClientQueryPredicate = (query: { queryKey?: readonly unknown[] }) =>
     (query.queryKey?.[0] as { _id?: string } | undefined)?._id === 'newsControllerGetAllNewsClient';
 
-const newsIndicatorQueryPredicate = (query: { queryKey?: unknown[] }) =>
+const newsIndicatorQueryPredicate = (query: { queryKey?: readonly unknown[] }) =>
     (query.queryKey?.[0] as { _id?: string } | undefined)?._id === 'newsControllerGetNewsIndicator';
 
-const newsByIdQueryPredicate = (query: { queryKey?: unknown[] }) =>
+const newsByIdQueryPredicate = (query: { queryKey?: readonly unknown[] }) =>
     (query.queryKey?.[0] as { _id?: string } | undefined)?._id === 'newsControllerGetNewsById';
 
 export const useNewsUnreadIndicator = ({ gameType }: { gameType?: GameType | null }) => {

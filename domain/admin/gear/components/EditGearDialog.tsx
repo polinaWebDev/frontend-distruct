@@ -246,6 +246,7 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание предмета..."
                                             rows={3}
                                         />
@@ -261,7 +262,10 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Тип игры *</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
@@ -333,7 +337,10 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Категория *</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Выберите категорию" />
@@ -367,7 +374,10 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Редкость</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Не указано" />
@@ -399,7 +409,10 @@ export function EditGearDialog({ open, onOpenChange, gear }: EditGearDialogProps
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Тип</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Выберите тип" />

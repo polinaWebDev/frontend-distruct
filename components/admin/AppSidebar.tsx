@@ -78,6 +78,10 @@ const navItems = {
                     title: 'Предложения',
                     href: '/admin/offers',
                 },
+                {
+                    title: 'Косметика профиля',
+                    href: '/admin/profile-cosmetics',
+                },
             ],
         },
         {

@@ -14,10 +14,15 @@ import { useQuery } from '@tanstack/react-query';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { friendsControllerIncomingOptions } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { SubscriptionsDialog } from './components/subscriptions-dialog/subscriptions-dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { AppDialog, AppDialogContent } from '@/ui/AppDialog/app-dialog';
 import { ProfileCustomizationDialog } from './components/profile-customization-dialog/profile-customization-dialog';
+import Image from 'next/image';
+import { getFileUrl } from '@/lib/utils';
+
+const MIN_OUTLINE_SIZE = 296;
+const MAX_OUTLINE_SIZE = 380;
 
 export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     const searchParams = useSearchParams();
@@ -27,6 +32,62 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
     const [isEditingProfile, setIsEditingProfile] = useState(false);
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
     const [isCustomizationDialogOpen, setIsCustomizationDialogOpen] = useState(false);
+    const [profileBackgroundUrl, setProfileBackgroundUrl] = useState<string | null>(
+        profile.profile_background_url ?? null
+    );
+    const [profileFrameUrl, setProfileFrameUrl] = useState<string | null>(
+        profile.profile_frame_url ?? null
+    );
+    const [avatarOutlineUrl, setAvatarOutlineUrl] = useState<string | null>(
+        profile.avatar_outline_url ?? null
+    );
+    const [avatarOutlineSize, setAvatarOutlineSize] = useState({
+        width: MIN_OUTLINE_SIZE,
+        height: MIN_OUTLINE_SIZE,
+    });
+
+    useEffect(() => {
+        if (!avatarOutlineUrl) {
+            setAvatarOutlineSize({ width: MIN_OUTLINE_SIZE, height: MIN_OUTLINE_SIZE });
+            return;
+        }
+
+        let isCancelled = false;
+        const image = new window.Image();
+
+        image.onload = () => {
+            if (isCancelled) return;
+
+            let width = image.naturalWidth || MIN_OUTLINE_SIZE;
+            let height = image.naturalHeight || MIN_OUTLINE_SIZE;
+
+            // Keep at least 296x296.
+            const minScale = Math.max(MIN_OUTLINE_SIZE / width, MIN_OUTLINE_SIZE / height, 1);
+            width *= minScale;
+            height *= minScale;
+
+            // Down-scale oversized source images while preserving aspect ratio.
+            const maxScale = Math.min(MAX_OUTLINE_SIZE / width, MAX_OUTLINE_SIZE / height, 1);
+            width *= maxScale;
+            height *= maxScale;
+
+            setAvatarOutlineSize({
+                width: Math.round(width),
+                height: Math.round(height),
+            });
+        };
+
+        image.onerror = () => {
+            if (isCancelled) return;
+            setAvatarOutlineSize({ width: MIN_OUTLINE_SIZE, height: MIN_OUTLINE_SIZE });
+        };
+
+        image.src = getFileUrl(avatarOutlineUrl);
+
+        return () => {
+            isCancelled = true;
+        };
+    }, [avatarOutlineUrl]);
 
     const { data: incomingRequests } = useQuery({
         ...friendsControllerIncomingOptions({
@@ -51,7 +112,32 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
                     <div className={styles.content}>
                         <div className={styles.content_inner}>
                             <div className={styles.left}>
-                                <ProfileAvatar url={profile.avatar_url} />
+                                <div className={styles.avatar_wrap}>
+                                    <div className={styles.avatar_inner}>
+                                        <ProfileAvatar
+                                            url={profile.avatar_url}
+                                            profileBackgroundUrl={profileBackgroundUrl}
+                                        />
+                                    </div>
+                                    {profileFrameUrl && (
+                                        <Image
+                                            className={styles.avatar_frame}
+                                            src={getFileUrl(profileFrameUrl)}
+                                            alt=""
+                                            width={315}
+                                            height={315}
+                                        />
+                                    )}
+                                    {avatarOutlineUrl && (
+                                        <Image
+                                            className={styles.avatar_outline}
+                                            src={getFileUrl(avatarOutlineUrl)}
+                                            alt=""
+                                            width={avatarOutlineSize.width}
+                                            height={avatarOutlineSize.height}
+                                        />
+                                    )}
+                                </div>
 
                                 <AppBtn
                                     style="outline_red"
@@ -127,7 +213,11 @@ export const ProfilePage = ({ profile }: { profile: UserResponseDto }) => {
             <ProfileCustomizationDialog
                 open={isCustomizationDialogOpen}
                 onOpenChange={setIsCustomizationDialogOpen}
-                userPoints={profile.points}
+                onAppearanceChange={(value) => {
+                    setProfileBackgroundUrl(value.profileBackgroundUrl);
+                    setProfileFrameUrl(value.profileFrameUrl);
+                    setAvatarOutlineUrl(value.avatarOutlineUrl);
+                }}
             />
         </>
     );

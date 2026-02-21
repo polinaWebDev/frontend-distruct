@@ -61,7 +61,6 @@ export const HtmlEditor = ({ value, onChange, className, placeholder }: HtmlEdit
             }),
             ImageResize.configure({
                 inline: true,
-                allowBase64: false,
             }),
             LinkExtension.configure({
                 openOnClick: false,

@@ -1,7 +1,8 @@
 import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
-const isLocalEnv = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
+const isLocalEnv =
+    process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_APP_ENV === 'local';
 
 const nextConfig: NextConfig = {
     /* config options here */

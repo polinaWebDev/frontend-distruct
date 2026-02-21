@@ -26,7 +26,7 @@ import styles from './public-profile-page.module.css';
 type FriendRequestItem = {
     id: string;
     user: PublicUserResponseDto;
-    createdAt: string;
+    createdAt: Date;
 };
 
 export const PublicProfilePage = ({ userId, game }: { userId: string; game: GameType }) => {

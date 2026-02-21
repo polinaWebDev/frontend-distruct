@@ -42,7 +42,7 @@ type UpdateMapFloorDialogProps = {
 export const UpdateMapFloorDialog = ({ floor, map_id }: UpdateMapFloorDialogProps) => {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
-    const form = useForm<z.infer<typeof schema>>({
+    const form = useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
             id: floor.id,
@@ -64,7 +64,7 @@ export const UpdateMapFloorDialog = ({ floor, map_id }: UpdateMapFloorDialogProp
     }, [open, floor, map_id, form]);
 
     const { mutate: updateFloor, isPending } = useMutation({
-        mutationFn: async (body: z.infer<typeof schema>) => {
+        mutationFn: async (body: z.output<typeof schema>) => {
             const client = getPublicClient();
             const response = await client.request({
                 method: 'POST',
@@ -129,7 +129,19 @@ export const UpdateMapFloorDialog = ({ floor, map_id }: UpdateMapFloorDialogProp
                                 <FormItem>
                                     <FormLabel>Номер этажа</FormLabel>
                                     <FormControl>
-                                        <Input type="number" min={1} {...field} />
+                                        <Input
+                                            type="number"
+                                            min={1}
+                                            {...field}
+                                            value={
+                                                typeof field.value === 'number' ? field.value : ''
+                                            }
+                                            onChange={(event) =>
+                                                field.onChange(
+                                                    Number.parseInt(event.target.value, 10)
+                                                )
+                                            }
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -140,7 +152,7 @@ export const UpdateMapFloorDialog = ({ floor, map_id }: UpdateMapFloorDialogProp
                 <DialogFooter>
                     <Button
                         disabled={!form.formState.isValid || isPending}
-                        onClick={() => updateFloor(form.getValues())}
+                        onClick={() => updateFloor(schema.parse(form.getValues()))}
                     >
                         {isPending ? 'Сохранение...' : 'Сохранить'}
                     </Button>

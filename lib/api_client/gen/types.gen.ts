@@ -11,6 +11,12 @@ export type UserResponseDto = {
     avatar_url?: string | null;
     role: 'admin' | 'user';
     points: number;
+    equipped_profile_background_id?: string | null;
+    equipped_profile_frame_id?: string | null;
+    equipped_avatar_outline_id?: string | null;
+    profile_background_url?: string | null;
+    profile_frame_url?: string | null;
+    avatar_outline_url?: string | null;
 };
 
 export type GetUserListResponseDto = {
@@ -41,6 +47,9 @@ export type PublicUserResponseDto = {
     id: string;
     username: string;
     avatar_url?: string | null;
+    profile_background_url?: string | null;
+    profile_frame_url?: string | null;
+    avatar_outline_url?: string | null;
 };
 
 export type PublicUserListResponseDto = {
@@ -276,6 +285,9 @@ export type User = {
     tierLists: Array<TierListEntity>;
     points: number;
     news_seen_at?: Date | null;
+    equipped_profile_background_id?: string | null;
+    equipped_profile_frame_id?: string | null;
+    equipped_avatar_outline_id?: string | null;
 };
 
 export type GetNewsCommentsResponseItemDto = {
@@ -469,7 +481,9 @@ export type CreateChallengeDto = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: string | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date?: Date | null;
     game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
@@ -486,7 +500,9 @@ export type UpdateChallengeDto = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: string | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date?: Date | null;
     game_type: 'arena_breakout' | 'active_matter' | 'arc_raiders' | 'escape_from_tarkov';
@@ -512,7 +528,11 @@ export type ChallengeEntity = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: {
+        [key: string]: unknown;
+    } | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date: Date | null;
     time_limit_in_seconds: number | null;
@@ -570,7 +590,11 @@ export type GetAllChallengesWithProgressItemDto = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: {
+        [key: string]: unknown;
+    } | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date: Date | null;
     time_limit_in_seconds: number | null;
@@ -592,7 +616,11 @@ export type GetAllChallengesResponseItemDto = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: {
+        [key: string]: unknown;
+    } | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date: Date | null;
     time_limit_in_seconds: number | null;
@@ -613,7 +641,11 @@ export type GetChallengeByIdWithProgressResponseDto = {
     short_description: string;
     challenge_level: number;
     prize_amount: number;
+    prize_cosmetic_id?: {
+        [key: string]: unknown;
+    } | null;
     active: boolean;
+    is_contact_info_required: boolean;
     start_date: Date;
     end_date: Date | null;
     time_limit_in_seconds: number | null;
@@ -661,7 +693,14 @@ export type ChallengeSeasonUserBalanceEntity = {
     user?: User;
 };
 
-export type ChallengeShopItemEntity = {
+export type PrizeCosmeticSummaryDto = {
+    id: string;
+    name: string;
+    type: 'profile_background' | 'profile_frame' | 'avatar_outline';
+    asset_url: string;
+};
+
+export type ChallengeShopItemResponseDto = {
     id: string;
     createdAt: Date;
     updatedAt: Date;
@@ -672,9 +711,13 @@ export type ChallengeShopItemEntity = {
     price: number;
     is_infinite: boolean;
     is_active: boolean;
+    is_contact_info_required: boolean;
+    is_repeatable_purchase_allowed: boolean;
     order: number;
     quantity: number;
+    prize_cosmetic_id?: string | null;
     challenge_season_id: string;
+    prize_cosmetic?: PrizeCosmeticSummaryDto | null;
 };
 
 export type CreateChallengeShopItemDto = {
@@ -683,8 +726,11 @@ export type CreateChallengeShopItemDto = {
     price: number;
     is_infinite: boolean;
     is_active: boolean;
+    is_contact_info_required: boolean;
+    is_repeatable_purchase_allowed: boolean;
     order: number;
     quantity: number;
+    prize_cosmetic_id?: string | null;
     challenge_season_id: string;
     file?: Blob | File | null;
 };
@@ -695,8 +741,11 @@ export type UpdateChallengeShopItemDto = {
     price: number;
     is_infinite: boolean;
     is_active: boolean;
+    is_contact_info_required: boolean;
+    is_repeatable_purchase_allowed: boolean;
     order: number;
     quantity: number;
+    prize_cosmetic_id?: string | null;
     challenge_season_id: string;
     file?: Blob | File | null;
     id: string;
@@ -710,6 +759,25 @@ export type ReversePurchaseDto = {
     id: string;
 };
 
+export type ChallengeShopItemEntity = {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    name: string;
+    description: string | null;
+    image_url: string | null;
+    price: number;
+    is_infinite: boolean;
+    is_active: boolean;
+    is_contact_info_required: boolean;
+    is_repeatable_purchase_allowed: boolean;
+    order: number;
+    quantity: number;
+    prize_cosmetic_id?: string | null;
+    challenge_season_id: string;
+};
+
 export type ChallengeShopPurchaseEntity = {
     id: string;
     createdAt: Date;
@@ -717,7 +785,7 @@ export type ChallengeShopPurchaseEntity = {
     deletedAt: Date | null;
     challenge_shop_item_id: string;
     user_id: string;
-    contact_info: string;
+    contact_info?: string | null;
     item: ChallengeShopItemEntity;
     user?: User;
 };
@@ -759,9 +827,110 @@ export type ChallengeOfferEntity = {
     user_id: string;
 };
 
+export type ChallengeShopItemClientListItemDto = {
+    id: string;
+    createdAt: Date;
+    updatedAt: Date;
+    deletedAt: Date | null;
+    name: string;
+    description: string | null;
+    image_url: string | null;
+    price: number;
+    is_infinite: boolean;
+    is_active: boolean;
+    is_contact_info_required: boolean;
+    is_repeatable_purchase_allowed: boolean;
+    order: number;
+    quantity: number;
+    prize_cosmetic_id?: string | null;
+    challenge_season_id: string;
+    prize_cosmetic?: PrizeCosmeticSummaryDto | null;
+    is_one_time: boolean;
+    is_already_purchased_by_user: boolean;
+    user_purchase_count?: number | null;
+};
+
 export type PurchaseShopItemDto = {
     item_id: string;
-    contact_info: string;
+    contact_info?: string | null;
+};
+
+export type EquipProfileCosmeticDto = {
+    cosmetic_id: string;
+};
+
+export type UnequipProfileCosmeticDto = {
+    type: 'profile_background' | 'profile_frame' | 'avatar_outline';
+};
+
+export type CreateProfileCosmeticDto = {
+    name: string;
+    description?: string | null;
+    type: 'profile_background' | 'profile_frame' | 'avatar_outline';
+    asset_url?: string | null;
+    is_active?: boolean;
+    /**
+     * Deprecated. Ignored by backend. Use /api/admin/cosmetic-bindings* endpoints.
+     *
+     * @deprecated
+     */
+    source_type?: 'challenge_reward' | 'season_shop_item' | 'admin_manual' | 'promo_code' | 'shop_gift';
+    /**
+     * Deprecated. Ignored by backend. Use /api/admin/cosmetic-bindings* endpoints.
+     *
+     * @deprecated
+     */
+    source_id?: string | null;
+    file?: Blob | File;
+};
+
+export type UpdateProfileCosmeticDto = {
+    name?: string;
+    description?: string | null;
+    type?: 'profile_background' | 'profile_frame' | 'avatar_outline';
+    asset_url?: string | null;
+    is_active?: boolean;
+    /**
+     * Deprecated. Ignored by backend. Use /api/admin/cosmetic-bindings* endpoints.
+     *
+     * @deprecated
+     */
+    source_type?: 'challenge_reward' | 'season_shop_item' | 'admin_manual' | 'promo_code' | 'shop_gift';
+    /**
+     * Deprecated. Ignored by backend. Use /api/admin/cosmetic-bindings* endpoints.
+     *
+     * @deprecated
+     */
+    source_id?: string | null;
+    file?: Blob | File;
+    id: string;
+};
+
+export type GrantProfileCosmeticDto = {
+    user_id: string;
+    cosmetic_id: string;
+    source_type?: 'challenge_reward' | 'season_shop_item' | 'admin_manual' | 'promo_code' | 'shop_gift';
+    source_id?: string | null;
+};
+
+export type BindProfileCosmeticSourceItemDto = {
+    cosmetic_id: string;
+    source_id: string;
+};
+
+export type BindProfileCosmeticsBatchDto = {
+    source_type: 'challenge_reward' | 'season_shop_item';
+    bindings: Array<BindProfileCosmeticSourceItemDto>;
+};
+
+export type UpsertCosmeticBindingDto = {
+    source_type: 'challenge_reward' | 'season_shop_item' | 'admin_manual' | 'promo_code' | 'shop_gift';
+    source_id: string;
+    cosmetic_id?: string | null;
+};
+
+export type BulkUpsertCosmeticBindingsDto = {
+    items: Array<UpsertCosmeticBindingDto>;
 };
 
 export type CreateGearDto = {
@@ -2388,10 +2557,25 @@ export type ChallengesShopAdminControllerGetListData = {
 };
 
 export type ChallengesShopAdminControllerGetListResponses = {
-    200: Array<ChallengeShopItemEntity>;
+    200: Array<ChallengeShopItemResponseDto>;
 };
 
 export type ChallengesShopAdminControllerGetListResponse = ChallengesShopAdminControllerGetListResponses[keyof ChallengesShopAdminControllerGetListResponses];
+
+export type ChallengesShopAdminControllerGetByIdData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/api/challenges/shop/admin/get-by-id/{id}';
+};
+
+export type ChallengesShopAdminControllerGetByIdResponses = {
+    200: ChallengeShopItemResponseDto;
+};
+
+export type ChallengesShopAdminControllerGetByIdResponse = ChallengesShopAdminControllerGetByIdResponses[keyof ChallengesShopAdminControllerGetByIdResponses];
 
 export type ChallengesShopAdminControllerCreateData = {
     body: CreateChallengeShopItemDto;
@@ -2578,7 +2762,7 @@ export type ShopControllerGetListData = {
 };
 
 export type ShopControllerGetListResponses = {
-    200: Array<ChallengeShopItemEntity>;
+    200: Array<ChallengeShopItemClientListItemDto>;
 };
 
 export type ShopControllerGetListResponse = ShopControllerGetListResponses[keyof ShopControllerGetListResponses];
@@ -2596,6 +2780,184 @@ export type ShopControllerPurchaseResponses = {
 };
 
 export type ShopControllerPurchaseResponse = ShopControllerPurchaseResponses[keyof ShopControllerPurchaseResponses];
+
+export type ProfileCosmeticsControllerGetMyCosmeticsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/me';
+};
+
+export type ProfileCosmeticsControllerGetMyCosmeticsResponses = {
+    200: unknown;
+};
+
+export type ProfileCosmeticsControllerEquipData = {
+    body: EquipProfileCosmeticDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/equip';
+};
+
+export type ProfileCosmeticsControllerEquipResponses = {
+    201: boolean;
+};
+
+export type ProfileCosmeticsControllerEquipResponse = ProfileCosmeticsControllerEquipResponses[keyof ProfileCosmeticsControllerEquipResponses];
+
+export type ProfileCosmeticsControllerUnequipData = {
+    body: UnequipProfileCosmeticDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/unequip';
+};
+
+export type ProfileCosmeticsControllerUnequipResponses = {
+    201: boolean;
+};
+
+export type ProfileCosmeticsControllerUnequipResponse = ProfileCosmeticsControllerUnequipResponses[keyof ProfileCosmeticsControllerUnequipResponses];
+
+export type ProfileCosmeticsAdminControllerGetListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        search?: string;
+        type?: string;
+        source_type?: string;
+        source_id?: string;
+        is_active?: boolean;
+    };
+    url: '/api/profile-cosmetics/admin/list';
+};
+
+export type ProfileCosmeticsAdminControllerGetListResponses = {
+    200: unknown;
+};
+
+export type ProfileCosmeticsAdminControllerGetOptionsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        search?: string;
+        type?: string;
+        is_active?: boolean;
+    };
+    url: '/api/profile-cosmetics/admin/options';
+};
+
+export type ProfileCosmeticsAdminControllerGetOptionsResponses = {
+    200: unknown;
+};
+
+export type ProfileCosmeticsAdminControllerCreateData = {
+    body: CreateProfileCosmeticDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/admin/create';
+};
+
+export type ProfileCosmeticsAdminControllerCreateResponses = {
+    201: unknown;
+};
+
+export type ProfileCosmeticsAdminControllerUpdateData = {
+    body: UpdateProfileCosmeticDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/admin/update';
+};
+
+export type ProfileCosmeticsAdminControllerUpdateResponses = {
+    201: boolean;
+};
+
+export type ProfileCosmeticsAdminControllerUpdateResponse = ProfileCosmeticsAdminControllerUpdateResponses[keyof ProfileCosmeticsAdminControllerUpdateResponses];
+
+export type ProfileCosmeticsAdminControllerGrantData = {
+    body: GrantProfileCosmeticDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/admin/grant';
+};
+
+export type ProfileCosmeticsAdminControllerGrantResponses = {
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type ProfileCosmeticsAdminControllerGrantResponse = ProfileCosmeticsAdminControllerGrantResponses[keyof ProfileCosmeticsAdminControllerGrantResponses];
+
+export type ProfileCosmeticsAdminControllerBindBatchData = {
+    body: BindProfileCosmeticsBatchDto;
+    path?: never;
+    query?: never;
+    url: '/api/profile-cosmetics/admin/bind-batch';
+};
+
+export type ProfileCosmeticsAdminControllerBindBatchResponses = {
+    201: unknown;
+};
+
+export type RewardSourcesAdminControllerGetOptionsData = {
+    body?: never;
+    path?: never;
+    query: {
+        source_type: string;
+        search?: string;
+        is_active?: boolean;
+    };
+    url: '/api/admin/reward-sources/options';
+};
+
+export type RewardSourcesAdminControllerGetOptionsResponses = {
+    200: unknown;
+};
+
+export type CosmeticBindingsAdminControllerGetListData = {
+    body?: never;
+    path?: never;
+    query?: {
+        source_type?: string;
+        source_id?: string;
+        cosmetic_id?: string;
+        search?: string;
+        page?: number;
+        limit?: number;
+    };
+    url: '/api/admin/cosmetic-bindings';
+};
+
+export type CosmeticBindingsAdminControllerGetListResponses = {
+    200: unknown;
+};
+
+export type CosmeticBindingsAdminControllerUpsertData = {
+    body: UpsertCosmeticBindingDto;
+    path?: never;
+    query?: never;
+    url: '/api/admin/cosmetic-bindings/upsert';
+};
+
+export type CosmeticBindingsAdminControllerUpsertResponses = {
+    201: {
+        [key: string]: unknown;
+    };
+};
+
+export type CosmeticBindingsAdminControllerUpsertResponse = CosmeticBindingsAdminControllerUpsertResponses[keyof CosmeticBindingsAdminControllerUpsertResponses];
+
+export type CosmeticBindingsAdminControllerBulkUpsertData = {
+    body: BulkUpsertCosmeticBindingsDto;
+    path?: never;
+    query?: never;
+    url: '/api/admin/cosmetic-bindings/bulk-upsert';
+};
+
+export type CosmeticBindingsAdminControllerBulkUpsertResponses = {
+    201: unknown;
+};
 
 export type GearAdminControllerCreateGearData = {
     body: CreateGearDto;

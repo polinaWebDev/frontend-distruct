@@ -61,11 +61,10 @@ export const EditorToolbar = ({ editor, onImageUpload, isUploading }: EditorTool
         if (file) {
             onImageUpload(file).then((url) => {
                 if (url) {
-                    editor
-                        .chain()
-                        .focus()
-                        .setImage({ src: getFileUrl(url) })
-                        .run();
+                    const chain = editor.chain().focus() as unknown as {
+                        setImage: (attrs: { src: string }) => { run: () => boolean };
+                    };
+                    chain.setImage({ src: getFileUrl(url) }).run();
                 }
             });
         }

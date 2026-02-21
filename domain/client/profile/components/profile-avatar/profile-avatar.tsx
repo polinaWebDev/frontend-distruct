@@ -7,8 +7,15 @@ import { useMutation } from '@tanstack/react-query';
 import { usersControllerEditAvatarMutation } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
 import { toast } from 'sonner';
+import Image from 'next/image';
 
-export const ProfileAvatar = ({ url }: { url?: string | null }) => {
+export const ProfileAvatar = ({
+    url,
+    profileBackgroundUrl,
+}: {
+    url?: string | null;
+    profileBackgroundUrl?: string | null;
+}) => {
     const ref = useRef<HTMLInputElement>(null);
 
     const { mutate: editAvatar } = useMutation({
@@ -49,12 +56,30 @@ export const ProfileAvatar = ({ url }: { url?: string | null }) => {
                 className="hidden"
                 accept="image/*"
             />
-            {url ? (
-                <img className={styles.avatar} src={getFileUrl(url)} alt="" />
-            ) : (
-                <div className={styles.placeholder} />
-            )}
-
+            <div className={styles.avatar_clip}>
+                {profileBackgroundUrl && (
+                    <Image
+                        className={styles.background}
+                        src={getFileUrl(profileBackgroundUrl)}
+                        alt=""
+                        fill
+                        sizes="296px"
+                    />
+                )}
+                <div className={styles.avatar_layer}>
+                    {url ? (
+                        <Image
+                            className={styles.avatar}
+                            src={getFileUrl(url)}
+                            alt=""
+                            fill
+                            sizes="296px"
+                        />
+                    ) : (
+                        <div className={styles.placeholder} />
+                    )}
+                </div>
+            </div>
             <div className={styles.edit_btn} onClick={() => ref.current?.click()}>
                 <SquarePen />
             </div>

@@ -474,7 +474,6 @@ export const MapRenderer = memo(
                         map_level_ids: mapLevelIds,
                         map_id,
                         info_link: marker.info_link ?? undefined,
-                        is_locked: marker.is_locked,
                     },
                     bodySerializer: mapMarkerBodySerializer,
                 });
@@ -555,19 +554,6 @@ export const MapRenderer = memo(
                                         clearLongPressUnlock(marker.marker.id);
                                     },
                                     mouseout: () => {
-                                        clearLongPressUnlock(marker.marker.id);
-                                    },
-                                    touchstart: (e) => {
-                                        startLongPressUnlock(
-                                            marker.marker,
-                                            e.target as LeafletMarker,
-                                            e.originalEvent as TouchEvent
-                                        );
-                                    },
-                                    touchend: () => {
-                                        clearLongPressUnlock(marker.marker.id);
-                                    },
-                                    touchcancel: () => {
                                         clearLongPressUnlock(marker.marker.id);
                                     },
                                     dragend: (e) => {

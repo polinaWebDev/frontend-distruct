@@ -88,22 +88,24 @@ export const ClientMapPage = ({ map }: { map: MapDataResponseDto }) => {
                             />
                         </Activity>
                     </div>
+
+                    {selectedMarker && (
+                        <div className="pointer-events-auto">
+                            <MarkMarkerInfo
+                                marker={selectedMarker}
+                                levels={
+                                    selectedMarker.map_level_ids?.length
+                                        ? selectedMarker.map_level_ids
+                                              .map((id) => map.levels?.find((level) => level.id === id))
+                                              .filter((x): x is NonNullable<typeof x> => Boolean(x))
+                                        : undefined
+                                }
+                                onClose={() => setSelectedMarker(undefined)}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
-
-            {selectedMarker && (
-                <MarkMarkerInfo
-                    marker={selectedMarker}
-                    levels={
-                        selectedMarker.map_level_ids?.length
-                            ? selectedMarker.map_level_ids
-                                  .map((id) => map.levels?.find((level) => level.id === id))
-                                  .filter((x): x is NonNullable<typeof x> => Boolean(x))
-                            : undefined
-                    }
-                    onClose={() => setSelectedMarker(undefined)}
-                />
-            )}
         </div>
     );
 };

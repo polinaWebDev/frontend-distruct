@@ -224,6 +224,7 @@ export function EditCategoryDialog({ open, onOpenChange, category }: EditCategor
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание категории..."
                                             rows={3}
                                         />

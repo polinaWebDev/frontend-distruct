@@ -203,6 +203,7 @@ export function CreateCategoryDialog({ open, onOpenChange }: CreateCategoryDialo
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание категории..."
                                             rows={3}
                                         />

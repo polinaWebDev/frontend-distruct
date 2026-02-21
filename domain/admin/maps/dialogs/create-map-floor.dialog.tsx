@@ -48,7 +48,7 @@ const LayersPlusIcon = createLucideIcon('LayersPlus', [
 
 export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
     const queryClient = useQueryClient();
-    const form = useForm<z.infer<typeof schema>>({
+    const form = useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
             map_id,
@@ -119,7 +119,19 @@ export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
                                 <FormItem>
                                     <FormLabel>Номер этажа</FormLabel>
                                     <FormControl>
-                                        <Input type="number" min={1} {...field} />
+                                        <Input
+                                            type="number"
+                                            min={1}
+                                            {...field}
+                                            value={
+                                                typeof field.value === 'number' ? field.value : ''
+                                            }
+                                            onChange={(event) =>
+                                                field.onChange(
+                                                    Number.parseInt(event.target.value, 10)
+                                                )
+                                            }
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -130,7 +142,7 @@ export const CreateMapFloorDialog = ({ map_id }: { map_id: string }) => {
                 <DialogFooter>
                     <Button
                         disabled={!form.formState.isValid || isPending}
-                        onClick={() => createFloor(form.getValues())}
+                        onClick={() => createFloor(schema.parse(form.getValues()))}
                     >
                         {isPending ? 'Создание...' : 'Создать'}
                     </Button>

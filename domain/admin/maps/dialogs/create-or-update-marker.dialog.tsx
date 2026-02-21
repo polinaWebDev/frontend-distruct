@@ -49,7 +49,7 @@ import { CreateMapLevelDialog } from './create-map-level.dialog';
 const schema = zCreateMapMarkerDto.extend({
     map_level_ids: z.array(z.string()).min(1, 'Выберите хотя бы одну сложность'),
     file: z.optional(z.instanceof(File)),
-    is_locked: z.boolean().optional().default(false),
+    is_locked: z.boolean().optional(),
 });
 
 const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>>) => {
@@ -119,7 +119,7 @@ export const CreateOrUpdateMarkerDialog = ({
     };
     const [imageFile, setImageFile] = useState<File | null>(null);
     const queryClient = useQueryClient();
-    const form = useForm<z.infer<typeof schema>>({
+    const form = useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
             name: marker_data?.name ?? '',

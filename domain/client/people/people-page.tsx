@@ -27,7 +27,7 @@ const PAGE_LIMIT = 20;
 type FriendRequestItem = {
     id: string;
     user: PublicUserResponseDto;
-    createdAt: string;
+    createdAt: Date;
 };
 
 const useDebouncedValue = (value: string, delay = 300) => {
@@ -52,6 +52,7 @@ export const PeoplePage = ({ game }: { game: GameType }) => {
         ...usersPublicControllerFindPublicInfiniteOptions({
             client,
             query: {
+                page: 1,
                 limit: PAGE_LIMIT,
                 username: debouncedSearch || undefined,
             },

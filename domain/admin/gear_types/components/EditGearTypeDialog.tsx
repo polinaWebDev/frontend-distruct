@@ -192,6 +192,7 @@ export function EditGearTypeDialog({
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание типа предмета..."
                                             rows={3}
                                         />

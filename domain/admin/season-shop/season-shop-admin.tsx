@@ -36,6 +36,19 @@ import { CreateChallengeShopItemDialog } from './components/CreateChallengeShopI
 import { EditChallengeShopItemDialog } from './components/EditChallengeShopItemDialog';
 import { ViewChallengeShopItemDialog } from './components/ViewChallengeShopItemDialog';
 
+const getSeasonShopPreview = (item: ChallengeShopItemEntity): string | null => {
+    const record = item as unknown as Record<string, unknown>;
+    const prize = record.prize_cosmetic;
+    if (prize && typeof prize === 'object') {
+        const prizeRecord = prize as Record<string, unknown>;
+        const asset = prizeRecord.asset_url;
+        if (typeof asset === 'string' && asset.trim()) {
+            return asset;
+        }
+    }
+    return item.image_url ?? null;
+};
+
 export const SeasonShopAdmin = () => {
     const queryClient = useQueryClient();
     const [seasonId, setSeasonId] = useState<string>('');
@@ -160,62 +173,65 @@ export const SeasonShopAdmin = () => {
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {shopItems.map((item) => (
-                                <TableRow key={item.id}>
-                                    <TableCell>
-                                        {item.image_url ? (
-                                            <Image
-                                                src={getFileUrl(item.image_url)}
-                                                alt={item.name}
-                                                width={48}
-                                                height={48}
-                                                className="object-cover h-[48px] rounded"
-                                            />
-                                        ) : (
-                                            <span className="text-muted-foreground text-sm">
-                                                Нет изображения
-                                            </span>
-                                        )}
-                                    </TableCell>
-                                    <TableCell className="font-medium">{item.name}</TableCell>
-                                    <TableCell className="max-w-xs truncate">
-                                        {item.description}
-                                    </TableCell>
-                                    <TableCell>{item.price}</TableCell>
-                                    <TableCell>{item.is_infinite ? 'Да' : 'Нет'}</TableCell>
-                                    <TableCell>{item.is_active ? 'Да' : 'Нет'}</TableCell>
-                                    <TableCell>{item.order}</TableCell>
-                                    <TableCell>{item.quantity}</TableCell>
-                                    <TableCell className="text-right">
-                                        <div className="flex justify-end gap-2">
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setViewingItem(item)}
-                                                title="Просмотр"
-                                            >
-                                                <InfoIcon className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => setEditingItem(item)}
-                                                title="Редактировать"
-                                            >
-                                                <PencilIcon className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                variant="ghost"
-                                                size="icon"
-                                                onClick={() => handleDelete(item.id)}
-                                                title="Удалить"
-                                            >
-                                                <Trash2Icon className="w-4 h-4 text-destructive" />
-                                            </Button>
-                                        </div>
-                                    </TableCell>
-                                </TableRow>
-                            ))}
+                            {shopItems.map((item) => {
+                                const preview = getSeasonShopPreview(item);
+                                return (
+                                    <TableRow key={item.id}>
+                                        <TableCell>
+                                            {preview ? (
+                                                <Image
+                                                    src={getFileUrl(preview)}
+                                                    alt={item.name}
+                                                    width={48}
+                                                    height={48}
+                                                    className="object-cover h-[48px] rounded"
+                                                />
+                                            ) : (
+                                                <span className="text-muted-foreground text-sm">
+                                                    Нет изображения
+                                                </span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="font-medium">{item.name}</TableCell>
+                                        <TableCell className="max-w-xs truncate">
+                                            {item.description}
+                                        </TableCell>
+                                        <TableCell>{item.price}</TableCell>
+                                        <TableCell>{item.is_infinite ? 'Да' : 'Нет'}</TableCell>
+                                        <TableCell>{item.is_active ? 'Да' : 'Нет'}</TableCell>
+                                        <TableCell>{item.order}</TableCell>
+                                        <TableCell>{item.quantity}</TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex justify-end gap-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setViewingItem(item)}
+                                                    title="Просмотр"
+                                                >
+                                                    <InfoIcon className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setEditingItem(item)}
+                                                    title="Редактировать"
+                                                >
+                                                    <PencilIcon className="w-4 h-4" />
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => handleDelete(item.id)}
+                                                    title="Удалить"
+                                                >
+                                                    <Trash2Icon className="w-4 h-4 text-destructive" />
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
                         </TableBody>
                     </Table>
                 )}

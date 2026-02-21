@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -32,13 +32,17 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { challengesShopAdminControllerCreateMutation } from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import {
+    challengesShopAdminControllerCreateMutation,
+    profileCosmeticsAdminControllerGetOptionsOptions,
+} from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import { challengesShopAdminControllerCreate } from '@/lib/api_client/gen/sdk.gen';
-import type { ChallengeSeason } from '@/lib/api_client/gen/types.gen';
+import type { ChallengeSeason, CreateChallengeShopItemDto } from '@/lib/api_client/gen/types.gen';
 import { zCreateChallengeShopItemDto } from '@/lib/api_client/gen/zod.gen';
 import { getPublicClient } from '@/lib/api_client/public_client';
+import { parseAdminCosmeticsResponse } from '@/domain/profile-cosmetics/profile-cosmetics.utils';
 
-type CreateChallengeShopItemFormData = z.infer<typeof zCreateChallengeShopItemDto>;
+type CreateChallengeShopItemFormData = z.input<typeof zCreateChallengeShopItemDto>;
 
 interface CreateChallengeShopItemDialogProps {
     open: boolean;
@@ -53,8 +57,14 @@ export function CreateChallengeShopItemDialog({
 }: CreateChallengeShopItemDialogProps) {
     const queryClient = useQueryClient();
     const [imageFile, setImageFile] = useState<File | null>(null);
+    const [cosmeticSearchQuery, setCosmeticSearchQuery] = useState('');
+    const [prizeCosmeticId, setPrizeCosmeticId] = useState('');
 
-    const form = useForm<CreateChallengeShopItemFormData>({
+    const form = useForm<
+        CreateChallengeShopItemFormData,
+        unknown,
+        CreateChallengeShopItemFormData
+    >({
         resolver: zodResolver(zCreateChallengeShopItemDto),
         defaultValues: {
             name: '',
@@ -62,6 +72,8 @@ export function CreateChallengeShopItemDialog({
             price: 0,
             is_infinite: false,
             is_active: true,
+            is_contact_info_required: false,
+            is_repeatable_purchase_allowed: true,
             order: 0,
             quantity: 0,
             challenge_season_id: '',
@@ -79,6 +91,7 @@ export function CreateChallengeShopItemDialog({
             toast.success('Предмет успешно создан');
             form.reset();
             setImageFile(null);
+            setPrizeCosmeticId('');
             onOpenChange(false);
         },
         onError: () => {
@@ -86,16 +99,32 @@ export function CreateChallengeShopItemDialog({
         },
     });
 
+    const { data: cosmeticsData } = useQuery({
+        ...profileCosmeticsAdminControllerGetOptionsOptions({
+            client: getPublicClient(),
+            query: {
+                search: cosmeticSearchQuery || undefined,
+                is_active: true,
+            },
+        }),
+        enabled: open,
+    });
+
+    const cosmeticsOptions = parseAdminCosmeticsResponse(cosmeticsData);
+
     const handleSubmit = async (data: CreateChallengeShopItemFormData) => {
-        const bodyData: any = {
+        const bodyData: CreateChallengeShopItemDto = {
             name: data.name,
             description: data.description,
             price: data.price,
             is_infinite: data.is_infinite,
             is_active: data.is_active,
+            is_contact_info_required: data.is_contact_info_required ?? false,
+            is_repeatable_purchase_allowed: data.is_repeatable_purchase_allowed ?? true,
             order: data.order,
             quantity: data.quantity,
             challenge_season_id: data.challenge_season_id,
+            prize_cosmetic_id: prizeCosmeticId || null,
         };
 
         // If there's an image file, call SDK directly to bypass Zod validation
@@ -114,6 +143,7 @@ export function CreateChallengeShopItemDialog({
                 toast.success('Предмет успешно создан');
                 form.reset();
                 setImageFile(null);
+                setPrizeCosmeticId('');
                 onOpenChange(false);
             } catch (error) {
                 console.error(error);
@@ -160,6 +190,7 @@ export function CreateChallengeShopItemDialog({
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание предмета..."
                                             rows={3}
                                         />
@@ -179,11 +210,17 @@ export function CreateChallengeShopItemDialog({
                                         <FormControl>
                                             <Input
                                                 {...field}
+                                                value={field.value ?? ''}
                                                 type="number"
                                                 placeholder="0"
-                                                onChange={(e) =>
-                                                    field.onChange(parseInt(e.target.value, 10))
-                                                }
+                                                onChange={(e) => {
+                                                    const rawValue = e.target.value;
+                                                    if (rawValue === '') {
+                                                        field.onChange(undefined);
+                                                        return;
+                                                    }
+                                                    field.onChange(Number(rawValue));
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -200,17 +237,50 @@ export function CreateChallengeShopItemDialog({
                                         <FormControl>
                                             <Input
                                                 {...field}
+                                                value={field.value ?? ''}
                                                 type="number"
                                                 placeholder="0"
-                                                onChange={(e) =>
-                                                    field.onChange(parseInt(e.target.value, 10))
-                                                }
+                                                onChange={(e) => {
+                                                    const rawValue = e.target.value;
+                                                    if (rawValue === '') {
+                                                        field.onChange(undefined);
+                                                        return;
+                                                    }
+                                                    field.onChange(Number(rawValue));
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
+                        </div>
+
+                        <div className="space-y-2">
+                            <FormLabel>Косметическая награда</FormLabel>
+                            <Input
+                                value={cosmeticSearchQuery}
+                                onChange={(event) => setCosmeticSearchQuery(event.target.value)}
+                                placeholder="Поиск косметики..."
+                            />
+                            <Select
+                                value={prizeCosmeticId || '__none__'}
+                                onValueChange={(value) =>
+                                    setPrizeCosmeticId(value === '__none__' ? '' : value)
+                                }
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Без косметической награды" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="__none__">Без награды</SelectItem>
+                                    {cosmeticsOptions.map((item) => (
+                                        <SelectItem key={item.id} value={item.id}>
+                                            {item.name}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
                         </div>
 
                         <div className="grid grid-cols-2 gap-4">
@@ -223,11 +293,17 @@ export function CreateChallengeShopItemDialog({
                                         <FormControl>
                                             <Input
                                                 {...field}
+                                                value={field.value ?? ''}
                                                 type="number"
                                                 placeholder="0"
-                                                onChange={(e) =>
-                                                    field.onChange(parseInt(e.target.value, 10))
-                                                }
+                                                onChange={(e) => {
+                                                    const rawValue = e.target.value;
+                                                    if (rawValue === '') {
+                                                        field.onChange(undefined);
+                                                        return;
+                                                    }
+                                                    field.onChange(Number(rawValue));
+                                                }}
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -281,7 +357,7 @@ export function CreateChallengeShopItemDialog({
                                             onValueChange={(value) =>
                                                 field.onChange(value === 'true')
                                             }
-                                            value={field.value.toString()}
+                                            value={String(field.value ?? true)}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="w-full">
@@ -308,7 +384,7 @@ export function CreateChallengeShopItemDialog({
                                             onValueChange={(value) =>
                                                 field.onChange(value === 'true')
                                             }
-                                            value={field.value.toString()}
+                                            value={String(field.value ?? true)}
                                         >
                                             <FormControl>
                                                 <SelectTrigger className="w-full">
@@ -318,6 +394,60 @@ export function CreateChallengeShopItemDialog({
                                             <SelectContent>
                                                 <SelectItem value="true">Да</SelectItem>
                                                 <SelectItem value="false">Нет</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+                        <div className="grid grid-cols-2 gap-4">
+                            <FormField
+                                control={form.control}
+                                name="is_contact_info_required"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Контакты обязательны *</FormLabel>
+                                        <Select
+                                            onValueChange={(value) =>
+                                                field.onChange(value === 'true')
+                                            }
+                                            value={String(field.value ?? false)}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="true">Да</SelectItem>
+                                                <SelectItem value="false">Нет</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="is_repeatable_purchase_allowed"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Повторная покупка *</FormLabel>
+                                        <Select
+                                            onValueChange={(value) =>
+                                                field.onChange(value === 'true')
+                                            }
+                                            value={String(field.value ?? true)}
+                                        >
+                                            <FormControl>
+                                                <SelectTrigger className="w-full">
+                                                    <SelectValue />
+                                                </SelectTrigger>
+                                            </FormControl>
+                                            <SelectContent>
+                                                <SelectItem value="true">Разрешена</SelectItem>
+                                                <SelectItem value="false">Запрещена</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -349,6 +479,7 @@ export function CreateChallengeShopItemDialog({
                                 onClick={() => {
                                     form.reset();
                                     setImageFile(null);
+                                    setPrizeCosmeticId('');
                                     onOpenChange(false);
                                 }}
                             >

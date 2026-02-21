@@ -129,6 +129,7 @@ export const CreateOrUpdateMapCategoryDialog = ({
                                         <FormControl>
                                             <Textarea
                                                 {...field}
+                                                value={field.value ?? ''}
                                                 placeholder="Описание категории"
                                                 rows={3}
                                             />

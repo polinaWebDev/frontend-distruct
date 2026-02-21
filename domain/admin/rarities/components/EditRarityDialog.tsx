@@ -142,6 +142,7 @@ export function EditRarityDialog({ open, onOpenChange, rarity }: EditRarityDialo
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание редкости..."
                                             rows={3}
                                         />

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { XIcon, SearchIcon, CheckIcon, ArrowUpIcon, ArrowDownIcon, TrashIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -28,6 +28,7 @@ import {
     challengesAdminControllerCreateChallengeMutation,
     challengesAdminControllerUpdateChallengeMutation,
     gearAdminControllerGetGearListInfiniteOptions,
+    profileCosmeticsAdminControllerGetOptionsOptions,
 } from '@/lib/api_client/gen/@tanstack/react-query.gen';
 import type {
     ChallengeSeason,
@@ -43,6 +44,7 @@ import {
     CHALLENGE_DIFFICULTY_VALUES,
 } from '@/lib/enums/challenge_difficulty.enum';
 import type { ChallengeAdminRow } from '../types';
+import { parseAdminCosmeticsResponse } from '@/domain/profile-cosmetics/profile-cosmetics.utils';
 
 type ChallengeFormValues = {
     title: string;
@@ -57,6 +59,8 @@ type ChallengeFormValues = {
     game_type: GameType;
     season_id: string;
     difficulty: ChallengeDifficulty;
+    prize_cosmetic_id: string;
+    is_contact_info_required: boolean;
 };
 
 interface ChallengeFormDialogProps {
@@ -75,6 +79,20 @@ const formatToDateTimeLocal = (value?: string | Date | null) => {
     const offset = date.getTimezoneOffset();
     const local = new Date(date.getTime() - offset * 60000);
     return local.toISOString().slice(0, 16);
+};
+
+const extractCosmeticId = (value: unknown): string => {
+    if (!value) return '';
+    if (typeof value === 'string') return value;
+    if (typeof value === 'number') return String(value);
+    if (typeof value === 'object') {
+        const record = value as Record<string, unknown>;
+        if (typeof record.id === 'string') return record.id;
+        if (typeof record.id === 'number') return String(record.id);
+        if (typeof record.cosmetic_id === 'string') return record.cosmetic_id;
+        if (typeof record.cosmetic_id === 'number') return String(record.cosmetic_id);
+    }
+    return '';
 };
 
 export function ChallengeFormDialog({
@@ -101,6 +119,8 @@ export function ChallengeFormDialog({
             game_type: gameType ?? GameType.ArenaBreakout,
             season_id: seasons[0]?.id ?? '',
             difficulty: ChallengeDifficulty.Easy,
+            prize_cosmetic_id: '',
+            is_contact_info_required: challenge?.is_contact_info_required ?? false,
         },
     });
 
@@ -108,11 +128,14 @@ export function ChallengeFormDialog({
     const watchedGameType = watch('game_type');
     const watchedSeason = watch('season_id');
     const watchedDifficulty = watch('difficulty');
+    const watchedPrizeCosmeticId = watch('prize_cosmetic_id');
 
     useEffect(() => {
         register('game_type', { required: 'Выберите игру' });
         register('season_id', { required: 'Выберите сезон' });
         register('difficulty', { required: 'Выберите сложность' });
+        register('prize_cosmetic_id');
+        register('is_contact_info_required');
     }, [register]);
 
     const defaultValues = useMemo(() => {
@@ -129,6 +152,8 @@ export function ChallengeFormDialog({
             season_id: challenge?.season_id ?? seasons[0]?.id ?? '',
             difficulty: (challenge?.difficulty ?? ChallengeDifficulty.Easy) as ChallengeDifficulty,
             short_description: challenge?.short_description ?? '',
+            prize_cosmetic_id: extractCosmeticId(challenge?.prize_cosmetic_id),
+            is_contact_info_required: challenge?.is_contact_info_required ?? false,
         };
     }, [challenge, gameType, seasons]);
 
@@ -148,6 +173,7 @@ export function ChallengeFormDialog({
     const [selectedGears, setSelectedGears] = useState<GearEntity[]>(challenge?.gears ?? []);
     const [gearSearchQuery, setGearSearchQuery] = useState('');
     const [isGearSelectorOpen, setIsGearSelectorOpen] = useState(false);
+    const [cosmeticSearchQuery, setCosmeticSearchQuery] = useState('');
     const gearSelectorRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -268,8 +294,21 @@ export function ChallengeFormDialog({
         return (gearData?.pages.flatMap((page) => (page as { data: GearEntity[] })?.data ?? []) ??
             []) as GearEntity[];
     }, [gearData]);
+    const { data: cosmeticsData } = useQuery({
+        ...profileCosmeticsAdminControllerGetOptionsOptions({
+            client: getPublicClient(),
+            query: {
+                search: cosmeticSearchQuery || undefined,
+                is_active: true,
+            },
+        }),
+        enabled: open,
+    });
 
-    console.log(allGearItems);
+    const cosmeticOptions = useMemo(
+        () => parseAdminCosmeticsResponse(cosmeticsData),
+        [cosmeticsData]
+    );
 
     const addGear = (gear: GearEntity) => {
         if (selectedGears.some((g) => g.id === gear.id)) return;
@@ -308,7 +347,9 @@ export function ChallengeFormDialog({
             title: values.title,
             description: values.description,
             challenge_level: safeChallengeLevel,
+            is_contact_info_required: values.is_contact_info_required,
             prize_amount: safePrizeAmount,
+            prize_cosmetic_id: values.prize_cosmetic_id || null,
             short_description: values.short_description,
             active: values.active,
             start_date: new Date(values.start_date),
@@ -455,6 +496,34 @@ export function ChallengeFormDialog({
                             <Label htmlFor="end_date">Дата окончания</Label>
                             <Input id="end_date" type="datetime-local" {...register('end_date')} />
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="prize-cosmetic-search">Косметическая награда</Label>
+                        <Input
+                            id="prize-cosmetic-search"
+                            placeholder="Поиск косметики..."
+                            value={cosmeticSearchQuery}
+                            onChange={(event) => setCosmeticSearchQuery(event.target.value)}
+                        />
+                        <Select
+                            value={watchedPrizeCosmeticId || '__none__'}
+                            onValueChange={(value) =>
+                                setValue('prize_cosmetic_id', value === '__none__' ? '' : value)
+                            }
+                        >
+                            <SelectTrigger id="prize_cosmetic_id" className="w-full">
+                                <SelectValue placeholder="Без косметической награды" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="__none__">Без косметической награды</SelectItem>
+                                {cosmeticOptions.map((item) => (
+                                    <SelectItem key={item.id} value={item.id}>
+                                        {item.name}
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     <div className="grid gap-4 md:grid-cols-3">
@@ -791,10 +860,20 @@ export function ChallengeFormDialog({
                     </div>
 
                     <div className="flex items-center justify-between">
-                        <label className="flex items-center gap-2 text-sm">
-                            <input type="checkbox" {...register('active')} className="h-4 w-4" />
-                            <span>Активен *</span>
-                        </label>
+                        <div className="flex items-center gap-6">
+                            <label className="flex items-center gap-2 text-sm">
+                                <input type="checkbox" {...register('active')} className="h-4 w-4" />
+                                <span>Активен *</span>
+                            </label>
+                            <label className="flex items-center gap-2 text-sm">
+                                <input
+                                    type="checkbox"
+                                    {...register('is_contact_info_required')}
+                                    className="h-4 w-4"
+                                />
+                                <span>Контакты обязательны</span>
+                            </label>
+                        </div>
                         <div className="flex gap-2">
                             <Button variant="outline" type="button" onClick={handleClose}>
                                 Отмена

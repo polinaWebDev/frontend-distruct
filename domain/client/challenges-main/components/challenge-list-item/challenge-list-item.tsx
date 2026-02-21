@@ -7,6 +7,26 @@ import { CHALLENGE_DIFFICULTY_VALUES } from '@/lib/enums/challenge_difficulty.en
 import { AppBtn } from '@/ui/SmallBtn/AppBtn';
 import Link from 'next/link';
 import clsx from 'clsx';
+import { getFileUrl } from '@/lib/utils';
+import Image from 'next/image';
+
+const getChallengeRewardImage = (challenge: GetAllChallengesWithProgressItemDto): string | null => {
+    const prize = challenge.prize_cosmetic_id;
+    if (!prize || typeof prize !== 'object') return null;
+
+    const asRecord = prize as Record<string, unknown>;
+    const directAsset = asRecord.asset_url;
+    if (typeof directAsset === 'string' && directAsset.trim()) return directAsset;
+
+    const nestedCosmetic = asRecord.prize_cosmetic;
+    if (nestedCosmetic && typeof nestedCosmetic === 'object') {
+        const nestedRecord = nestedCosmetic as Record<string, unknown>;
+        const nestedAsset = nestedRecord.asset_url;
+        if (typeof nestedAsset === 'string' && nestedAsset.trim()) return nestedAsset;
+    }
+
+    return null;
+};
 
 const ChallengeBtn = ({ challenge }: { challenge: GetAllChallengesWithProgressItemDto }) => {
     const progress = challenge.progress;
@@ -87,6 +107,7 @@ export const ChallengeListItem = ({
             (difficulty) => difficulty.value === challenge.difficulty
         );
     }, [challenge.difficulty]);
+    const rewardImage = useMemo(() => getChallengeRewardImage(challenge), [challenge]);
 
     return (
         <Link
@@ -100,6 +121,15 @@ export const ChallengeListItem = ({
             }}
         >
             <div className={styles.content}>
+                {rewardImage && (
+                    <Image
+                        src={getFileUrl(rewardImage)}
+                        alt="Награда"
+                        className={styles.reward_img}
+                        width={68}
+                        height={68}
+                    />
+                )}
                 <div className={styles.title_container}>
                     <p className={styles.title}>{challenge.title}</p>
                     <p className={styles.desc}>{challenge.short_description}</p>

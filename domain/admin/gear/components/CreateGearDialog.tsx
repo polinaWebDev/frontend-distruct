@@ -231,6 +231,7 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                                     <FormControl>
                                         <Textarea
                                             {...field}
+                                            value={field.value ?? ''}
                                             placeholder="Описание предмета..."
                                             rows={3}
                                         />
@@ -246,7 +247,10 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Тип игры *</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue />
@@ -316,7 +320,10 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Категория *</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Выберите категорию" />
@@ -362,7 +369,10 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Редкость</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Не указано" />
@@ -394,7 +404,10 @@ export function CreateGearDialog({ open, onOpenChange }: CreateGearDialogProps) 
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Тип</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
+                                    <Select
+                                        onValueChange={field.onChange}
+                                        value={field.value ?? undefined}
+                                    >
                                         <FormControl>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Выберите тип" />

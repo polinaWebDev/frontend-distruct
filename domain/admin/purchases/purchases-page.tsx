@@ -159,7 +159,7 @@ export const PurchasesPage = () => {
                                     <TableCell>{purchase.item?.price ?? '—'}</TableCell>
                                     <TableCell
                                         className="max-w-xs truncate"
-                                        title={purchase.contact_info}
+                                        title={purchase.contact_info ?? undefined}
                                     >
                                         {purchase.contact_info || '—'}
                                     </TableCell>

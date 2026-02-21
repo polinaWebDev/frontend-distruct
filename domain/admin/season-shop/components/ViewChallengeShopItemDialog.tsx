@@ -18,11 +18,26 @@ interface ViewChallengeShopItemDialogProps {
     item: ChallengeShopItemEntity;
 }
 
+const getSeasonShopPreview = (item: ChallengeShopItemEntity): string | null => {
+    const record = item as unknown as Record<string, unknown>;
+    const prize = record.prize_cosmetic;
+    if (prize && typeof prize === 'object') {
+        const prizeRecord = prize as Record<string, unknown>;
+        const asset = prizeRecord.asset_url;
+        if (typeof asset === 'string' && asset.trim()) {
+            return asset;
+        }
+    }
+    return item.image_url ?? null;
+};
+
 export function ViewChallengeShopItemDialog({
     open,
     onOpenChange,
     item,
 }: ViewChallengeShopItemDialogProps) {
+    const preview = getSeasonShopPreview(item);
+
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -31,14 +46,14 @@ export function ViewChallengeShopItemDialog({
                     <DialogDescription>Информация о предмете магазина</DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                    {item.image_url && (
+                    {preview && (
                         <div>
                             <Label className="text-sm font-medium text-muted-foreground">
                                 Изображение
                             </Label>
                             <div className="mt-2">
                                 <Image
-                                    src={getFileUrl(item.image_url)}
+                                    src={getFileUrl(preview)}
                                     alt={item.name}
                                     width={200}
                                     height={200}
@@ -72,6 +87,20 @@ export function ViewChallengeShopItemDialog({
                     <div>
                         <Label className="text-sm font-medium text-muted-foreground">Активен</Label>
                         <p className="mt-1">{item.is_active ? 'Да' : 'Нет'}</p>
+                    </div>
+                    <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                            Контакты обязательны
+                        </Label>
+                        <p className="mt-1">{item.is_contact_info_required ? 'Да' : 'Нет'}</p>
+                    </div>
+                    <div>
+                        <Label className="text-sm font-medium text-muted-foreground">
+                            Повторная покупка
+                        </Label>
+                        <p className="mt-1">
+                            {item.is_repeatable_purchase_allowed ? 'Разрешена' : 'Запрещена'}
+                        </p>
                     </div>
                     <div>
                         <Label className="text-sm font-medium text-muted-foreground">Порядок</Label>

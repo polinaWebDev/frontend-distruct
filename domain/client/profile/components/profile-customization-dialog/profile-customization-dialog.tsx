@@ -1,21 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 import { Dialog } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList } from '@/components/ui/tabs';
+import Image from 'next/image';
 import { AppDialog, AppDialogContent } from '@/ui/AppDialog/app-dialog';
 import AppTabsTrigger from '@/ui/AppTabsTrigger/AppTabsTrigger';
-import { AppBtn } from '@/ui/SmallBtn/AppBtn';
+import {
+    profileCosmeticsControllerEquipMutation,
+    profileCosmeticsControllerGetMyCosmeticsOptions,
+    profileCosmeticsControllerGetMyCosmeticsQueryKey,
+    profileCosmeticsControllerUnequipMutation,
+} from '@/lib/api_client/gen/@tanstack/react-query.gen';
+import { getPublicClient } from '@/lib/api_client/public_client';
+import {
+    COSMETIC_TYPES,
+    parseMyCosmeticsResponse,
+    type CosmeticType,
+} from '@/domain/profile-cosmetics/profile-cosmetics.utils';
+import { getFileUrl } from '@/lib/utils';
 import styles from './profile-customization-dialog.module.css';
 
 type CustomizationTab = 'outline' | 'background' | 'frame';
-
-type CustomizationItem = {
-    id: string;
-    name: string;
-    description: string;
-    requiredPoints: number;
-};
 
 const TAB_LABELS: Record<CustomizationTab, string> = {
     outline: 'Обводка',
@@ -23,77 +31,196 @@ const TAB_LABELS: Record<CustomizationTab, string> = {
     frame: 'Рамка',
 };
 
-const getUnlockHint = (requiredPoints: number) =>
-    requiredPoints === 0
-        ? 'Доступно по умолчанию'
-        : `Откроется при ${requiredPoints} очках профиля`;
+const TAB_TO_TYPE: Record<CustomizationTab, CosmeticType> = {
+    outline: 'avatar_outline',
+    background: 'profile_background',
+    frame: 'profile_frame',
+};
 
 export const ProfileCustomizationDialog = ({
     open,
     onOpenChange,
-    userPoints,
-    itemsByTab,
+    onAppearanceChange,
 }: {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    userPoints: number;
-    itemsByTab?: Record<CustomizationTab, CustomizationItem[]>;
+    onAppearanceChange?: (value: {
+        profileBackgroundUrl: string | null;
+        profileFrameUrl: string | null;
+        avatarOutlineUrl: string | null;
+    }) => void;
 }) => {
-    const [appliedByTab, setAppliedByTab] = useState<Record<CustomizationTab, string | null>>({
-        outline: null,
-        background: null,
-        frame: null,
+    const client = getPublicClient();
+    const queryClient = useQueryClient();
+
+    const cosmeticsQuery = useQuery({
+        ...profileCosmeticsControllerGetMyCosmeticsOptions({ client }),
+        enabled: open,
     });
 
-    const resolvedItemsByTab: Record<CustomizationTab, CustomizationItem[]> = itemsByTab ?? {
-        outline: [],
-        background: [],
-        frame: [],
+    const equipMutation = useMutation({
+        ...profileCosmeticsControllerEquipMutation({ client }),
+        onSuccess: async () => {
+            toast.success('Косметика применена');
+            await queryClient.invalidateQueries({
+                queryKey: profileCosmeticsControllerGetMyCosmeticsQueryKey({ client }),
+            });
+        },
+        onError: () => {
+            toast.error('Не удалось применить косметику');
+        },
+    });
+
+    const unequipMutation = useMutation({
+        ...profileCosmeticsControllerUnequipMutation({ client }),
+        onSuccess: async () => {
+            toast.success('Косметика снята');
+            await queryClient.invalidateQueries({
+                queryKey: profileCosmeticsControllerGetMyCosmeticsQueryKey({ client }),
+            });
+        },
+        onError: () => {
+            toast.error('Не удалось снять косметику');
+        },
+    });
+
+    const parsed = useMemo(
+        () => parseMyCosmeticsResponse(cosmeticsQuery.data),
+        [cosmeticsQuery.data]
+    );
+
+    const itemsByTab = useMemo(
+        () => ({
+            outline: parsed.items.filter((item) => item.type === 'avatar_outline'),
+            background: parsed.items.filter((item) => item.type === 'profile_background'),
+            frame: parsed.items.filter((item) => item.type === 'profile_frame'),
+        }),
+        [parsed.items]
+    );
+
+    const appearance = useMemo(() => {
+        const getEquippedAsset = (type: CosmeticType) =>
+            parsed.items.find(
+                (item) =>
+                    item.type === type &&
+                    (item.is_equipped === true || parsed.equippedByType[type] === item.id)
+            )?.asset_url ?? null;
+
+        return {
+            profileBackgroundUrl: getEquippedAsset('profile_background'),
+            profileFrameUrl: getEquippedAsset('profile_frame'),
+            avatarOutlineUrl: getEquippedAsset('avatar_outline'),
+        };
+    }, [parsed.equippedByType, parsed.items]);
+
+    useEffect(() => {
+        if (!cosmeticsQuery.isSuccess) return;
+        onAppearanceChange?.(appearance);
+    }, [appearance, cosmeticsQuery.isSuccess, onAppearanceChange]);
+
+    const applyItem = async (itemId: string) => {
+        await equipMutation.mutateAsync({
+            body: { cosmetic_id: itemId },
+        });
     };
 
-    const applyItem = (tab: CustomizationTab, itemId: string) => {
-        setAppliedByTab((prev) => ({
-            ...prev,
-            [tab]: itemId,
-        }));
+    const unequip = async (tab: CustomizationTab) => {
+        await unequipMutation.mutateAsync({
+            body: { type: TAB_TO_TYPE[tab] },
+        });
     };
 
     const renderItems = (tab: CustomizationTab) => {
+        const list = itemsByTab[tab];
+        const isGridTab = tab === 'outline' || tab === 'background';
+
+        if (cosmeticsQuery.isLoading) {
+            return <div className={styles.empty}>Загрузка...</div>;
+        }
+
+        if (cosmeticsQuery.isError) {
+            return <div className={styles.empty}>Не удалось загрузить косметику профиля.</div>;
+        }
+
         return (
-            <div className={styles.list}>
-                {resolvedItemsByTab[tab].length === 0 && (
+            <div
+                className={`
+                    ${styles.list}
+                    ${isGridTab ? styles.gridList : styles.frameList}
+                `}
+            >
+                {list.length === 0 && (
                     <div className={styles.empty}>
                         Для этой категории пока нет доступных предметов.
                     </div>
                 )}
-                {resolvedItemsByTab[tab].map((item) => {
-                    const isOwned = userPoints >= item.requiredPoints;
-                    const isApplied = appliedByTab[tab] === item.id;
-                    const unlockHint = getUnlockHint(item.requiredPoints);
-                    const tooltipText = isOwned
-                        ? 'Доступно для применения'
-                        : `${unlockHint}. Сейчас: ${userPoints}`;
+                {list.map((item) => {
+                    const isApplied =
+                        item.is_equipped === true ||
+                        parsed.equippedByType[TAB_TO_TYPE[tab]] === item.id;
+                    const isActionDisabled =
+                        equipMutation.isPending ||
+                        unequipMutation.isPending ||
+                        item.is_active === false;
 
                     return (
-                        <div
+                        <button
+                            type="button"
                             key={item.id}
-                            className={`${styles.item} ${!isOwned ? styles.itemDisabled : ''}`}
-                            title={tooltipText}
+                            className={`
+                                ${styles.itemButton}
+                                ${isGridTab ? styles.gridItemButton : styles.frameItemButton}
+                                ${item.is_active === false ? styles.itemDisabled : ''}
+                                ${isApplied ? styles.itemSelected : ''}
+                            `}
+                            disabled={isActionDisabled}
+                            onClick={() => {
+                                if (isApplied) {
+                                    void unequip(tab);
+                                    return;
+                                }
+                                void applyItem(item.id);
+                            }}
                         >
-                            <div className={styles.itemInfo}>
-                                <p className={styles.itemName}>{item.name}</p>
-                                <p className={styles.itemDescription}>{item.description}</p>
-                                {!isOwned && <p className={styles.unlockHint}>{unlockHint}</p>}
+                            <div
+                                className={`
+                                    ${styles.preview}
+                                    ${isGridTab ? styles.gridPreview : styles.framePreview}
+                                    ${isApplied ? styles.previewSelected : ''}
+                                `}
+                            >
+                                {item.asset_url ? (
+                                    <Image
+                                        src={getFileUrl(item.asset_url)}
+                                        alt={item.name}
+                                        width={72}
+                                        height={72}
+                                        className={styles.previewImage}
+                                    />
+                                ) : (
+                                    <span className={styles.previewFallback}>Нет превью</span>
+                                )}
                             </div>
-                            <div title={tooltipText}>
-                                <AppBtn
-                                    text={isApplied ? 'Применено' : 'Применить'}
-                                    style={isOwned ? 'outline_bright' : 'outline_dark'}
-                                    disabled={!isOwned || isApplied}
-                                    onClick={() => applyItem(tab, item.id)}
-                                />
-                            </div>
-                        </div>
+                            {isGridTab ? (
+                                <div className={styles.gridItemInfo}>
+                                    <p className={styles.itemName}>{item.name}</p>
+                                    {item.is_active === false && (
+                                        <p className={styles.unlockHint}>Отключено</p>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className={styles.itemInfo}>
+                                    <p className={styles.itemName}>{item.name}</p>
+                                    <p className={styles.itemDescription}>{item.description}</p>
+                                    {item.is_active === false && (
+                                        <p className={styles.unlockHint}>
+                                            Косметика отключена админом
+                                        </p>
+                                    )}
+                                    {isApplied && <p className={styles.selectedLabel}>Надето</p>}
+                                </div>
+                            )}
+                        </button>
                     );
                 })}
             </div>
@@ -124,6 +251,12 @@ export const ProfileCustomizationDialog = ({
                         <TabsContent value="background">{renderItems('background')}</TabsContent>
                         <TabsContent value="frame">{renderItems('frame')}</TabsContent>
                     </Tabs>
+                    {parsed.items.length > 0 && (
+                        <p className={styles.hintText}>
+                            Типов косметики: {COSMETIC_TYPES.length}. Повторный клик по надетому
+                            предмету снимает его.
+                        </p>
+                    )}
                 </AppDialogContent>
             </AppDialog>
         </Dialog>

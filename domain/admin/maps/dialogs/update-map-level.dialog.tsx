@@ -46,7 +46,7 @@ type UpdateMapLevelDialogProps = {
 export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProps) => {
     const [open, setOpen] = useState(false);
     const queryClient = useQueryClient();
-    const form = useForm<z.infer<typeof schema>>({
+    const form = useForm<z.input<typeof schema>, unknown, z.output<typeof schema>>({
         resolver: zodResolver(schema),
         defaultValues: {
             id: level.id,
@@ -156,7 +156,19 @@ export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProp
                                 <FormItem>
                                     <FormLabel>Порядок</FormLabel>
                                     <FormControl>
-                                        <Input type="number" min={1} {...field} />
+                                        <Input
+                                            type="number"
+                                            min={1}
+                                            {...field}
+                                            value={
+                                                typeof field.value === 'number' ? field.value : ''
+                                            }
+                                            onChange={(event) =>
+                                                field.onChange(
+                                                    Number.parseInt(event.target.value, 10)
+                                                )
+                                            }
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -167,7 +179,7 @@ export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProp
                 <DialogFooter>
                     <Button
                         disabled={!form.formState.isValid || isPending}
-                        onClick={() => updateLevel({ body: form.getValues() })}
+                        onClick={() => updateLevel({ body: schema.parse(form.getValues()) })}
                     >
                         {isPending ? 'Сохранение...' : 'Сохранить'}
                     </Button>

@@ -35,6 +35,15 @@
         }
     }
 
+    .reward_img {
+        width: 68px;
+        height: 68px;
+        min-width: 68px;
+        border-radius: 10px;
+        border: 1px solid #34363d;
+        object-fit: cover;
+    }
+
     .title_container {
         display: flex;
         align-items: flex-start;

@@ -64,6 +64,45 @@
     margin-top: 32px;
 }
 
+.avatar_wrap {
+    position: relative;
+    width: 315px;
+    height: 315px;
+}
+
+.avatar_inner {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 296px;
+    height: 296px;
+}
+
+.avatar_outline {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    max-width: none;
+    max-height: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.avatar_frame {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 315px;
+    height: 315px;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    pointer-events: none;
+    z-index: 4;
+}
+
 .customization_btn {
     max-width: 220px;
     margin-bottom: 12px;

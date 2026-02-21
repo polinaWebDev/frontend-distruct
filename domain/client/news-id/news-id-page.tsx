@@ -15,7 +15,7 @@ import { useEffect, useRef } from 'react';
 import { useMarkNewsSeen } from '../news/hooks/useNewsReadState';
 import Link from 'next/link';
 import { GoBackSmallBtn } from '@/ui/GoBackBig/GoBackBig';
-import { GameType } from '@/lib/enums/game_type.enum';
+import { GameType, isEnabledClientGameType } from '@/lib/enums/game_type.enum';
 
 export const NewsIdPage = ({
     data,
@@ -39,6 +39,10 @@ export const NewsIdPage = ({
 
     const mainImageFileName = data.gallery_images?.[0]?.image_url ?? data.image_url;
     const mainImageUrl = getFileUrl(mainImageFileName);
+    const resolvedGameType =
+        data.game_type && isEnabledClientGameType(data.game_type)
+            ? data.game_type
+            : GameType.ArenaBreakout;
 
     return (
         <BannerProvider page="news_article">
@@ -59,7 +63,7 @@ export const NewsIdPage = ({
                     <CommentsList
                         newsId={data.id}
                         authed={authed}
-                        gameType={data.game_type ?? GameType.ArenaBreakout}
+                        gameType={resolvedGameType}
                     />
                 </div>
 

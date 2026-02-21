@@ -17,7 +17,7 @@ export const getFileUrl = (url: string) => {
         process.env.NEXT_PUBLIC_CDN_MAPS_BASE_URL?.replace(/\/$/, '') ??
         process.env.CDN_MAPS_BASE_URL?.replace(/\/$/, '');
     const isLocalEnv =
-        process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'local';
+        process.env.NODE_ENV === 'development' || process.env.NEXT_PUBLIC_APP_ENV === 'local';
 
     if (normalizedUrl.startsWith('api/public/')) {
         if (normalizedUrl.startsWith('api/public/maps/') && mapsCdnBase) {

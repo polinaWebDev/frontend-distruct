@@ -8,6 +8,7 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import Image from 'next/image';
 import { GAME_TYPE_VALUES, type GameType } from '@/lib/enums/game_type.enum';
 import {
     ChallengeDifficulty,
@@ -15,6 +16,7 @@ import {
 } from '@/lib/enums/challenge_difficulty.enum';
 import type { ChallengeSeason } from '@/lib/api_client/gen/types.gen';
 import type { ChallengeAdminRow } from '../types';
+import { getFileUrl } from '@/lib/utils';
 
 interface ViewChallengeDialogProps {
     open: boolean;
@@ -38,8 +40,30 @@ const formatDate = (value?: string | Date | null) => {
 const getGameTypeLabel = (value: GameType) =>
     GAME_TYPE_VALUES.find((element) => element.value === value)?.label ?? value;
 
-const getDifficultyLabel = (difficulty: ChallengeDifficulty) =>
-    CHALLENGE_DIFFICULTY_VALUES.find((item) => item.value === difficulty)?.label ?? difficulty;
+const getDifficultyLabel = (difficulty: string) => {
+    const match = CHALLENGE_DIFFICULTY_VALUES.find(
+        (item) => item.value === (difficulty as ChallengeDifficulty)
+    );
+    return match?.label(1) ?? difficulty;
+};
+
+const getChallengePrizeImage = (challenge: ChallengeAdminRow): string | null => {
+    const prize = challenge.prize_cosmetic_id;
+    if (!prize || typeof prize !== 'object') return null;
+
+    const record = prize as Record<string, unknown>;
+    const direct = record.asset_url;
+    if (typeof direct === 'string' && direct.trim()) return direct;
+
+    const nested = record.prize_cosmetic;
+    if (nested && typeof nested === 'object') {
+        const nestedRecord = nested as Record<string, unknown>;
+        const nestedAsset = nestedRecord.asset_url;
+        if (typeof nestedAsset === 'string' && nestedAsset.trim()) return nestedAsset;
+    }
+
+    return null;
+};
 
 export function ViewChallengeDialog({
     open,
@@ -48,6 +72,7 @@ export function ViewChallengeDialog({
     seasons,
 }: ViewChallengeDialogProps) {
     const season = challenge ? seasons.find((item) => item.id === challenge.season_id) : null;
+    const prizeImage = challenge ? getChallengePrizeImage(challenge) : null;
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -59,6 +84,20 @@ export function ViewChallengeDialog({
 
                 {challenge ? (
                     <div className="space-y-5">
+                        {prizeImage && (
+                            <div>
+                                <Label className="text-muted-foreground">Превью награды</Label>
+                                <div className="mt-2">
+                                    <Image
+                                        src={getFileUrl(prizeImage)}
+                                        alt={challenge.title}
+                                        width={200}
+                                        height={200}
+                                        className="object-cover rounded"
+                                    />
+                                </div>
+                            </div>
+                        )}
                         <div>
                             <Label className="text-muted-foreground">Описание</Label>
                             <p className="mt-1 text-sm text-muted-foreground">
