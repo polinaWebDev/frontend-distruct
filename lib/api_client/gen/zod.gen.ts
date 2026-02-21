@@ -1450,7 +1450,6 @@ export const zCreateMapMarkerDto = z.object({
 });
 
 export const zUpdateMapMarkerDto = z.object({
-    id: z.string(),
     name: z.optional(z.string()),
     description: z.optional(z.union([
         z.string(),
@@ -3259,7 +3258,9 @@ export const zMapsMarkerAdminControllerCreateMapMarkerResponse = z.string();
 
 export const zMapsMarkerAdminControllerUpdateMapMarkerData = z.object({
     body: zUpdateMapMarkerDto,
-    path: z.optional(z.never()),
+    path: z.object({
+        id: z.string()
+    }),
     query: z.optional(z.never())
 });
 

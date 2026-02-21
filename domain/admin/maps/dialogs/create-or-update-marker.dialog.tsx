@@ -51,24 +51,62 @@ const schema = zCreateMapMarkerDto.extend({
     file: z.optional(z.instanceof(File)),
 });
 
-const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>> & { id?: string }) => {
+const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>>) => {
     const data = new FormData();
 
-    if (body.id) data.append('id', body.id);
     if (body.name !== undefined) data.append('name', body.name);
-    if (body.description) data.append('description', body.description);
+    if (body.description !== undefined && body.description !== null) {
+        data.append('description', body.description);
+    }
     if (body.latitude !== undefined) data.append('latitude', String(body.latitude));
     if (body.longitude !== undefined) data.append('longitude', String(body.longitude));
-    if (body.type_id) data.append('type_id', body.type_id);
-    if (body.floor_id) data.append('floor_id', body.floor_id);
+    if (body.type_id !== undefined) data.append('type_id', body.type_id);
+    if (body.floor_id !== undefined && body.floor_id !== null) {
+        data.append('floor_id', body.floor_id);
+    }
     if (body.map_level_ids) {
         body.map_level_ids.forEach((id) => data.append('map_level_ids[]', id));
     }
-    if (body.map_id) data.append('map_id', body.map_id);
-    if (body.info_link) data.append('info_link', body.info_link);
+    if (body.map_id !== undefined) data.append('map_id', body.map_id);
+    if (body.info_link !== undefined && body.info_link !== null) {
+        data.append('info_link', body.info_link);
+    }
     if (body.file) data.append('file', body.file);
 
     return data;
+};
+
+const normalizeLevels = (levelIds: string[]) => [...levelIds].sort().join('|');
+
+const getChangedMarkerFields = ({
+    next,
+    current,
+    file,
+}: {
+    next: z.infer<typeof schema>;
+    current: MapDataMarkerDto;
+    file: File | null;
+}) => {
+    const changed: Partial<z.infer<typeof schema>> = {};
+
+    if (next.name !== current.name) changed.name = next.name;
+    if (next.description !== (current.description ?? '')) changed.description = next.description;
+    if (next.latitude !== current.latitude) changed.latitude = next.latitude;
+    if (next.longitude !== current.longitude) changed.longitude = next.longitude;
+    if (next.type_id !== current.type_id) changed.type_id = next.type_id;
+    if ((next.floor_id ?? undefined) !== (current.floor_id ?? undefined)) changed.floor_id = next.floor_id;
+    if (
+        normalizeLevels(next.map_level_ids) !==
+        normalizeLevels((current.map_level_ids ?? []).map(String))
+    ) {
+        changed.map_level_ids = next.map_level_ids;
+    }
+    if ((next.info_link ?? undefined) !== (current.info_link ?? undefined)) {
+        changed.info_link = next.info_link;
+    }
+    if (file) changed.file = file;
+
+    return changed;
 };
 
 export const CreateOrUpdateMarkerDialog = ({
@@ -391,12 +429,27 @@ export const CreateOrUpdateMarkerDialog = ({
                         disabled={isPending || updateMutation.isPending || isPending}
                         onClick={form.handleSubmit((res) => {
                             if (marker_id) {
+                                const changedFields = marker_data
+                                    ? getChangedMarkerFields({
+                                          next: res,
+                                          current: marker_data,
+                                          file: imageFile,
+                                      })
+                                    : {
+                                          ...res,
+                                          file: imageFile ? imageFile : undefined,
+                                      };
+
+                                if (!Object.keys(changedFields).length) {
+                                    toast.info('Нет изменений для сохранения');
+                                    setOpen(false);
+                                    setImageFile(null);
+                                    return;
+                                }
+
                                 updateMutation.mutate({
-                                    body: {
-                                        ...res,
-                                        file: imageFile ? imageFile : undefined,
-                                        id: marker_id,
-                                    },
+                                    path: { id: marker_id },
+                                    body: changedFields,
                                     bodySerializer: mapMarkerBodySerializer,
                                 });
                             } else {

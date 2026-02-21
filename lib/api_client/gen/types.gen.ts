@@ -1194,7 +1194,6 @@ export type CreateMapMarkerDto = {
 };
 
 export type UpdateMapMarkerDto = {
-    id: string;
     name?: string;
     description?: string | null;
     latitude?: number;
@@ -3247,14 +3246,15 @@ export type MapsMarkerAdminControllerCreateMapMarkerResponse = MapsMarkerAdminCo
 
 export type MapsMarkerAdminControllerUpdateMapMarkerData = {
     body: UpdateMapMarkerDto;
-    path?: never;
+    path: {
+        id: string;
+    };
     query?: never;
-    url: '/api/maps/markers/admin/update';
+    url: '/api/maps/markers/admin/{id}';
 };
 
 export type MapsMarkerAdminControllerUpdateMapMarkerResponses = {
     200: boolean;
-    201: boolean;
 };
 
 export type MapsMarkerAdminControllerUpdateMapMarkerResponse = MapsMarkerAdminControllerUpdateMapMarkerResponses[keyof MapsMarkerAdminControllerUpdateMapMarkerResponses];

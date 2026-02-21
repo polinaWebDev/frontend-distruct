@@ -170,7 +170,7 @@ export const MapRenderer = memo(
             }
 
             return markers;
-        }, [map_data, selectedTypeId, selectedCategories, activeFloorId, selectedLevelId]);
+        }, [map_data, selectedTypeId, selectedCategories, activeFloorId, selectedLevelId, floors]);
 
         const clusterGroupKey = useMemo(() => {
             const categoriesKey = [...selectedCategories].sort().join(',');
@@ -204,7 +204,7 @@ export const MapRenderer = memo(
                         queryKey,
                         updateMarkerCoordinates(
                             previousData,
-                            variables.body.id,
+                            variables.path.id,
                             variables.body.latitude,
                             variables.body.longitude
                         )
@@ -258,28 +258,24 @@ export const MapRenderer = memo(
             },
         });
 
-        const iconCreateFunction = useCallback(createClusterCustomIcon, []);
+        const iconCreateFunction = useCallback(
+            (...args: Parameters<typeof createClusterCustomIcon>) => createClusterCustomIcon(...args),
+            []
+        );
         const shouldUseClusters = !admin && !selectedTypeId;
 
         const handleMarkerDragEnd = useCallback(
             (marker: MapDataMarkerDto, latlng: LatLng) => {
                 if (!admin) return;
                 updateMarkerMutation.mutate({
+                    path: { id: marker.id },
                     body: {
-                        id: marker.id,
-                        name: marker.name,
-                        description: marker.description ?? '',
                         latitude: latlng.lat,
                         longitude: latlng.lng,
-                        type_id: marker.type_id,
-                        floor_id: marker.floor_id ?? activeFloorId,
-                        map_id: map_id,
-                        info_link: marker.info_link ?? undefined,
-                        map_level_ids: marker.map_level_ids ?? [],
                     },
                 });
             },
-            [admin, map_id, updateMarkerMutation, activeFloorId]
+            [admin, updateMarkerMutation]
         );
 
         const handleRemoveMarker = useCallback(

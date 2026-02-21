@@ -1272,10 +1272,10 @@ export const mapsMarkerAdminControllerCreateMapMarker = <ThrowOnError extends bo
 };
 
 export const mapsMarkerAdminControllerUpdateMapMarker = <ThrowOnError extends boolean = false>(options: Options<MapsMarkerAdminControllerUpdateMapMarkerData, ThrowOnError>) => {
-    return (options.client ?? client).post<MapsMarkerAdminControllerUpdateMapMarkerResponses, unknown, ThrowOnError>({
+    return (options.client ?? client).patch<MapsMarkerAdminControllerUpdateMapMarkerResponses, unknown, ThrowOnError>({
         ...formDataBodySerializer,
         responseType: 'json',
-        url: '/api/maps/markers/admin/update',
+        url: '/api/maps/markers/admin/{id}',
         ...options,
         headers: {
             'Content-Type': null,
