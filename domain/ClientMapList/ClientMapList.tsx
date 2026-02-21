@@ -4,7 +4,7 @@ import { MapListResponseDto } from '@/lib/api_client/gen';
 import styles from './ClientMapList.module.css';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { getFileUrl } from '@/lib/utils';
+import { getFileUrl, hexToRgba } from '@/lib/utils';
 import Link from 'next/link';
 import { GameType } from '@/lib/enums/game_type.enum';
 import { Map } from 'lucide-react';
@@ -34,7 +34,17 @@ export const ClientMapList = ({ maps, game }: { maps: MapListResponseDto[]; game
                                     {[...(map.levels ?? [])]
                                         .sort((a, b) => Number(a.sort_order) - Number(b.sort_order))
                                         .map((level) => (
-                                            <span key={level.id} className={styles.level_badge}>
+                                            <span
+                                                key={level.id}
+                                                className={styles.level_badge}
+                                                style={{
+                                                    borderColor: level.color || '#9CA3AF',
+                                                    backgroundColor: hexToRgba(
+                                                        level.color || '#9CA3AF',
+                                                        0.22
+                                                    ),
+                                                }}
+                                            >
                                                 {level.name}
                                             </span>
                                         ))}

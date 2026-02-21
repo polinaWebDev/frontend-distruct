@@ -17,7 +17,7 @@ export const MapMarker = ({
             style={{
                 ['--marker-shadow-color' as string]: color,
                 ['--poi-zone-border-color' as string]: hexToRgba(color, 0.75),
-                ['--poi-zone-fill-color' as string]: hexToRgba(color, 0.18),
+                ['--poi-zone-fill-color' as string]: hexToRgba(color, 0.32),
                 ['--poi-zone-glow-color' as string]: hexToRgba(color, 0.45),
             }}
         >

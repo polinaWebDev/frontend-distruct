@@ -1,7 +1,7 @@
 import { MapDataMarkerDto } from '@/lib/api_client/gen';
 import styles from './mark-marker-info.module.css';
 import { MapMarkerBackIcon } from '@/lib/icons/MapMarkerBackIcon';
-import { getFileUrl } from '@/lib/utils';
+import { getFileUrl, hexToRgba } from '@/lib/utils';
 import Image from 'next/image';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 import clsx from 'clsx';
@@ -44,12 +44,11 @@ export const MarkMarkerInfo = ({
                             <span
                                 key={level.id}
                                 className={styles.level_badge}
-                                style={{ borderColor: level.color || '#9CA3AF' }}
+                                style={{
+                                    borderColor: level.color || '#9CA3AF',
+                                    backgroundColor: hexToRgba(level.color || '#9CA3AF', 0.22),
+                                }}
                             >
-                                <span
-                                    className={styles.level_badge_dot}
-                                    style={{ backgroundColor: level.color || '#9CA3AF' }}
-                                />
                                 {level.name}
                             </span>
                         ))}

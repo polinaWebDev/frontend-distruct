@@ -1,6 +1,6 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { MapLevelDto } from '@/lib/api_client/gen';
-import { cn } from '@/lib/utils';
+import { cn, hexToRgba } from '@/lib/utils';
 import { RemoveMapLevelDialog } from '@/domain/admin/maps/dialogs/remove-map-level.dialog';
 import { UpdateMapLevelDialog } from '@/domain/admin/maps/dialogs/update-map-level.dialog';
 
@@ -36,23 +36,30 @@ export const MapLevelTabs = ({
         >
             <Tabs value={activeId} onValueChange={onSelect}>
                 <TabsList className="bg-map-overlay-bg/80 backdrop-blur flex flex-col items-stretch gap-2 h-auto w-fit p-2">
-                    {sortedLevels.map((level) => (
-                        <div key={level.id} className="flex items-center justify-between gap-2">
-                            <TabsTrigger value={level.id} className="justify-start gap-2">
-                                <span
-                                    className="inline-block h-2.5 w-2.5 rounded-full border border-white/30"
-                                    style={{ backgroundColor: level.color || '#9CA3AF' }}
-                                />
-                                {level.name}
-                            </TabsTrigger>
-                            {showAdminActions && (
-                                <div className="flex items-center gap-1">
-                                    <UpdateMapLevelDialog level={level} map_id={mapId} />
-                                    <RemoveMapLevelDialog id={level.id} map_id={mapId} />
-                                </div>
-                            )}
-                        </div>
-                    ))}
+                    {sortedLevels.map((level) => {
+                        const isActive = level.id === activeId;
+                        return (
+                            <div key={level.id} className="flex items-center justify-between gap-2">
+                                <TabsTrigger
+                                    value={level.id}
+                                    className="justify-start !border"
+                                    style={{
+                                        borderColor: isActive
+                                            ? hexToRgba(level.color || '#9CA3AF', 0.75)
+                                            : 'transparent',
+                                    }}
+                                >
+                                    {level.name}
+                                </TabsTrigger>
+                                {showAdminActions && (
+                                    <div className="flex items-center gap-1">
+                                        <UpdateMapLevelDialog level={level} map_id={mapId} />
+                                        <RemoveMapLevelDialog id={level.id} map_id={mapId} />
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
                 </TabsList>
             </Tabs>
         </div>
