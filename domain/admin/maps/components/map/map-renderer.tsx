@@ -76,6 +76,12 @@ const removeMarkerFromMapData = (data: MapDataResponseDto, markerId: string) => 
 
 const getMarkerLevelIds = (marker: MapDataMarkerDto) => marker.map_level_ids ?? [];
 const DUPLICATE_MARKER_LONGITUDE_OFFSET = 0.00008;
+const LONG_PRESS_UNLOCK_MS = 500;
+type LeafletMarkerWithDraggableDown = LeafletMarker & {
+    dragging?: {
+        _draggable?: { _onDown?: (e: MouseEvent | TouchEvent) => void };
+    };
+};
 
 const mapMarkerBodySerializer = (body: {
     name?: string;
@@ -87,6 +93,7 @@ const mapMarkerBodySerializer = (body: {
     map_level_ids?: string[];
     map_id?: string;
     info_link?: string;
+    is_locked?: boolean;
 }) => {
     const data = new FormData();
 
@@ -101,8 +108,38 @@ const mapMarkerBodySerializer = (body: {
     }
     if (body.map_id !== undefined) data.append('map_id', body.map_id);
     if (body.info_link !== undefined) data.append('info_link', body.info_link);
+    if (body.is_locked !== undefined) {
+        const lockedValue = body.is_locked ? '1' : '0';
+        data.append('is_locked', lockedValue);
+        data.append('isLocked', lockedValue);
+    }
 
     return data;
+};
+
+const updateMarkerById = (
+    data: MapDataResponseDto,
+    markerId: string,
+    updater: (marker: MapDataMarkerDto) => MapDataMarkerDto
+) => {
+    if (!data.categories) return data;
+
+    let updated = false;
+    const categories = data.categories.map((category) => {
+        if (!category.marker_types) return category;
+        const marker_types = category.marker_types.map((markerType) => {
+            if (!markerType.markers) return markerType;
+            const markers = markerType.markers.map((marker) => {
+                if (marker.id !== markerId) return marker;
+                updated = true;
+                return updater(marker);
+            });
+            return markers === markerType.markers ? markerType : { ...markerType, markers };
+        });
+        return marker_types === category.marker_types ? category : { ...category, marker_types };
+    });
+
+    return updated ? { ...data, categories } : data;
 };
 
 export const MapRenderer = memo(
@@ -126,10 +163,12 @@ export const MapRenderer = memo(
         onMarkerClick?: (marker: MapDataMarkerDto) => void;
     }) => {
         const map = useRef<Map | null>(null);
+        const longPressUnlockTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+        const isMapDraggingSuppressed = useRef(false);
         const [clickedLatLng, setClickedLatLng] = useState<LatLng | null>(null);
         const [createDialogOpen, setCreateDialogOpen] = useState(false);
         const queryClient = useQueryClient();
-        const floors = map_data.floors ?? [];
+        const floors = useMemo(() => map_data.floors ?? [], [map_data.floors]);
         const activeFloorId = selectedFloorId ?? floors[0]?.id;
         const activeFloor = floors.find((floor) => floor.id === activeFloorId);
         const maxZoomOverride = activeFloor?.max_zoom ?? 0;
@@ -220,21 +259,28 @@ export const MapRenderer = memo(
                 await queryClient.cancelQueries({ queryKey });
                 const previousData = queryClient.getQueryData<MapDataResponseDto>(queryKey);
                 if (previousData) {
-                    if (
-                        variables.body.latitude === undefined ||
-                        variables.body.longitude === undefined
+                    if (variables.body.is_locked !== undefined) {
+                        queryClient.setQueryData<MapDataResponseDto>(
+                            queryKey,
+                            updateMarkerById(previousData, variables.path.id, (marker) => ({
+                                ...marker,
+                                is_locked: variables.body.is_locked ?? marker.is_locked,
+                            }))
+                        );
+                    } else if (
+                        variables.body.latitude !== undefined &&
+                        variables.body.longitude !== undefined
                     ) {
-                        return { previousData, queryKey };
+                        queryClient.setQueryData<MapDataResponseDto>(
+                            queryKey,
+                            updateMarkerCoordinates(
+                                previousData,
+                                variables.path.id,
+                                variables.body.latitude,
+                                variables.body.longitude
+                            )
+                        );
                     }
-                    queryClient.setQueryData<MapDataResponseDto>(
-                        queryKey,
-                        updateMarkerCoordinates(
-                            previousData,
-                            variables.path.id,
-                            variables.body.latitude,
-                            variables.body.longitude
-                        )
-                    );
                 }
                 return { previousData, queryKey };
             },
@@ -314,10 +360,73 @@ export const MapRenderer = memo(
             []
         );
         const shouldUseClusters = !admin && !selectedTypeId;
+        const suppressMapDragging = useCallback(() => {
+            if (!map.current || isMapDraggingSuppressed.current) return;
+            map.current.dragging.disable();
+            isMapDraggingSuppressed.current = true;
+        }, []);
+
+        const restoreMapDragging = useCallback(() => {
+            if (!map.current || !isMapDraggingSuppressed.current) return;
+            map.current.dragging.enable();
+            isMapDraggingSuppressed.current = false;
+        }, []);
+
+        const clearLongPressUnlock = useCallback(
+            (markerId: string, shouldRestoreMapDragging = true) => {
+                const timer = longPressUnlockTimers.current[markerId];
+                if (!timer) {
+                    if (shouldRestoreMapDragging) restoreMapDragging();
+                    return;
+                }
+                clearTimeout(timer);
+                delete longPressUnlockTimers.current[markerId];
+                if (shouldRestoreMapDragging) restoreMapDragging();
+            },
+            [restoreMapDragging]
+        );
+
+        const startLongPressUnlock = useCallback(
+            (
+                marker: MapDataMarkerDto,
+                markerNode?: LeafletMarker | null,
+                downEvent?: MouseEvent | TouchEvent
+            ) => {
+                if (!admin || !marker.is_locked || updateMarkerMutation.isPending) return;
+                suppressMapDragging();
+                clearLongPressUnlock(marker.id, false);
+                longPressUnlockTimers.current[marker.id] = setTimeout(() => {
+                    updateMarkerMutation.mutate({
+                        path: { id: marker.id },
+                        body: { is_locked: false },
+                    });
+                    markerNode?.dragging?.enable();
+                    const draggable = (markerNode as LeafletMarkerWithDraggableDown)?.dragging
+                        ?._draggable;
+                    draggable?._onDown?.(downEvent as MouseEvent | TouchEvent);
+                    toast.success('Метка разблокирована');
+                    clearLongPressUnlock(marker.id, false);
+                }, LONG_PRESS_UNLOCK_MS);
+            },
+            [admin, clearLongPressUnlock, suppressMapDragging, updateMarkerMutation]
+        );
+
+        useEffect(() => {
+            const timers = longPressUnlockTimers.current;
+            return () => {
+                Object.keys(timers).forEach((markerId) => {
+                    const timer = timers[markerId];
+                    if (!timer) return;
+                    clearTimeout(timer);
+                    delete timers[markerId];
+                });
+                restoreMapDragging();
+            };
+        }, [restoreMapDragging]);
 
         const handleMarkerDragEnd = useCallback(
             (marker: MapDataMarkerDto, latlng: LatLng) => {
-                if (!admin) return;
+                if (!admin || marker.is_locked) return;
                 updateMarkerMutation.mutate({
                     path: { id: marker.id },
                     body: {
@@ -365,6 +474,7 @@ export const MapRenderer = memo(
                         map_level_ids: mapLevelIds,
                         map_id,
                         info_link: marker.info_link ?? undefined,
+                        is_locked: marker.is_locked,
                     },
                     bodySerializer: mapMarkerBodySerializer,
                 });
@@ -426,7 +536,7 @@ export const MapRenderer = memo(
                             <EnhancedMarker
                                 position={[marker.marker.latitude, marker.marker.longitude]}
                                 key={marker.marker.id}
-                                draggable
+                                draggable={!marker.marker.is_locked}
                                 eventHandlers={{
                                     click: (e) => {
                                         if (!admin) {
@@ -434,16 +544,44 @@ export const MapRenderer = memo(
                                         }
                                         console.log(e);
                                     },
+                                    mousedown: (e) => {
+                                        startLongPressUnlock(
+                                            marker.marker,
+                                            e.target as LeafletMarker,
+                                            e.originalEvent as MouseEvent
+                                        );
+                                    },
+                                    mouseup: () => {
+                                        clearLongPressUnlock(marker.marker.id);
+                                    },
+                                    mouseout: () => {
+                                        clearLongPressUnlock(marker.marker.id);
+                                    },
+                                    touchstart: (e) => {
+                                        startLongPressUnlock(
+                                            marker.marker,
+                                            e.target as LeafletMarker,
+                                            e.originalEvent as TouchEvent
+                                        );
+                                    },
+                                    touchend: () => {
+                                        clearLongPressUnlock(marker.marker.id);
+                                    },
+                                    touchcancel: () => {
+                                        clearLongPressUnlock(marker.marker.id);
+                                    },
                                     dragend: (e) => {
                                         const target = e.target as LeafletMarker;
                                         handleMarkerDragEnd(marker.marker, target.getLatLng());
+                                        restoreMapDragging();
                                     },
                                 }}
                                 icon={
                                     <MapMarker
                                         marker_type={marker.marker_type}
                                         color={marker.color}
-                                        draggable
+                                        draggable={!marker.marker.is_locked}
+                                        showLockBadge={marker.marker.is_locked}
                                     />
                                 }
                             >

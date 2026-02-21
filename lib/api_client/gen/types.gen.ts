@@ -1055,6 +1055,7 @@ export type MapDataMarkerDto = {
     description: string;
     latitude: number;
     longitude: number;
+    is_locked: boolean;
     type_id: string;
     floor_id?: string | null;
     map_level_ids?: Array<string>;
@@ -1219,6 +1220,7 @@ export type UpdateMapMarkerDto = {
     map_id?: string;
     file?: Blob | File;
     info_link?: string | null;
+    is_locked?: boolean;
 };
 
 export type RemoveMapMarkerDto = {

@@ -1,14 +1,17 @@
 import { MapDataMarkerTypeDto } from '@/lib/api_client/gen';
 import styles from './map-marker.module.css';
 import { hexToRgba } from '@/lib/utils';
+import { Lock } from 'lucide-react';
 export const MapMarker = ({
     marker_type,
     color,
     draggable = false,
+    showLockBadge = false,
 }: {
     marker_type: MapDataMarkerTypeDto;
     color: string;
     draggable?: boolean;
+    showLockBadge?: boolean;
 }) => {
     const isPoi = marker_type.is_point_of_interest;
     return (
@@ -22,6 +25,11 @@ export const MapMarker = ({
             }}
         >
             <div dangerouslySetInnerHTML={{ __html: marker_type.icon }}></div>
+            {showLockBadge && (
+                <span className={styles.lockBadge} aria-hidden>
+                    <Lock className={styles.lockBadgeIcon} />
+                </span>
+            )}
         </div>
     );
 };

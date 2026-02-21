@@ -1233,6 +1233,7 @@ export const zMapDataMarkerDto = z.object({
     description: z.string(),
     latitude: z.number(),
     longitude: z.number(),
+    is_locked: z.boolean().default(false),
     type_id: z.string(),
     floor_id: z.optional(z.union([
         z.string(),
@@ -1477,7 +1478,8 @@ export const zUpdateMapMarkerDto = z.object({
     info_link: z.optional(z.union([
         z.string(),
         z.null()
-    ]))
+    ])),
+    is_locked: z.optional(z.boolean()).default(false)
 });
 
 export const zRemoveMapMarkerDto = z.object({

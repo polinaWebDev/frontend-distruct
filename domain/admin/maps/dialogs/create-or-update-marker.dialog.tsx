@@ -49,6 +49,7 @@ import { CreateMapLevelDialog } from './create-map-level.dialog';
 const schema = zCreateMapMarkerDto.extend({
     map_level_ids: z.array(z.string()).min(1, 'Выберите хотя бы одну сложность'),
     file: z.optional(z.instanceof(File)),
+    is_locked: z.boolean().optional().default(false),
 });
 
 const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>>) => {
@@ -71,43 +72,14 @@ const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>>) => {
     if (body.info_link !== undefined && body.info_link !== null) {
         data.append('info_link', body.info_link);
     }
+    if (body.is_locked !== undefined) {
+        const lockedValue = body.is_locked ? '1' : '0';
+        data.append('is_locked', lockedValue);
+        data.append('isLocked', lockedValue);
+    }
     if (body.file) data.append('file', body.file);
 
     return data;
-};
-
-const normalizeLevels = (levelIds: string[]) => [...levelIds].sort().join('|');
-
-const getChangedMarkerFields = ({
-    next,
-    current,
-    file,
-}: {
-    next: z.infer<typeof schema>;
-    current: MapDataMarkerDto;
-    file: File | null;
-}) => {
-    const changed: Partial<z.infer<typeof schema>> = {};
-
-    if (next.name !== current.name) changed.name = next.name;
-    if (next.description !== (current.description ?? '')) changed.description = next.description;
-    if (next.latitude !== current.latitude) changed.latitude = next.latitude;
-    if (next.longitude !== current.longitude) changed.longitude = next.longitude;
-    if (next.type_id !== current.type_id) changed.type_id = next.type_id;
-    if ((next.floor_id ?? undefined) !== (current.floor_id ?? undefined))
-        changed.floor_id = next.floor_id;
-    if (
-        normalizeLevels(next.map_level_ids) !==
-        normalizeLevels((current.map_level_ids ?? []).map(String))
-    ) {
-        changed.map_level_ids = next.map_level_ids;
-    }
-    if ((next.info_link ?? undefined) !== (current.info_link ?? undefined)) {
-        changed.info_link = next.info_link;
-    }
-    if (file) changed.file = file;
-
-    return changed;
 };
 
 export const CreateOrUpdateMarkerDialog = ({
@@ -159,6 +131,7 @@ export const CreateOrUpdateMarkerDialog = ({
             map_level_ids: (marker_data?.map_level_ids ?? []).map(String),
             map_id: map_id,
             info_link: marker_data?.info_link ?? undefined,
+            is_locked: marker_data?.is_locked ?? false,
         },
         mode: 'onChange',
     });
@@ -329,6 +302,27 @@ export const CreateOrUpdateMarkerDialog = ({
                         )}
 
                         <FormItem>
+                            <div className="flex items-center gap-2">
+                                <Controller
+                                    control={form.control}
+                                    name="is_locked"
+                                    render={({ field }) => (
+                                        <Checkbox
+                                            id="marker-is-locked"
+                                            checked={Boolean(field.value)}
+                                            onCheckedChange={(checked) =>
+                                                field.onChange(checked === true)
+                                            }
+                                        />
+                                    )}
+                                />
+                                <Label htmlFor="marker-is-locked" className="cursor-pointer">
+                                    Заблокировать метку (нельзя двигать)
+                                </Label>
+                            </div>
+                        </FormItem>
+
+                        <FormItem>
                             <div className="flex items-center justify-between">
                                 <Label>Сложность</Label>
                                 <CreateMapLevelDialog map_id={map_id} levels={levels} compact />
@@ -437,27 +431,12 @@ export const CreateOrUpdateMarkerDialog = ({
                         disabled={isPending || updateMutation.isPending || isPending}
                         onClick={form.handleSubmit((res) => {
                             if (marker_id) {
-                                const changedFields = marker_data
-                                    ? getChangedMarkerFields({
-                                          next: res,
-                                          current: marker_data,
-                                          file: imageFile,
-                                      })
-                                    : {
-                                          ...res,
-                                          file: imageFile ? imageFile : undefined,
-                                      };
-
-                                if (!Object.keys(changedFields).length) {
-                                    toast.info('Нет изменений для сохранения');
-                                    setOpen(false);
-                                    setImageFile(null);
-                                    return;
-                                }
-
                                 updateMutation.mutate({
                                     path: { id: marker_id },
-                                    body: changedFields,
+                                    body: {
+                                        ...res,
+                                        file: imageFile ? imageFile : undefined,
+                                    },
                                     bodySerializer: mapMarkerBodySerializer,
                                 });
                             } else {
