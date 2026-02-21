@@ -1194,17 +1194,17 @@ export type CreateMapMarkerDto = {
 };
 
 export type UpdateMapMarkerDto = {
-    name: string;
+    id: string;
+    name?: string;
     description?: string | null;
-    latitude: number;
-    longitude: number;
-    type_id: string;
+    latitude?: number;
+    longitude?: number;
+    type_id?: string;
     floor_id?: string | null;
-    map_level_ids: Array<string>;
-    map_id: string;
+    map_level_ids?: Array<string>;
+    map_id?: string;
     file?: Blob | File;
     info_link?: string | null;
-    id: string;
 };
 
 export type RemoveMapMarkerDto = {

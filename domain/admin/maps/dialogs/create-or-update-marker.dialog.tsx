@@ -51,17 +51,20 @@ const schema = zCreateMapMarkerDto.extend({
     file: z.optional(z.instanceof(File)),
 });
 
-const mapMarkerBodySerializer = (body: z.infer<typeof schema>) => {
+const mapMarkerBodySerializer = (body: Partial<z.infer<typeof schema>> & { id?: string }) => {
     const data = new FormData();
 
-    data.append('name', body.name);
+    if (body.id) data.append('id', body.id);
+    if (body.name !== undefined) data.append('name', body.name);
     if (body.description) data.append('description', body.description);
-    data.append('latitude', String(body.latitude));
-    data.append('longitude', String(body.longitude));
-    data.append('type_id', body.type_id);
+    if (body.latitude !== undefined) data.append('latitude', String(body.latitude));
+    if (body.longitude !== undefined) data.append('longitude', String(body.longitude));
+    if (body.type_id) data.append('type_id', body.type_id);
     if (body.floor_id) data.append('floor_id', body.floor_id);
-    body.map_level_ids.forEach((id) => data.append('map_level_ids[]', id));
-    data.append('map_id', body.map_id);
+    if (body.map_level_ids) {
+        body.map_level_ids.forEach((id) => data.append('map_level_ids[]', id));
+    }
+    if (body.map_id) data.append('map_id', body.map_id);
     if (body.info_link) data.append('info_link', body.info_link);
     if (body.file) data.append('file', body.file);
 
@@ -173,8 +176,6 @@ export const CreateOrUpdateMarkerDialog = ({
             toast.error('Ошибка при обновлении маркера');
         },
     });
-
-    console.log(marker_data?.type_id);
 
     return (
         <Dialog

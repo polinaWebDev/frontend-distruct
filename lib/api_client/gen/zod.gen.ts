@@ -1450,26 +1450,26 @@ export const zCreateMapMarkerDto = z.object({
 });
 
 export const zUpdateMapMarkerDto = z.object({
-    name: z.string(),
+    id: z.string(),
+    name: z.optional(z.string()),
     description: z.optional(z.union([
         z.string(),
         z.null()
     ])),
-    latitude: z.number(),
-    longitude: z.number(),
-    type_id: z.string(),
+    latitude: z.optional(z.number()),
+    longitude: z.optional(z.number()),
+    type_id: z.optional(z.string()),
     floor_id: z.optional(z.union([
         z.string(),
         z.null()
     ])),
-    map_level_ids: z.array(z.string()).min(1),
-    map_id: z.string(),
+    map_level_ids: z.optional(z.array(z.string()).min(1)),
+    map_id: z.optional(z.string()),
     file: z.optional(z.string()),
     info_link: z.optional(z.union([
         z.string(),
         z.null()
-    ])),
-    id: z.string()
+    ]))
 });
 
 export const zRemoveMapMarkerDto = z.object({

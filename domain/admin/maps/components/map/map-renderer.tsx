@@ -194,6 +194,12 @@ export const MapRenderer = memo(
                 await queryClient.cancelQueries({ queryKey });
                 const previousData = queryClient.getQueryData<MapDataResponseDto>(queryKey);
                 if (previousData) {
+                    if (
+                        variables.body.latitude === undefined ||
+                        variables.body.longitude === undefined
+                    ) {
+                        return { previousData, queryKey };
+                    }
                     queryClient.setQueryData<MapDataResponseDto>(
                         queryKey,
                         updateMarkerCoordinates(

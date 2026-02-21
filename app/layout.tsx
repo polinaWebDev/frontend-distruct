@@ -5,6 +5,7 @@ import localFont from 'next/font/local';
 import { NextIntlClientProvider } from 'next-intl';
 import { QueryClientProvider } from '@/lib/providers/QueryClient.provider';
 import { getSiteUrl } from '@/lib/seo';
+import { WebVitals } from '@/app/_components/WebVitals';
 
 const montserrat = Montserrat({
     variable: '--font-montserrat',
@@ -57,6 +58,7 @@ export default function RootLayout({
             <body className={`${montserrat.variable} ${thicker.variable} antialiased dark`}>
                 <NextIntlClientProvider>
                     <QueryClientProvider>{children}</QueryClientProvider>
+                    <WebVitals />
                 </NextIntlClientProvider>
             </body>
         </html>
