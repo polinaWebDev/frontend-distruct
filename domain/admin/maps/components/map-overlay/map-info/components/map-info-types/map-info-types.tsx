@@ -69,7 +69,12 @@ export const MapInfoTypes = ({
                                 dangerouslySetInnerHTML={{ __html: type.icon }}
                             ></div>
 
-                            <p>{type.name}</p>
+                            <div className={styles.name_wrap}>
+                                <p>{type.name}</p>
+                                {type.is_point_of_interest && (
+                                    <span className={styles.poi_badge}>POI</span>
+                                )}
+                            </div>
                             <p className={styles.count}>
                                 {type.markers?.filter(markerMatchesSelectedLevel).length ?? 0}
                             </p>

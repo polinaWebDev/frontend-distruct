@@ -3,13 +3,9 @@ import 'leaflet/dist/leaflet.css';
 import './map-renderer.css';
 import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { MapContainer, Popup, TileLayer } from 'react-leaflet';
-import {
-    LatLng,
-    Map,
-    Marker as LeafletMarker,
-} from 'leaflet';
+import { LatLng, Map, Marker as LeafletMarker } from 'leaflet';
 import { MapDataMarkerDto, MapDataMarkerTypeDto, MapDataResponseDto } from '@/lib/api_client/gen';
-import { Info, MapPinPlusInside, Trash2 } from 'lucide-react';
+import { Copy, Info, MapPinPlusInside, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CreateOrUpdateMarkerDialog } from '../../dialogs/create-or-update-marker.dialog';
 import { MapMarker } from './components/map-marker';
@@ -79,7 +75,7 @@ const removeMarkerFromMapData = (data: MapDataResponseDto, markerId: string) => 
 };
 
 const getMarkerLevelIds = (marker: MapDataMarkerDto) => marker.map_level_ids ?? [];
-const DUPLICATE_MARKER_COORDINATE_OFFSET = 0.00003;
+const DUPLICATE_MARKER_LONGITUDE_OFFSET = 0.00008;
 
 const mapMarkerBodySerializer = (body: {
     name?: string;
@@ -313,7 +309,8 @@ export const MapRenderer = memo(
         });
 
         const iconCreateFunction = useCallback(
-            (...args: Parameters<typeof createClusterCustomIcon>) => createClusterCustomIcon(...args),
+            (...args: Parameters<typeof createClusterCustomIcon>) =>
+                createClusterCustomIcon(...args),
             []
         );
         const shouldUseClusters = !admin && !selectedTypeId;
@@ -361,9 +358,8 @@ export const MapRenderer = memo(
                 duplicateMarkerMutation.mutate({
                     body: {
                         name: marker.name,
-                        description: marker.description ?? undefined,
-                        latitude: marker.latitude + DUPLICATE_MARKER_COORDINATE_OFFSET,
-                        longitude: marker.longitude + DUPLICATE_MARKER_COORDINATE_OFFSET,
+                        latitude: marker.latitude,
+                        longitude: marker.longitude + DUPLICATE_MARKER_LONGITUDE_OFFSET,
                         type_id: marker.type_id,
                         floor_id: marker.floor_id ?? activeFloorId,
                         map_level_ids: mapLevelIds,
@@ -373,7 +369,14 @@ export const MapRenderer = memo(
                     bodySerializer: mapMarkerBodySerializer,
                 });
             },
-            [admin, selectedLevelId, map_data.levels, duplicateMarkerMutation, activeFloorId, map_id]
+            [
+                admin,
+                selectedLevelId,
+                map_data.levels,
+                duplicateMarkerMutation,
+                activeFloorId,
+                map_id,
+            ]
         );
 
         return (
@@ -474,12 +477,14 @@ export const MapRenderer = memo(
                                             <Info />
                                         </Button>
                                         <Button
-                                            size={'sm'}
+                                            size={'icon'}
                                             variant="secondary"
                                             disabled={duplicateMarkerMutation.isPending}
                                             onClick={() => handleDuplicateMarker(marker.marker)}
+                                            aria-label="Дублировать метку"
+                                            title="Дублировать метку"
                                         >
-                                            Дублировать
+                                            <Copy />
                                         </Button>
                                         <Button
                                             size={'icon'}

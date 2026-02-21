@@ -16,6 +16,7 @@ import {
     FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { GetMapTypeResponseDto } from '@/lib/api_client/gen';
 import {
@@ -32,6 +33,8 @@ import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
 
+type IconTypeFormValues = z.input<typeof zCreateMapTypeDto>;
+
 export const CreateOrUpdateIconTypeDialog = ({
     open,
     onOpenChange,
@@ -45,11 +48,12 @@ export const CreateOrUpdateIconTypeDialog = ({
     category_id: string;
     icon_type_data?: GetMapTypeResponseDto;
 }) => {
-    const form = useForm<z.infer<typeof zCreateMapTypeDto>>({
+    const form = useForm<IconTypeFormValues>({
         resolver: zodResolver(icon_type_data ? zUpdateMapTypeDto : zCreateMapTypeDto),
         defaultValues: {
             name: icon_type_data?.name ?? '',
             icon: icon_type_data?.icon ?? '',
+            is_point_of_interest: icon_type_data?.is_point_of_interest ?? false,
             category_id: icon_type_data?.category_id ?? category_id,
             map_id: map_id,
         },
@@ -141,6 +145,31 @@ export const CreateOrUpdateIconTypeDialog = ({
 
                             <FormField
                                 control={form.control}
+                                name="is_point_of_interest"
+                                render={({ field }) => (
+                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
+                                        <div className="space-y-0.5">
+                                            <FormLabel className="text-base">
+                                                Point of interest
+                                            </FormLabel>
+                                            <div className="text-[0.8rem] text-muted-foreground">
+                                                {field.value
+                                                    ? 'Метка будет считаться POI'
+                                                    : 'Обычный тип метки'}
+                                            </div>
+                                        </div>
+                                        <FormControl>
+                                            <Switch
+                                                checked={Boolean(field.value)}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
                                 name="icon"
                                 render={({ field }) => (
                                     <FormItem>
@@ -190,10 +219,12 @@ export const CreateOrUpdateIconTypeDialog = ({
                     <Button
                         disabled={isPending || isUpdatePending}
                         onClick={() => {
+                            const values = form.getValues();
                             if (icon_type_data) {
                                 updateIconType({
                                     body: {
-                                        ...form.getValues(),
+                                        ...values,
+                                        is_point_of_interest: Boolean(values.is_point_of_interest),
                                         category_id: category_id,
                                         id: icon_type_data.id,
                                     },
@@ -203,7 +234,8 @@ export const CreateOrUpdateIconTypeDialog = ({
 
                             createIconType({
                                 body: {
-                                    ...form.getValues(),
+                                    ...values,
+                                    is_point_of_interest: Boolean(values.is_point_of_interest),
                                     category_id: category_id,
                                 },
                             });

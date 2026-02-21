@@ -94,12 +94,11 @@ export const ClientMapPage = ({ map }: { map: MapDataResponseDto }) => {
             {selectedMarker && (
                 <MarkMarkerInfo
                     marker={selectedMarker}
-                    levelName={
+                    levels={
                         selectedMarker.map_level_ids?.length
                             ? selectedMarker.map_level_ids
-                                  .map((id) => map.levels?.find((level) => level.id === id)?.name)
-                                  .filter((x): x is string => Boolean(x))
-                                  .join(', ')
+                                  .map((id) => map.levels?.find((level) => level.id === id))
+                                  .filter((x): x is NonNullable<typeof x> => Boolean(x))
                             : undefined
                     }
                     onClose={() => setSelectedMarker(undefined)}

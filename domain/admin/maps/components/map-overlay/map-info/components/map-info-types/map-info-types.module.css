@@ -92,6 +92,26 @@
                     margin-left: 17px;
                 }
 
+                .name_wrap {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .poi_badge {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 18px;
+                    padding: 0 8px;
+                    border-radius: 999px;
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    background: rgba(0, 163, 255, 0.15);
+                    color: #99ddff;
+                    font-size: 11px;
+                    font-weight: 700;
+                }
+
                 .count {
                     margin-left: auto;
 

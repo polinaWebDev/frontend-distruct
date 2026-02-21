@@ -1178,6 +1178,7 @@ export const zMapLevelEntity = z.object({
     ]),
     map_id: z.string(),
     name: z.string(),
+    color: z.string().default('#9CA3AF'),
     sort_order: z.number(),
     map: zMapEntity
 });
@@ -1185,6 +1186,7 @@ export const zMapLevelEntity = z.object({
 export const zCreateMapLevelDto = z.object({
     map_id: z.string(),
     name: z.string(),
+    color: z.optional(z.string().regex(/^#[0-9A-Fa-f]{6}$/)),
     sort_order: z.optional(z.number().gte(0))
 });
 
@@ -1192,6 +1194,7 @@ export const zUpdateMapLevelDto = z.object({
     id: z.string(),
     map_id: z.string(),
     name: z.string(),
+    color: z.optional(z.string().regex(/^#[0-9A-Fa-f]{6}$/)),
     sort_order: z.number().gte(0)
 });
 
@@ -1220,6 +1223,7 @@ export const zMapFloorDto = z.object({
 export const zMapLevelDto = z.object({
     id: z.string(),
     name: z.string(),
+    color: z.string(),
     sort_order: z.number()
 });
 
@@ -1249,6 +1253,7 @@ export const zMapDataMarkerTypeDto = z.object({
     id: z.string(),
     name: z.string(),
     icon: z.string(),
+    is_point_of_interest: z.boolean().default(false),
     markers: z.optional(z.union([
         z.array(zMapDataMarkerDto),
         z.null()
@@ -1304,7 +1309,8 @@ export const zMapDataResponseDto = z.object({
 export const zMapListMarkerTypeDto = z.object({
     id: z.string(),
     name: z.string(),
-    icon: z.string()
+    icon: z.string(),
+    is_point_of_interest: z.boolean().default(false)
 });
 
 export const zMapListCategoryDto = z.object({
@@ -1404,6 +1410,7 @@ export const zGetMapTypeResponseDto = z.object({
     name: z.string(),
     map_id: z.string(),
     icon: z.string(),
+    is_point_of_interest: z.boolean().default(false),
     category_id: z.string(),
     category: zMapMarkerCategoryEntity
 });
@@ -1411,6 +1418,7 @@ export const zGetMapTypeResponseDto = z.object({
 export const zCreateMapTypeDto = z.object({
     name: z.string(),
     icon: z.string(),
+    is_point_of_interest: z.boolean().default(false),
     category_id: z.string(),
     map_id: z.string()
 });
@@ -1418,6 +1426,7 @@ export const zCreateMapTypeDto = z.object({
 export const zUpdateMapTypeDto = z.object({
     name: z.string(),
     icon: z.string(),
+    is_point_of_interest: z.boolean().default(false),
     category_id: z.string(),
     map_id: z.string(),
     id: z.string()

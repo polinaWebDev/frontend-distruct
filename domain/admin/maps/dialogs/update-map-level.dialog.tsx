@@ -34,6 +34,7 @@ const schema = z.object({
     id: z.string(),
     map_id: z.string(),
     name: z.string().min(1, 'Введите название'),
+    color: z.string().regex(/^#[0-9A-Fa-f]{6}$/, 'Введите цвет в формате #RRGGBB'),
     sort_order: z.coerce.number().int().min(1, 'Порядок должен быть >= 1'),
 });
 
@@ -51,6 +52,7 @@ export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProp
             id: level.id,
             map_id,
             name: level.name,
+            color: level.color ?? '#9CA3AF',
             sort_order: Number(level.sort_order ?? 1),
         },
         mode: 'onChange',
@@ -62,6 +64,7 @@ export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProp
             id: level.id,
             map_id,
             name: level.name,
+            color: level.color ?? '#9CA3AF',
             sort_order: Number(level.sort_order ?? 1),
         });
     }, [open, level, map_id, form]);
@@ -112,6 +115,35 @@ export const UpdateMapLevelDialog = ({ level, map_id }: UpdateMapLevelDialogProp
                                     <FormLabel>Название</FormLabel>
                                     <FormControl>
                                         <Input {...field} placeholder="Легко" />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="color"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Цвет</FormLabel>
+                                    <FormControl>
+                                        <div className="flex items-center gap-2">
+                                            <Input
+                                                type="color"
+                                                value={field.value}
+                                                onChange={(e) =>
+                                                    field.onChange(e.target.value.toUpperCase())
+                                                }
+                                                className="h-10 w-12 p-1"
+                                            />
+                                            <Input
+                                                value={field.value}
+                                                onChange={(e) =>
+                                                    field.onChange(e.target.value.toUpperCase())
+                                                }
+                                                placeholder="#9CA3AF"
+                                            />
+                                        </div>
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

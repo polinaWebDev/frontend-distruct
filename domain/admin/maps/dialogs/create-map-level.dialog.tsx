@@ -35,6 +35,7 @@ export const CreateMapLevelDialog = ({
     const [open, setOpen] = useState(false);
     const [name, setName] = useState('');
     const [sortOrder, setSortOrder] = useState('1');
+    const [color, setColor] = useState('#9CA3AF');
 
     const nextSortOrder = useMemo(() => {
         const maxSortOrder = levels.reduce((acc, level) => {
@@ -43,11 +44,13 @@ export const CreateMapLevelDialog = ({
         }, 0);
         return String(maxSortOrder + 1);
     }, [levels]);
+    const isColorValid = /^#[0-9A-Fa-f]{6}$/.test(color);
 
     const clearAndClose = () => {
         setOpen(false);
         setName('');
         setSortOrder(nextSortOrder);
+        setColor('#9CA3AF');
     };
 
     const { mutate: createLevel, isPending } = useMutation({
@@ -79,6 +82,7 @@ export const CreateMapLevelDialog = ({
                     setSortOrder(nextSortOrder);
                 } else if (!isPending) {
                     setName('');
+                    setColor('#9CA3AF');
                 }
             }}
         >
@@ -96,7 +100,9 @@ export const CreateMapLevelDialog = ({
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Добавить сложность</DialogTitle>
-                    <DialogDescription>Создайте новый уровень сложности для карты</DialogDescription>
+                    <DialogDescription>
+                        Создайте новый уровень сложности для карты
+                    </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col gap-2">
@@ -117,16 +123,35 @@ export const CreateMapLevelDialog = ({
                             placeholder="1"
                         />
                     </div>
+                    <div className="flex flex-col gap-2">
+                        <p className="text-sm text-white">Цвет</p>
+                        <div className="flex items-center gap-2">
+                            <Input
+                                type="color"
+                                value={color}
+                                onChange={(e) => setColor(e.target.value.toUpperCase())}
+                                className="h-10 w-12 p-1"
+                            />
+                            <Input
+                                value={color}
+                                onChange={(e) => setColor(e.target.value.toUpperCase())}
+                                placeholder="#9CA3AF"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <DialogFooter>
                     <Button
                         type="button"
-                        disabled={isPending || !name.trim() || Number(sortOrder) < 1}
+                        disabled={
+                            isPending || !name.trim() || Number(sortOrder) < 1 || !isColorValid
+                        }
                         onClick={() => {
                             createLevel({
                                 body: {
                                     map_id,
                                     name: name.trim(),
+                                    color: color.toUpperCase(),
                                     sort_order: Number(sortOrder),
                                 },
                             });

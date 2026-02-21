@@ -30,7 +30,15 @@ export const MapLevelTabs = ({
             <Tabs value={activeId} onValueChange={onSelect}>
                 <TabsList className="bg-map-overlay-bg/80 backdrop-blur flex flex-col items-stretch gap-2 h-auto w-fit p-2">
                     {sortedLevels.map((level) => (
-                        <TabsTrigger key={level.id} value={level.id}>
+                        <TabsTrigger
+                            key={level.id}
+                            value={level.id}
+                            className="justify-start gap-2"
+                        >
+                            <span
+                                className="inline-block h-2.5 w-2.5 rounded-full border border-white/30"
+                                style={{ backgroundColor: level.color || '#9CA3AF' }}
+                            />
                             {level.name}
                         </TabsTrigger>
                     ))}

@@ -38,7 +38,13 @@ export const MapLevelTabs = ({
                 <TabsList className="bg-map-overlay-bg/80 backdrop-blur flex flex-col items-stretch gap-2 h-auto w-fit p-2">
                     {sortedLevels.map((level) => (
                         <div key={level.id} className="flex items-center justify-between gap-2">
-                            <TabsTrigger value={level.id}>{level.name}</TabsTrigger>
+                            <TabsTrigger value={level.id} className="justify-start gap-2">
+                                <span
+                                    className="inline-block h-2.5 w-2.5 rounded-full border border-white/30"
+                                    style={{ backgroundColor: level.color || '#9CA3AF' }}
+                                />
+                                {level.name}
+                            </TabsTrigger>
                             {showAdminActions && (
                                 <div className="flex items-center gap-1">
                                     <UpdateMapLevelDialog level={level} map_id={mapId} />

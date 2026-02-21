@@ -90,10 +90,18 @@
         color: #ffffff;
     }
 
+    .level_badges {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
     .level_badge {
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        gap: 6px;
         padding: 4px 9px;
         border-radius: 999px;
         font-size: 11px;
@@ -101,7 +109,14 @@
         font-weight: 700;
         color: #ffffff;
         background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .level_badge_dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        flex: 0 0 auto;
     }
 
     .content {

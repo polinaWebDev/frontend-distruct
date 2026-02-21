@@ -995,6 +995,7 @@ export type MapLevelEntity = {
     deletedAt: Date | null;
     map_id: string;
     name: string;
+    color: string;
     sort_order: number;
     map: MapEntity;
 };
@@ -1002,6 +1003,10 @@ export type MapLevelEntity = {
 export type CreateMapLevelDto = {
     map_id: string;
     name: string;
+    /**
+     * Hex color in #RRGGBB format
+     */
+    color?: string;
     sort_order?: number;
 };
 
@@ -1009,6 +1014,10 @@ export type UpdateMapLevelDto = {
     id: string;
     map_id: string;
     name: string;
+    /**
+     * Hex color in #RRGGBB format
+     */
+    color?: string;
     sort_order: number;
 };
 
@@ -1036,6 +1045,7 @@ export type MapFloorDto = {
 export type MapLevelDto = {
     id: string;
     name: string;
+    color: string;
     sort_order: number;
 };
 
@@ -1056,6 +1066,7 @@ export type MapDataMarkerTypeDto = {
     id: string;
     name: string;
     icon: string;
+    is_point_of_interest: boolean;
     markers?: Array<MapDataMarkerDto> | null;
 };
 
@@ -1088,6 +1099,7 @@ export type MapListMarkerTypeDto = {
     id: string;
     name: string;
     icon: string;
+    is_point_of_interest: boolean;
 };
 
 export type MapListCategoryDto = {
@@ -1157,6 +1169,7 @@ export type GetMapTypeResponseDto = {
      * svg icon, as a string
      */
     icon: string;
+    is_point_of_interest: boolean;
     category_id: string;
     category: MapMarkerCategoryEntity;
 };
@@ -1164,6 +1177,7 @@ export type GetMapTypeResponseDto = {
 export type CreateMapTypeDto = {
     name: string;
     icon: string;
+    is_point_of_interest: boolean;
     category_id: string;
     map_id: string;
 };
@@ -1171,6 +1185,7 @@ export type CreateMapTypeDto = {
 export type UpdateMapTypeDto = {
     name: string;
     icon: string;
+    is_point_of_interest: boolean;
     category_id: string;
     map_id: string;
     id: string;

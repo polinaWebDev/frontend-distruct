@@ -228,17 +228,15 @@ export const MapsPage = () => {
                     {selectedMarker && (
                         <MarkMarkerInfo
                             marker={selectedMarker}
-                            levelName={
+                            levels={
                                 selectedMarker.map_level_ids?.length
                                     ? selectedMarker.map_level_ids
-                                          .map(
-                                              (id) =>
-                                                  fullMapDataRes.levels?.find(
-                                                      (level) => level.id === id
-                                                  )?.name
+                                          .map((id) =>
+                                              fullMapDataRes.levels?.find(
+                                                  (level) => level.id === id
+                                              )
                                           )
-                                          .filter((x): x is string => Boolean(x))
-                                          .join(', ')
+                                          .filter((x): x is NonNullable<typeof x> => Boolean(x))
                                     : undefined
                             }
                             onClose={() => setSelectedMarker(undefined)}

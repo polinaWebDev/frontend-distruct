@@ -94,7 +94,8 @@ const getChangedMarkerFields = ({
     if (next.latitude !== current.latitude) changed.latitude = next.latitude;
     if (next.longitude !== current.longitude) changed.longitude = next.longitude;
     if (next.type_id !== current.type_id) changed.type_id = next.type_id;
-    if ((next.floor_id ?? undefined) !== (current.floor_id ?? undefined)) changed.floor_id = next.floor_id;
+    if ((next.floor_id ?? undefined) !== (current.floor_id ?? undefined))
+        changed.floor_id = next.floor_id;
     if (
         normalizeLevels(next.map_level_ids) !==
         normalizeLevels((current.map_level_ids ?? []).map(String))
@@ -370,8 +371,15 @@ export const CreateOrUpdateMarkerDialog = ({
                                                         />
                                                         <Label
                                                             htmlFor={`marker-level-${level.id}`}
-                                                            className="cursor-pointer"
+                                                            className="cursor-pointer inline-flex items-center gap-2"
                                                         >
+                                                            <span
+                                                                className="inline-block h-2.5 w-2.5 rounded-full border border-white/30"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        level.color || '#9CA3AF',
+                                                                }}
+                                                            />
                                                             {level.name}
                                                         </Label>
                                                     </div>

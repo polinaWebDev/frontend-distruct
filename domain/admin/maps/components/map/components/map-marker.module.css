@@ -20,6 +20,28 @@
     }
 }
 
+.poi {
+    &::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 56px;
+        height: 56px;
+        border-radius: 999px;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+            circle at center,
+            var(--poi-zone-fill-color, rgba(255, 255, 255, 0.16)) 0%,
+            rgba(0, 0, 0, 0) 72%
+        );
+        border: 1px solid var(--poi-zone-border-color, rgba(255, 255, 255, 0.45));
+        box-shadow: 0 0 14px var(--poi-zone-glow-color, rgba(255, 255, 255, 0.28));
+        pointer-events: none;
+        z-index: -1;
+    }
+}
+
 .icon:hover {
     transform: scale(1.08);
 }
